@@ -4,6 +4,7 @@ import 'package:homenom/firebase_options.dart';
 import 'package:homenom/screens/ForgetPasswordScreen.dart';
 import 'package:homenom/screens/authentication_status.dart';
 import 'package:homenom/screens/home_screen.dart';
+import 'package:homenom/screens/location_screen.dart';
 import 'package:homenom/screens/login_screen.dart';
 import 'package:homenom/screens/otp_screen.dart';
 import 'package:homenom/screens/signup_screen.dart';
@@ -28,9 +29,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: LoginScreen.id,
+      initialRoute: LocationScreen.id,
       routes: {
         HomeScreen.id : (context) => const HomeScreen(),
+        LocationScreen.id : (context) => const LocationScreen(),
         LoginScreen.id : (context) => const LoginScreen(),
         SignUpScreen.id: (context) => const SignUpScreen(),
         AuthenticationStatus.id: (context) => const AuthenticationStatus(),

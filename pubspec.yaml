@@ -19,6 +19,7 @@ dependencies:
   firebase_auth: ^4.10.1
   pinput: ^3.0.1
   cloud_firestore: ^4.9.3
+  map_location_picker: ^1.2.8+3
 
 dev_dependencies:
   flutter_test:
