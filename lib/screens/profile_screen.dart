@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
+import 'package:homenom/screens/widgets/profile_card.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -9,6 +10,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: kAppBackgroundColor,
         title: Text("Profile Page"),
@@ -34,12 +36,25 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const Text("My Details"),
-            TextField(
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: "Hello",
-
-              ),
+            ProfileCard(
+              field: "Username",
+              content: "zohaib1397",
+              onEdit: (){},
+            ),
+            ProfileCard(
+              field: "Phone Number",
+              content: "12345678910",
+              onEdit: (){},
+            ),
+            ProfileCard(
+              field: "Address",
+              content: "Bahria Phase 8, Islamabad, Pakistan",
+              onEdit: (){},
+            ),
+            ProfileCard(
+              field: "National Identity Number",
+              content: "341435134532423",
+              onEdit: (){},
             ),
           ],
         ),
