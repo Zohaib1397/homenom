@@ -17,7 +17,7 @@ class Utils {
                 padding: const EdgeInsets.all(14),
                 child: const Text("okay"),
               ),
-            ),
+            )
           ],
         );
       },

@@ -7,6 +7,7 @@ import 'package:homenom/screens/home_screen.dart';
 import 'package:homenom/screens/location_screen.dart';
 import 'package:homenom/screens/login_screen.dart';
 import 'package:homenom/screens/otp_screen.dart';
+import 'package:homenom/screens/profile_screen.dart';
 import 'package:homenom/screens/signup_screen.dart';
 
 
@@ -29,9 +30,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: LocationScreen.id,
+      initialRoute: ProfileScreen.id,
       routes: {
         HomeScreen.id : (context) => const HomeScreen(),
+        ProfileScreen.id : (context) => const ProfileScreen(),
         LocationScreen.id : (context) => const LocationScreen(),
         LoginScreen.id : (context) => const LoginScreen(),
         SignUpScreen.id: (context) => const SignUpScreen(),

@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/location_screen.dart';
+import 'package:homenom/screens/login_screen.dart';
+import 'package:homenom/screens/profile_screen.dart';
+import 'package:homenom/screens/widgets/drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,6 +17,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void signOut() {
+    final _auth = FirebaseAuth.instance;
+    _auth.signOut();
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()));
+  }
+
+  void showProfileScreen(){
+    // First pop out drawer
+    Navigator.pop(context);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,19 +44,35 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.location_on, color: Colors.green,),
+              Icon(
+                Icons.location_on,
+                color: Colors.green,
+              ),
               SizedBox(
                 width: 10,
-                child: const Text("|", style: TextStyle(fontSize: 20, color: Colors.green),),
+                child: const Text(
+                  "|",
+                  style: TextStyle(fontSize: 20, color: Colors.green),
+                ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Location", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
-                  Text("Deliver To Location", style: TextStyle(color: Colors.white.withAlpha(100)),),
+                  Text(
+                    "Location",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  Text(
+                    "Deliver To Location",
+                    style: TextStyle(color: Colors.white.withAlpha(100)),
+                  ),
                 ],
               ),
-              Icon(Icons.arrow_drop_down, color: Colors.white,),
+              Icon(
+                Icons.arrow_drop_down,
+                color: Colors.white,
+              ),
             ],
           ),
         ),
@@ -55,7 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-              onPressed: () {}, icon: const Icon(Icons.shopping_cart_outlined,))
+              onPressed: () {},
+              icon: const Icon(
+                Icons.shopping_cart_outlined,
+              ))
         ],
       ),
       body: CustomScrollView(
@@ -63,7 +99,10 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverToBoxAdapter(),
         ],
       ),
-      drawer: Drawer(),
+      drawer: MyDrawer(
+        onSignOut: signOut,
+        onProfileOption: showProfileScreen,
+      ),
     );
   }
 }
