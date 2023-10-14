@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/screens/authentication_status.dart';
@@ -35,9 +36,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       );
-      await _auth.createUserWithEmailAndPassword(
+      final userCredentials = await _auth.createUserWithEmailAndPassword(
           email: _emailField.controller.text,
           password: _passwordField.controller.text);
+
+      await FirebaseFirestore.instance.collection("Users").doc(userCredentials.user!.email).set(
+          {
+            "username" : _username.controller.text,
+            "phone" : _phoneField.controller.text,
+            "Address": "Not set yet",
+            "is_phone_verified": false,
+
+          });
       await _auth.currentUser!.updateDisplayName(_username.controller.text);
       return true;
     } on FirebaseAuthException catch (e) {
@@ -216,6 +226,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 }
                                 if(_phoneField.controller.text[0] == '0'){
                                   _phoneField.controller.text = _phoneField.controller.text.substring(1);
+                                }
+                                if(_phoneField.controller.text.length!=10){
+                                  setState(() {
+                                    _phoneField.errorText = "Invalid phone number";
+                                  });
+                                  return;
                                 }
                                 if(await createAccount()){
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Inside if")));
