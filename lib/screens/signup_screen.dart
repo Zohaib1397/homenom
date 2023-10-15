@@ -42,11 +42,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       await FirebaseFirestore.instance.collection("Users").doc(userCredentials.user!.email).set(
           {
-            "username" : _username.controller.text,
+            "name" : _username.controller.text,
+            "username" : _emailField.controller.text.split('@'),
             "phone" : _phoneField.controller.text,
-            "Address": "Not set yet",
+            "address": "Empty",
             "is_phone_verified": false,
-
+            "nic" : "Empty",
+            "rating" : 0
           });
       await _auth.currentUser!.updateDisplayName(_username.controller.text);
       return true;
