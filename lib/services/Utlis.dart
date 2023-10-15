@@ -4,18 +4,18 @@ class Utils {
   static showPopup(BuildContext context, String title, String message) {
     showDialog(
       context: context,
-      builder: (ctx) {
+      builder: (BuildContext context) {
         return AlertDialog(
           title: Text(title),
           content: Text(message),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(ctx).pop();
+                Navigator.pop(context);
               },
               child: Container(
                 padding: const EdgeInsets.all(14),
-                child: const Text("okay"),
+                child: const Text("Okay"),
               ),
             )
           ],

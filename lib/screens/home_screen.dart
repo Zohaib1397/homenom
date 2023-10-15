@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void showProfileScreen(){
     // First pop out drawer
     Navigator.pop(context);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) =>  ProfileScreen()));
   }
 
   @override

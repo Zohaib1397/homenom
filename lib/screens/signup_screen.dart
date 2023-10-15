@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/screens/authentication_status.dart';
-
+import '../structure/User.dart' as Model;
 import '../constants/constants.dart';
 import '../services/TextFieldHandler.dart';
 
@@ -40,16 +40,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
           email: _emailField.controller.text,
           password: _passwordField.controller.text);
 
-      await FirebaseFirestore.instance.collection("Users").doc(userCredentials.user!.email).set(
-          {
-            "name" : _username.controller.text,
-            "username" : _emailField.controller.text.split('@'),
-            "phone" : _phoneField.controller.text,
-            "address": "Empty",
-            "is_phone_verified": false,
-            "nic" : "Empty",
-            "rating" : 0
-          });
+      final newUser = Model.User(
+        name: _username.controller.text,
+        username: _emailField.controller.text.split('@')[0],
+        address: "Empty",
+        email: _emailField.controller.text,
+        id: "Temporary Empty",
+        phoneNum: _phoneField.controller.text,
+        isPhoneVerified: false
+      );
+      await FirebaseFirestore.instance.collection("Users").doc(userCredentials.user!.email).set(newUser.toJson());
       await _auth.currentUser!.updateDisplayName(_username.controller.text);
       return true;
     } on FirebaseAuthException catch (e) {
