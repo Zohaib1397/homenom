@@ -18,7 +18,7 @@ class ProfileScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: kAppBackgroundColor,
-        title: Text("Profile Page"),
+        title: const Text("Profile Page"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
