@@ -18,21 +18,6 @@ class _CartScreenState extends State<CartScreen> {
       appBar: AppBar(
         title: const Text("My Cart List"),
         backgroundColor: kAppBackgroundColor,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.shopping_cart_outlined,
-              color: Colors.white,
-            ),
-          )
-        ],
-        leading: IconButton(
-          icon: const Icon(Icons.clear_all),
-          onPressed: () {
-            // clearCartNow(context);
-          },
-        ),
         centerTitle: true,
         automaticallyImplyLeading: true,
         elevation: 0,

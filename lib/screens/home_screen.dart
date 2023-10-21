@@ -6,6 +6,7 @@ import 'package:homenom/screens/location_screen.dart';
 import 'package:homenom/screens/login_screen.dart';
 import 'package:homenom/screens/profile_screen.dart';
 import 'package:homenom/screens/widgets/drawer.dart';
+import 'package:homenom/screens/widgets/menu_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -97,8 +98,16 @@ class _HomeScreenState extends State<HomeScreen> {
               ))
         ],
       ),
-      body: ListView(
-
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            MenuCard(
+              menuImage: AssetImage("assets/temporary/food_background.jpg"),
+              menuName: "BackCAPS Food",
+              deliveryPrice: 150,
+            ),
+          ],
+        ),
       ),
       drawer: MyDrawer(
         onSignOut: signOut,
