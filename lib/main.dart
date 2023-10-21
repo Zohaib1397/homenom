@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:homenom/firebase_options.dart';
 import 'package:homenom/screens/ForgetPasswordScreen.dart';
 import 'package:homenom/screens/authentication_status.dart';
+import 'package:homenom/screens/cart_screen.dart';
 import 'package:homenom/screens/home_screen.dart';
 import 'package:homenom/screens/location_screen.dart';
 import 'package:homenom/screens/login_screen.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: HomeScreen.id,
       routes: {
+        CartScreen.id: (context) => const CartScreen(),
         HomeScreen.id : (context) => const HomeScreen(),
         ProfileScreen.id : (context) => ProfileScreen(),
         LocationScreen.id : (context) => const LocationScreen(),

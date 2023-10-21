@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
+import 'package:homenom/screens/cart_screen.dart';
 import 'package:homenom/screens/location_screen.dart';
 import 'package:homenom/screens/login_screen.dart';
 import 'package:homenom/screens/profile_screen.dart';
@@ -88,16 +89,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen()));
+              },
               icon: const Icon(
                 Icons.shopping_cart_outlined,
               ))
         ],
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(),
-        ],
+      body: ListView(
+
       ),
       drawer: MyDrawer(
         onSignOut: signOut,
