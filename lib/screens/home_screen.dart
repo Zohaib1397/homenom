@@ -105,6 +105,8 @@ class _HomeScreenState extends State<HomeScreen> {
               menuImage: AssetImage("assets/temporary/food_background.jpg"),
               menuName: "BackCAPS Food",
               deliveryPrice: 150,
+              sellerRating: 2.1,
+              numberOfItemsSold: 125,
             ),
           ],
         ),

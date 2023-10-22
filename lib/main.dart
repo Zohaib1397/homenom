@@ -9,6 +9,7 @@ import 'package:homenom/screens/location_screen.dart';
 import 'package:homenom/screens/login_screen.dart';
 import 'package:homenom/screens/otp_screen.dart';
 import 'package:homenom/screens/profile_screen.dart';
+import 'package:homenom/screens/recipe_screen.dart';
 import 'package:homenom/screens/signup_screen.dart';
 
 
@@ -31,8 +32,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: AuthenticationStatus.id,
+      initialRoute: RecipeScreen.id,
       routes: {
+        RecipeScreen.id: (context) => const RecipeScreen(),
         CartScreen.id: (context) => const CartScreen(),
         HomeScreen.id : (context) => const HomeScreen(),
         ProfileScreen.id : (context) => ProfileScreen(),

@@ -14,3 +14,4 @@ final kInputFieldDecoration = InputDecoration(
 
 const kAppBackgroundColor = const Color(0xFFB55157);
 const kDefaultBorderRadius = 16.0;
+const kRatingStarIconSize = 10.0;
