@@ -7,6 +7,7 @@ import 'package:homenom/screens/cart_screen.dart';
 import 'package:homenom/screens/home_screen.dart';
 import 'package:homenom/screens/location_screen.dart';
 import 'package:homenom/screens/login_screen.dart';
+import 'package:homenom/screens/order_screen.dart';
 import 'package:homenom/screens/otp_screen.dart';
 import 'package:homenom/screens/profile_screen.dart';
 import 'package:homenom/screens/recipe_screen.dart';
@@ -32,8 +33,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: RecipeScreen.id,
+      initialRoute: OrderScreen.id,
       routes: {
+        OrderScreen.id: (context) => const OrderScreen(),
         RecipeScreen.id: (context) => const RecipeScreen(),
         CartScreen.id: (context) => const CartScreen(),
         HomeScreen.id : (context) => const HomeScreen(),
