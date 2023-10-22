@@ -43,10 +43,19 @@ class MyDrawer extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 15.0),
-            child: DrawerItem(
-              icon: Icons.logout,
-              text: "L O G O U T",
-              onTap: onSignOut,
+            child: Column(
+              children: [
+                DrawerItem(
+                  icon: Icons.business,
+                  text: "S E L L E R  A C C O U N T",
+                  onTap: (){},
+                ),
+                DrawerItem(
+                  icon: Icons.logout,
+                  text: "L O G O U T",
+                  onTap: onSignOut,
+                ),
+              ],
             ),
           )
         ],

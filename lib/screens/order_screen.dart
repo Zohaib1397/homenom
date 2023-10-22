@@ -58,10 +58,10 @@ class _OrderScreenState extends State<OrderScreen> {
                       children: [
                         Text(
                           "Description",
-                          textAlign: TextAlign.justify,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text(loremText),
+                        Text(loremText,
+                          textAlign: TextAlign.justify,),
                       ],
                     ),
                   ),
