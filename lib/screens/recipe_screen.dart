@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
+import 'package:homenom/screens/order_screen.dart';
 import 'package:homenom/screens/widgets/recipe_card.dart';
 
 class RecipeScreen extends StatelessWidget {
@@ -65,7 +66,9 @@ class RecipeScreen extends StatelessWidget {
               ),
             ),
           ),
-          RecipeCard(onPressed: (){}),
+          RecipeCard(onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> const OrderScreen()));
+          }),
         ],
       ),
     );
