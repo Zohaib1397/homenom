@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:homenom/constants/constants.dart';
+import 'package:homenom/services/Location.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LocationScreen extends StatefulWidget {
@@ -17,42 +18,23 @@ class LocationScreen extends StatefulWidget {
 
 class _LocationScreenState extends State<LocationScreen> {
   final Completer<GoogleMapController> _completer = Completer();
-  late Position position;
-  LatLng currentPosition = LatLng(37.3333, -127.0000);
+  LatLng currentPosition = LatLng(32.9425, 73.7257);
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
-    requestLocationPermission(context);
+    print("Call of init state");
+    getCurrentLocation();
   }
 
-  Future<void> requestLocationPermission(BuildContext context) async {
-    var status = await Permission.location.request();
-
-    if (status.isGranted) {
-      // Permission is granted, you can now access the user's location.
-      position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      currentPosition = LatLng(position.latitude, position.longitude);
-      // Do something with the location data.
-    } else if (status.isDenied) {
-      // Permission is denied, show a dialogue to explain why you need it.
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Location Permission Required'),
-            content: Text('This app requires location access to function properly.'),
-            actions: <Widget>[
-              MaterialButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+  Future<void> getCurrentLocation() async{
+    isLoading = true;
+    Location location = Location();
+    location.checkIfAccessGranted();
+    await location.getCurrentLocation();
+    currentPosition = LatLng(location.latitude,location.longitude);
+    isLoading = false;
   }
 
   @override
@@ -62,7 +44,9 @@ class _LocationScreenState extends State<LocationScreen> {
         backgroundColor: kAppBackgroundColor,
         title: const Text("Please select your location"),
       ),
-      body: GoogleMap(initialCameraPosition: CameraPosition(target: currentPosition, zoom: 14.5)),
+      body: isLoading? const Center(child: CircularProgressIndicator()) : GoogleMap(
+          initialCameraPosition:
+              CameraPosition(target: currentPosition, zoom: 14.5)),
       // body: Padding(
       //   padding: const EdgeInsets.symmetric(vertical: 20),
       //   child: Column(

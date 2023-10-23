@@ -6,6 +6,10 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Homenom</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need your location for this feature.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>We need your location for this feature.</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
