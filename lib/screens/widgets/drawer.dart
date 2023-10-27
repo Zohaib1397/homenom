@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:homenom/screens/seller_screen.dart';
 
 import 'drawer_items.dart';
 
@@ -48,7 +49,12 @@ class MyDrawer extends StatelessWidget {
                 DrawerItem(
                   icon: Icons.business,
                   text: "S E L L E R  A C C O U N T",
-                  onTap: (){},
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SellerScreen())
+                    );
+                  },
                 ),
                 DrawerItem(
                   icon: Icons.logout,

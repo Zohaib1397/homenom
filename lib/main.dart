@@ -11,6 +11,7 @@ import 'package:homenom/screens/order_screen.dart';
 import 'package:homenom/screens/otp_screen.dart';
 import 'package:homenom/screens/profile_screen.dart';
 import 'package:homenom/screens/recipe_screen.dart';
+import 'package:homenom/screens/seller_screen.dart';
 import 'package:homenom/screens/signup_screen.dart';
 
 
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: LocationScreen.id,
       routes: {
+        SellerScreen.id: (context) => const SellerScreen(),
         OrderScreen.id: (context) => const OrderScreen(),
         RecipeScreen.id: (context) => const RecipeScreen(),
         CartScreen.id: (context) => const CartScreen(),

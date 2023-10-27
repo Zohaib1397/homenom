@@ -18,7 +18,7 @@ class LocationScreen extends StatefulWidget {
 
 class _LocationScreenState extends State<LocationScreen> {
   final Completer<GoogleMapController> _completer = Completer();
-  LatLng currentPosition = LatLng(32.9425, 73.7257);
+  LatLng currentPosition = LatLng(32.9427, 73.7257);
   bool isLoading = false;
 
   @override
@@ -28,13 +28,18 @@ class _LocationScreenState extends State<LocationScreen> {
     getCurrentLocation();
   }
 
-  Future<void> getCurrentLocation() async{
-    isLoading = true;
+  Future<void> getCurrentLocation() async {
+    setState(() {
+      isLoading = true;
+    });
     Location location = Location();
     location.checkIfAccessGranted();
     await location.getCurrentLocation();
-    currentPosition = LatLng(location.latitude,location.longitude);
-    isLoading = false;
+    print("Current location is retrieved");
+    currentPosition = LatLng(location.latitude, location.longitude);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -44,9 +49,20 @@ class _LocationScreenState extends State<LocationScreen> {
         backgroundColor: kAppBackgroundColor,
         title: const Text("Please select your location"),
       ),
-      body: isLoading? const Center(child: CircularProgressIndicator()) : GoogleMap(
-          initialCameraPosition:
-              CameraPosition(target: currentPosition, zoom: 14.5)),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: currentPosition,
+                zoom: 14.5,
+              ),
+              markers: {
+                Marker(
+                  markerId: MarkerId("source"),
+                  position: currentPosition,
+                ),
+              },
+            ),
       // body: Padding(
       //   padding: const EdgeInsets.symmetric(vertical: 20),
       //   child: Column(
