@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:homenom/screens/authentication_status.dart';
 import 'package:homenom/screens/signup_screen.dart';
 
 import '../services/TextFieldHandler.dart';
+import '../structure/Role.dart';
 import 'ForgetPasswordScreen.dart';
 
 class LoginScreen extends StatefulWidget {

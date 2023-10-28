@@ -1,4 +1,7 @@
 
+
+import 'Role.dart';
+
 class User {
   late String name;
   late String username;
@@ -7,6 +10,9 @@ class User {
   late String id;
   late String phoneNum;
   late bool isPhoneVerified;
+  late String CNIC;
+  late int rating;
+  late String role;
 
   User({
     required this.name,
@@ -16,6 +22,9 @@ class User {
     required this.id,
     required this.phoneNum,
     required this.isPhoneVerified,
+    required this.CNIC,
+    required this.rating,
+    required this.role,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -26,6 +35,9 @@ class User {
     id: json['id'],
     phoneNum: json['phoneNum'],
     isPhoneVerified: json['isPhoneVerified'],
+    CNIC : json['CNIC'],
+    rating : json['rating'],
+    role: json['role'],
   );
 
   Map<String, dynamic> toJson(){
@@ -37,6 +49,9 @@ class User {
       'id' : id,
       'phoneNum' : phoneNum,
       'isPhoneVerified' :isPhoneVerified,
+      'CNIC': CNIC,
+      'rating': rating,
+      'role' : role,
     };
 
     return data;

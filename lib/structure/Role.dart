@@ -1,4 +1,4 @@
-enum CurrentUser{
+enum ROLE{
   CUSTOMER,
   SELLER,
   DRIVER
