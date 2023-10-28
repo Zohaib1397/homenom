@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
@@ -7,6 +8,8 @@ import 'package:homenom/screens/login_screen.dart';
 import 'package:homenom/screens/profile_screen.dart';
 import 'package:homenom/screens/widgets/drawer.dart';
 import 'package:homenom/screens/widgets/menu_card.dart';
+
+import '../services/Utlis.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final currentUser = FirebaseAuth.instance.currentUser!;
 
   void signOut() {
     final _auth = FirebaseAuth.instance;
@@ -39,44 +43,73 @@ class _HomeScreenState extends State<HomeScreen> {
       key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: kAppBackgroundColor,
-        title: MaterialButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(LocationScreen.id);
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.location_on,
-                color: Colors.green,
-              ),
-              SizedBox(
-                width: 10,
-                child: const Text(
-                  "|",
-                  style: TextStyle(fontSize: 20, color: Colors.green),
+        title: StreamBuilder(
+          stream: FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(currentUser.email)
+                    .snapshots(),
+          builder: (context, snapshot){
+            if(snapshot.hasData){
+              final user = snapshot.data!.data() as Map<String, dynamic>;
+              return MaterialButton(
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LocationScreen())
+                  );
+                  setState(() {
+                      user['address'] = "${userAddress.streetAddress}, ${userAddress.city}";
+                  });
+                  await FirebaseFirestore.instance.collection("Users").doc(currentUser.email).update({"address": "${userAddress.streetAddress}, ${userAddress.city}"});
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      color: Colors.green,
+                    ),
+                    SizedBox(
+                      width: 10,
+                      child: const Text(
+                        "|",
+                        style: TextStyle(fontSize: 20, color: Colors.green),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Location",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                        Text(
+                          "${user['address'] == "Null"? "Deliver To Location" : "${user['address']}"} ",
+                          style: TextStyle(fontSize:10, color: Colors.white.withAlpha(100)),
+                        ),
+                      ],
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.white,
+                    ),
+                  ],
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Location",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
+              );
+            }
+            else if (snapshot.hasError) {
+              return Utils.showPopup(context, "Database Error",
+                  "Error accessing data. Contact developer");
+            } else {
+              return Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(40),
+                    child: const CircularProgressIndicator(),
                   ),
-                  Text(
-                    "Deliver To Location",
-                    style: TextStyle(color: Colors.white.withAlpha(100)),
-                  ),
-                ],
-              ),
-              Icon(
-                Icons.arrow_drop_down,
-                color: Colors.white,
-              ),
-            ],
-          ),
+              );
+            }
+          },
         ),
         leading: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),

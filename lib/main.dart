@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: LocationScreen.id,
+      initialRoute: AuthenticationStatus.id,
       routes: {
         SellerScreen.id: (context) => const SellerScreen(),
         OrderScreen.id: (context) => const OrderScreen(),
@@ -42,7 +42,6 @@ class MyApp extends StatelessWidget {
         CartScreen.id: (context) => const CartScreen(),
         HomeScreen.id : (context) => const HomeScreen(),
         ProfileScreen.id : (context) => ProfileScreen(),
-        LocationScreen.id : (context) => const LocationScreen(),
         LoginScreen.id : (context) => const LoginScreen(),
         SignUpScreen.id: (context) => const SignUpScreen(),
         AuthenticationStatus.id: (context) => const AuthenticationStatus(),

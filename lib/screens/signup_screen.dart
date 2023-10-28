@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geocode/geocode.dart';
 import 'package:homenom/screens/authentication_status.dart';
 import '../structure/User.dart' as Model;
 import '../constants/constants.dart';
@@ -39,11 +40,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final userCredentials = await _auth.createUserWithEmailAndPassword(
           email: _emailField.controller.text,
           password: _passwordField.controller.text);
-
       final newUser = Model.User(
         name: _username.controller.text,
         username: _emailField.controller.text.split('@')[0],
-        address: "Empty",
+        address: "Null",
         email: _emailField.controller.text,
         id: "Temporary Empty",
         phoneNum: _phoneField.controller.text,
