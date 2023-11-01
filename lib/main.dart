@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/firebase_options.dart';
 import 'package:homenom/screens/ForgetPasswordScreen.dart';
+import 'package:homenom/screens/add_recipe_screen.dart';
 import 'package:homenom/screens/authentication_status.dart';
 import 'package:homenom/screens/cart_screen.dart';
 import 'package:homenom/screens/home_screen.dart';
@@ -34,8 +35,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: AuthenticationStatus.id,
+      initialRoute: AddRecipeScreen.id,
       routes: {
+        AddRecipeScreen.id : (context) => const AddRecipeScreen(),
         SellerScreen.id: (context) => const SellerScreen(),
         OrderScreen.id: (context) => const OrderScreen(),
         RecipeScreen.id: (context) => const RecipeScreen(),

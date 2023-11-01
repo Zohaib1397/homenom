@@ -52,6 +52,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         CNIC: "Null",
         rating: 0,
         role: role.toString(),
+        latitude: 0.0,
+        longitude: 0.0
       );
       await FirebaseFirestore.instance.collection("Users").doc(userCredentials.user!.email).set(newUser.toJson());
       await _auth.currentUser!.updateDisplayName(_username.controller.text);

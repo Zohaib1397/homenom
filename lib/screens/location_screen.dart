@@ -31,7 +31,7 @@ class _LocationScreenState extends State<LocationScreen> {
   }
 
   void loadDefaults() async{
-    userAddress = await geoCode.reverseGeocoding(latitude: 0.0, longitude: 0.0);
+    currentUserAddress.userAddress = await geoCode.reverseGeocoding(latitude: 0.0, longitude: 0.0);
   }
 
   Future<void> getCurrentLocation() async {
@@ -98,7 +98,9 @@ class _LocationScreenState extends State<LocationScreen> {
           print("Latitude: $latitude, Longitude: $longitude");
           String newAddress = "${address.streetAddress}, ${address.city}";
           setState(() {
-            userAddress = address;
+            currentUserAddress.userAddress = address;
+            currentUserAddress.latitude = latitude;
+            currentUserAddress.longitude = longitude;
           });
           Navigator.pop(context, newAddress);
         },

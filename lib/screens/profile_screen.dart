@@ -86,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           context,
                           MaterialPageRoute(builder: (context) => LocationScreen()),
                         );
-                        await FirebaseFirestore.instance.collection("Users").doc(currentUser.email).update({"address": "${userAddress.streetAddress}, ${userAddress.city}"});
+                        await FirebaseFirestore.instance.collection("Users").doc(currentUser.email).update({"address": "${currentUserAddress.userAddress.streetAddress}, ${currentUserAddress.userAddress.city}"});
                       },
                     ),
                     user['role'] == "ROLE.SELLER"? ProfileCard(

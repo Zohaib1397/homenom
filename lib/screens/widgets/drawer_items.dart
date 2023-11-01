@@ -18,7 +18,7 @@ class DrawerItem extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         leading: Icon(icon),
-        title: Text(text),
+        title: Text(text, style: const TextStyle(fontSize: 13),),
       ),
     );
   }

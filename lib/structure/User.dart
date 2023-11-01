@@ -13,6 +13,8 @@ class User {
   late String CNIC;
   late int rating;
   late String role;
+  late double latitude;
+  late double longitude;
 
   User({
     required this.name,
@@ -25,6 +27,8 @@ class User {
     required this.CNIC,
     required this.rating,
     required this.role,
+    required this.latitude,
+    required this.longitude,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -38,6 +42,8 @@ class User {
     CNIC : json['CNIC'],
     rating : json['rating'],
     role: json['role'],
+    latitude: json['latitude'],
+    longitude: json['longitude']
   );
 
   Map<String, dynamic> toJson(){
@@ -52,6 +58,8 @@ class User {
       'CNIC': CNIC,
       'rating': rating,
       'role' : role,
+      'latitude': latitude,
+      'longitude' : longitude
     };
 
     return data;

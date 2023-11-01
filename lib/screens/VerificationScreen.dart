@@ -106,14 +106,25 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   Future<void> identifyRole() async {
     await FirebaseFirestore.instance.collection('Users').doc(user.email).get().then((DocumentSnapshot snapshot){
       if(snapshot.exists){
-        if(snapshot.get('role') == ROLE.CUSTOMER){
-          role = "ROLE.CUSTOMER";
+        if(snapshot.get('role') == ROLE.CUSTOMER.toString()){
+          setState(() {
+            print("Role is set to Customer ${snapshot.get('role')}");
+            currentRole = ROLE.CUSTOMER;
+          });
+          // role = "ROLE.CUSTOMER";
         }
-        else if(snapshot.get('role') == ROLE.SELLER){
-          role = "ROLE.SELLER";
+        else if(snapshot.get('role') == ROLE.SELLER.toString()){
+          setState(() {
+            print("Role is set to Seller ");
+            currentRole = ROLE.SELLER;
+          });
+          // role = "ROLE.SELLER";
         }
         else{
-          role = "ROLE.DRIVER";
+          setState(() {
+            currentRole = ROLE.DRIVER;
+          });
+          // role = "ROLE.DRIVER";
         }
       }
       else{
@@ -126,7 +137,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return isEmailVerified
-        ? role == "SELLER"? SellerScreen(): HomeScreen()
+        ? HomeScreen() //role == "SELLER"? SellerScreen():
         : Scaffold(
             backgroundColor: kAppBackgroundColor,
             appBar: AppBar(

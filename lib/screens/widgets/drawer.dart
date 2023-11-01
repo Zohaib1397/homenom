@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:homenom/screens/seller_screen.dart';
 
+import '../../constants/constants.dart';
+import '../../structure/Role.dart';
 import 'drawer_items.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -46,7 +48,7 @@ class MyDrawer extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 15.0),
             child: Column(
               children: [
-                DrawerItem(
+                currentRole == ROLE.CUSTOMER ? DrawerItem(
                   icon: Icons.business,
                   text: "S E L L E R  A C C O U N T",
                   onTap: (){
@@ -55,6 +57,10 @@ class MyDrawer extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => const SellerScreen())
                     );
                   },
+                ) : DrawerItem(
+                  icon: Icons.camera_front_outlined,
+                  text: "C U S T O M E R  A C C O U N T",
+                  onTap: (){},
                 ),
                 DrawerItem(
                   icon: Icons.logout,
