@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
+import 'package:homenom/services/TextFieldHandler.dart';
 
 class AddRecipeScreen extends StatefulWidget {
   const AddRecipeScreen({super.key});
@@ -11,6 +12,12 @@ class AddRecipeScreen extends StatefulWidget {
 }
 
 class _AddRecipeScreenState extends State<AddRecipeScreen> {
+  late AssetImage recipeImage;
+  TextFieldHandler recipeTitle = TextFieldHandler();
+  TextFieldHandler recipePrice = TextFieldHandler();
+  TextFieldHandler recipeDescription = TextFieldHandler();
+  TextFieldHandler recipeQuantity = TextFieldHandler();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,9 +31,9 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: const Text(
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
                   "Select Menu",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -53,9 +60,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                     ),
                   ),
                   MaterialButton(
-                    color: Colors.green,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
+                    color: kAppBackgroundColor,
                     onPressed: () {},
                     child: Icon(
                       Icons.add,
@@ -78,64 +83,70 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                     Container(
                       child: Column(
                         children: [
-                          Icon(Icons.image_sharp, color: Colors.grey, size: 200,),
-                          TextButton(onPressed: (){}, child: const Text("Add Image")),
+                          Icon(
+                            Icons.image_sharp,
+                            color: Colors.grey,
+                            size: 200,
+                          ),
+                          TextButton(
+                              onPressed: () {}, child: const Text("Add Image")),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10,),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Row(
                       children: [
                         Expanded(
                           flex: 2,
-                          child: TextField(
-                            decoration: kInputFieldDecoration.copyWith(
-                              hintText: "Title",
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 1
-                                )
-                              ),
-                            ),
-                          ),
+                          child: buildTextField("Title", recipeTitle),
                         ),
                         const SizedBox(
                           width: 10,
                         ),
                         Expanded(
                           flex: 1,
-                          child: TextField(
-                            decoration: kInputFieldDecoration.copyWith(
-                              hintText: "Price",
-                              border: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 1
-                                ),
-                              ),
-                            ),
-                          ),
+                          child: buildTextField("Price", recipePrice)
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10,),
-                    TextField(
-                      keyboardType: TextInputType.number,
-                      maxLines: 5,
-                      decoration: kInputFieldDecoration.copyWith(
-                        hintText: "Description",
-                        border: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 1
-                          ),
-                        ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    buildTextField("Description", recipeDescription, maxLines: 5, inputType: TextInputType.number),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    buildTextField("Quantity in kilogram", recipeQuantity, inputType: TextInputType.number),
+                    const SizedBox(height: 10),
+                    MaterialButton(
+                      color: kAppBackgroundColor,
+                      textColor: Colors.white,
+                      onPressed: () {},
+                      child: const Text(
+                        "Create Recipe",
                       ),
                     ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  TextField buildTextField(String hint, TextFieldHandler handler, {int maxLines = 1, TextInputType inputType = TextInputType.name }) {
+    return TextField(
+      controller: handler.controller,
+      maxLines: maxLines,
+      keyboardType: inputType,
+      decoration: kInputFieldDecoration.copyWith(
+        hintText: hint,
+        border: const OutlineInputBorder(borderSide: BorderSide(width: 1)),
       ),
     );
   }

@@ -7,7 +7,6 @@ import 'package:homenom/screens/authentication_status.dart';
 import 'package:homenom/screens/signup_screen.dart';
 
 import '../services/TextFieldHandler.dart';
-import '../structure/Role.dart';
 import 'ForgetPasswordScreen.dart';
 
 class LoginScreen extends StatefulWidget {
