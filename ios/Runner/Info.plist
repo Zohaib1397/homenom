@@ -6,6 +6,10 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Homenom</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Allow access to photo library</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Allow access to camera</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>We need your location for this feature.</string>
     <key>NSLocationAlwaysUsageDescription</key>

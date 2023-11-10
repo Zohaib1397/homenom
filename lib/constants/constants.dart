@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../services/TextFieldHandler.dart';
 import '../structure/Address.dart';
 import '../structure/Role.dart';
 
@@ -29,3 +30,20 @@ const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
 
 const google_api_key = "AIzaSyCDBOCu_XE--rB5BamJJm4wFmk4AUa2pRI";
 const geocoder_api_key = "348740175803540265921x108595";
+
+TextField buildTextField(String hint, TextFieldHandler handler,
+    {int maxLines = 1, TextInputType inputType = TextInputType.name, bool hasErrorText = false}) {
+  return TextField(
+    controller: handler.controller,
+    maxLines: maxLines,
+    keyboardType: inputType,
+    decoration: !hasErrorText ? kInputFieldDecoration.copyWith(
+      hintText: hint,
+      border: const OutlineInputBorder(borderSide: BorderSide(width: 1)),
+    ) : kInputFieldDecoration.copyWith(
+      hintText: hint,
+      border: const OutlineInputBorder(borderSide: BorderSide(width: 1)),
+      errorText: handler.errorText,
+    ),
+  );
+}

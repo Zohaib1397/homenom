@@ -1,6 +1,16 @@
+
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/services/TextFieldHandler.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
+import '../services/Utlis.dart';
+import '../structure/Recipe.dart';
 
 class AddRecipeScreen extends StatefulWidget {
   const AddRecipeScreen({super.key});
@@ -13,10 +23,25 @@ class AddRecipeScreen extends StatefulWidget {
 
 class _AddRecipeScreenState extends State<AddRecipeScreen> {
   late AssetImage recipeImage;
+  final imagePicker = ImagePicker();
+  File? image;
+
   TextFieldHandler recipeTitle = TextFieldHandler();
   TextFieldHandler recipePrice = TextFieldHandler();
   TextFieldHandler recipeDescription = TextFieldHandler();
   TextFieldHandler recipeQuantity = TextFieldHandler();
+
+  Future<void> getImageFromGallery(ImageSource source) async{
+    try{
+      final imagePick = await imagePicker.pickImage(
+          source: source);
+      final imageTemporary = File(imagePick!.path);
+      setState(() => image = imageTemporary);
+    }catch (e){
+      Utils.showPopup(context, "Image Error", "Error: $e");
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +87,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   MaterialButton(
                     color: kAppBackgroundColor,
                     onPressed: () {},
-                    child: Icon(
+                    child: const Icon(
                       Icons.add,
                       color: Colors.white,
                     ),
@@ -77,19 +102,29 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
-                    Container(
+                    SizedBox(
                       child: Column(
                         children: [
-                          Icon(
+                          image == null ? const Icon(
                             Icons.image_sharp,
                             color: Colors.grey,
                             size: 200,
+                          ) : Image.file(image!,fit: BoxFit.cover,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                  onPressed: () => getImageFromGallery(ImageSource.gallery),
+                                  child: const Text("Add Image")),
+                              TextButton(
+                                onPressed: () => getImageFromGallery(ImageSource.camera),
+                                child: const Text("Capture Image"),
+                              ),
+                            ],
                           ),
-                          TextButton(
-                              onPressed: () {}, child: const Text("Add Image")),
                         ],
                       ),
                     ),
@@ -106,24 +141,27 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                           width: 10,
                         ),
                         Expanded(
-                          flex: 1,
-                          child: buildTextField("Price", recipePrice)
-                        ),
+                            flex: 1,
+                            child: buildTextField("Price", recipePrice)),
                       ],
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    buildTextField("Description", recipeDescription, maxLines: 5, inputType: TextInputType.number),
+                    buildTextField("Description", recipeDescription,
+                        maxLines: 5, inputType: TextInputType.number),
                     const SizedBox(
                       height: 10,
                     ),
-                    buildTextField("Quantity in kilogram", recipeQuantity, inputType: TextInputType.number),
+                    buildTextField("Quantity in kilogram", recipeQuantity,
+                        inputType: TextInputType.number),
                     const SizedBox(height: 10),
                     MaterialButton(
                       color: kAppBackgroundColor,
                       textColor: Colors.white,
-                      onPressed: () {},
+                      onPressed: () {
+                        addRecipeToDatabase();
+                      },
                       child: const Text(
                         "Create Recipe",
                       ),
@@ -139,15 +177,28 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     );
   }
 
-  TextField buildTextField(String hint, TextFieldHandler handler, {int maxLines = 1, TextInputType inputType = TextInputType.name }) {
-    return TextField(
-      controller: handler.controller,
-      maxLines: maxLines,
-      keyboardType: inputType,
-      decoration: kInputFieldDecoration.copyWith(
-        hintText: hint,
-        border: const OutlineInputBorder(borderSide: BorderSide(width: 1)),
-      ),
-    );
+
+
+  Future<void> addRecipeToDatabase() async {
+    if (recipeTitle.controller.text!="" && recipePrice.controller.text!="" && recipeDescription.controller.text!="" && recipeQuantity.controller.text!=""){
+      try{
+        final auth = await FirebaseAuth.instance;
+        final recipe = Recipe(
+          id: "Temporary Empty",
+          url: "Temporary Empty",
+          name: recipeTitle.controller.text,
+          description: recipeDescription.controller.text,
+          price: double.parse(recipePrice.controller.text),
+          quantity: int.parse(recipeQuantity.controller.text),
+          rating: 0,
+        );
+        await FirebaseFirestore.instance.collection("Recipes").doc(auth.currentUser!.email).set(recipe.toJson());
+        print("recipe added successfully");
+      }catch (e){
+        Utils.showPopup(context, "Database Connectivity Issue", "Something went wrong. Error: $e");
+      }
+    }else{
+      Utils.showPopup(context, "Fields error", "You need to fill all the fields to create Recipe.");
+    }
   }
 }
