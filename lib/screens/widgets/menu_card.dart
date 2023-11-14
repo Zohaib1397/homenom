@@ -8,7 +8,7 @@ class MenuCard extends StatefulWidget {
   final String menuName;
   final double sellerRating;
   final int numberOfItemsSold;
-  final double deliveryPrice;
+  final String deliveryPrice;
 
   const MenuCard(
       {super.key,
@@ -75,12 +75,9 @@ class _MenuCardState extends State<MenuCard> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(kDefaultBorderRadius),
-                child: Hero(
-                  tag: "FoodMenu",
-                  child: Image(
-                    image: widget.menuImage,
-                    fit: BoxFit.cover,
-                  ),
+                child: Image(
+                  image: widget.menuImage,
+                  fit: BoxFit.cover,
                 ),
               ),
               Positioned(

@@ -16,7 +16,6 @@ class AddMenuScreen extends StatefulWidget {
 
   static const String id = "Add_Menu_Screen";
 
-
   @override
   State<AddMenuScreen> createState() => _AddMenuScreenState();
 }
@@ -25,33 +24,49 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
   final imagePicker = ImagePicker();
   TextFieldHandler title = TextFieldHandler();
   File? image;
-  Future<void> getImageFromGallery(ImageSource source) async{
-    try{
-      final imagePick = await imagePicker.pickImage(
-          source: source);
+  bool isLoading = false;
+
+  Future<void> getImageFromGallery(ImageSource source) async {
+    try {
+      setState(() => isLoading = true);
+      final imagePick = await imagePicker.pickImage(source: source);
       final imageTemporary = File(imagePick!.path);
       setState(() => image = imageTemporary);
-    }catch (e){
+      setState(() => isLoading = false);
+    } catch (e) {
       Utils.showPopup(context, "Image Error", "Error: $e");
     }
   }
 
-  Future<void> createMenu() async{
-    try{
+  Future<void> createMenu() async {
+    try {
+      setState(() => isLoading = true);
       final auth = FirebaseAuth.instance;
       final newMenu = Menu(
         title: title.controller.text,
-        menuRating: 0,
         recipeList: [],
         menuUrl: 'Temporary empty',
       );
-      await FirebaseFirestore.instance.collection("Menu").doc(auth.currentUser!.email).collection(title.controller.text).doc("Menu Details").set(newMenu.toJson());
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Menu added successfully")));
-    }catch(e){
-      Utils.showPopup(context, "Database Error", "Something went wrong with firebase. Error: $e");
+      final menuDoc = FirebaseFirestore.instance
+          .collection("Menu")
+          .doc(auth.currentUser!.email);
+      final snapshot = await menuDoc.get();
+      if (snapshot.exists){
+        await menuDoc.update({
+          "menus" : FieldValue.arrayUnion([newMenu.toJson()]),
+        });
+      }else{
+        await menuDoc.set({
+          "menus" : FieldValue.arrayUnion([newMenu.toJson()]),
+        });
+      }
+      setState(() => isLoading = false);
+    } catch (e) {
+      Utils.showPopup(context, "Database Error",
+          "Something went wrong with firebase. Error: $e");
     }
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,51 +74,79 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
         backgroundColor: kAppBackgroundColor,
         title: const Text("Add Menu"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            SizedBox(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
-                  image == null ? const Icon(
-                    Icons.image_sharp,
-                    color: Colors.grey,
-                    size: 200,
-                  ) : Image.file(image!,fit: BoxFit.cover,),
+                  SizedBox(
+                    child: Column(
+                      children: [
+                        image == null
+                            ? const Icon(
+                                Icons.image_sharp,
+                                color: Colors.grey,
+                                size: 200,
+                              )
+                            : Image.file(
+                                image!,
+                                fit: BoxFit.cover,
+                              ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                                onPressed: () =>
+                                    getImageFromGallery(ImageSource.gallery),
+                                child: const Text("Add Image")),
+                            TextButton(
+                              onPressed: () =>
+                                  getImageFromGallery(ImageSource.camera),
+                              child: const Text("Capture Image"),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  buildTextField("Title", title, hasErrorText: true),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
-                          onPressed: () => getImageFromGallery(ImageSource.gallery),
-                          child: const Text("Add Image")),
-                      TextButton(
-                        onPressed: () => getImageFromGallery(ImageSource.camera),
-                        child: const Text("Capture Image"),
+                      MaterialButton(
+                        color: kAppBackgroundColor,
+                        onPressed: () async {
+                          if (title.controller.text != "" && image != null) {
+                            await createMenu();
+                            Navigator.pop(context, true);
+                          } else {
+                            title.errorText = "Title & Image is required";
+                          }
+                        },
+                        child: const Text(
+                          "Create Menu",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            buildTextField("Title", title, hasErrorText: true),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                MaterialButton(
-                  color: kAppBackgroundColor,
-                  onPressed: (){
-                    if(title.controller.text!="" && image != null){
-                      createMenu();
-                      Navigator.pop(context);
-                    }else{
-                      title.errorText = "Title & Image is required";
-                    }
-                }, child: const Text("Create Menu",style: TextStyle(color: Colors.white),) ,),
-              ],
-            ),
-          ],
-        ),
+          ),
+          isLoading
+              ? Scaffold(
+                  backgroundColor: Colors.grey.withAlpha(200),
+                )
+              : Container(),
+          isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Container(),
+        ],
       ),
     );
   }

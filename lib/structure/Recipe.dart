@@ -1,12 +1,13 @@
-
 class Recipe {
   late String id;
   late String url;
   late String name;
   late String description;
   late double price;
+  late double deliveryPrice;
   late int rating;
   late int quantity;
+  late int numberSold;
 
   Recipe({
     required this.id,
@@ -14,18 +15,22 @@ class Recipe {
     required this.name,
     required this.description,
     required this.price,
+    required this.deliveryPrice,
     required this.rating,
     required this.quantity,
+    required this.numberSold,
   });
 
   factory Recipe.fromJson(Map<String, dynamic> json) => Recipe(
-      id: json['id'],
-      url: json['url'],
-      name: json['name'],
-      description: json['description'],
-      price: json['price'],
-      rating: json['rating'],
-      quantity: json['quantity']
+    id: json['id'],
+    url: json['url'],
+    name: json['name'],
+    description: json['description'],
+    price: json['price'],
+    deliveryPrice: json['deliveryPrice'],
+    rating: json['rating'],
+    quantity: json['quantity'],
+    numberSold: json['numberSold'],
   );
 
   Map<String, dynamic> toJson(){
@@ -35,8 +40,10 @@ class Recipe {
       'name' : name,
       'description' : description,
       'price' : price,
+      'deliveryPrice' : deliveryPrice,
       'rating' : rating,
       'quantity' : quantity,
+      'numberSold' : numberSold,
     };
 
     return data;

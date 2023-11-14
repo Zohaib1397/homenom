@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: AddMenuScreen.id,
+      initialRoute: AuthenticationStatus.id,
       routes: {
         AddMenuScreen.id: (context) => const AddMenuScreen(),
         AddRecipeScreen.id : (context) => const AddRecipeScreen(),

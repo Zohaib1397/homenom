@@ -34,11 +34,13 @@ const geocoder_api_key = "348740175803540265921x108595";
 TextField buildTextField(String hint, TextFieldHandler handler,
     {int maxLines = 1, TextInputType inputType = TextInputType.name, bool hasErrorText = false}) {
   return TextField(
+
     controller: handler.controller,
     maxLines: maxLines,
     keyboardType: inputType,
     decoration: !hasErrorText ? kInputFieldDecoration.copyWith(
-      hintText: hint,
+      labelText: hint,
+      // hintText: hint,
       border: const OutlineInputBorder(borderSide: BorderSide(width: 1)),
     ) : kInputFieldDecoration.copyWith(
       hintText: hint,

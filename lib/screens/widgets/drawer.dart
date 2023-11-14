@@ -60,7 +60,9 @@ class MyDrawer extends StatelessWidget {
                 ) : DrawerItem(
                   icon: Icons.camera_front_outlined,
                   text: "C U S T O M E R  A C C O U N T",
-                  onTap: (){},
+                  onTap: (){
+
+                  },
                 ),
                 DrawerItem(
                   icon: Icons.logout,

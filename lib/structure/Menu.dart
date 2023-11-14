@@ -9,14 +9,12 @@ class Menu{
   Menu({
     required this.menuUrl,
     required this.title,
-    required this.menuRating,
     required this.recipeList,
   });
 
   factory Menu.fromJson(Map<String, dynamic> json) => Menu(
       menuUrl: json['menuUrl'],
       title: json['title'],
-      menuRating: json['menuRating'],
       recipeList: json['recipeList']
   );
 
@@ -24,7 +22,6 @@ class Menu{
     Map<String, dynamic> data = {
       'menuUrl': menuUrl,
       'title' : title,
-      'menuRating' : menuRating,
       'recipeList' : recipeList,
     };
 

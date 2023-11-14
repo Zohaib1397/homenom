@@ -19,6 +19,7 @@ class RecipeCard extends StatelessWidget {
               children: [
                 Text("This is the description of the specific recipe"),
                 Text("Price: 200"),
+                Text("Sold: 10"),
               ],
             ),
             trailing: Hero(
