@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:homenom/constants/constants.dart';
 import 'package:homenom/firebase_options.dart';
 import 'package:homenom/screens/ForgetPasswordScreen.dart';
 import 'package:homenom/screens/add_menu_screen.dart';
@@ -15,19 +16,22 @@ import 'package:homenom/screens/profile_screen.dart';
 import 'package:homenom/screens/recipe_screen.dart';
 import 'package:homenom/screens/seller_screen.dart';
 import 'package:homenom/screens/signup_screen.dart';
-
+import 'package:homenom/services/menu_controller.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
-    MyApp()
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => MenuControllerProvider())
+        ],
+        child: MyApp(),
+      ),
+
   );
 }
-
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -39,14 +43,14 @@ class MyApp extends StatelessWidget {
       initialRoute: AuthenticationStatus.id,
       routes: {
         AddMenuScreen.id: (context) => const AddMenuScreen(),
-        AddRecipeScreen.id : (context) => const AddRecipeScreen(),
+        AddRecipeScreen.id: (context) => const AddRecipeScreen(),
         SellerScreen.id: (context) => const SellerScreen(),
         OrderScreen.id: (context) => const OrderScreen(),
         RecipeScreen.id: (context) => const RecipeScreen(),
         CartScreen.id: (context) => const CartScreen(),
-        HomeScreen.id : (context) => const HomeScreen(),
-        ProfileScreen.id : (context) => ProfileScreen(),
-        LoginScreen.id : (context) => const LoginScreen(),
+        HomeScreen.id: (context) => const HomeScreen(),
+        ProfileScreen.id: (context) => ProfileScreen(),
+        LoginScreen.id: (context) => const LoginScreen(),
         SignUpScreen.id: (context) => const SignUpScreen(),
         AuthenticationStatus.id: (context) => const AuthenticationStatus(),
         ForgetPasswordScreen.id: (context) => const ForgetPasswordScreen(),

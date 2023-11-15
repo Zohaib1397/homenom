@@ -5,8 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/recipe_screen.dart';
-import 'package:homenom/services/TextFieldHandler.dart';
+import 'package:homenom/services/menu_controller.dart';
+import 'package:homenom/structure/TextFieldHandler.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import '../services/Utlis.dart';
 import '../structure/Menu.dart';
@@ -41,25 +43,12 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
   Future<void> createMenu() async {
     try {
       setState(() => isLoading = true);
-      final auth = FirebaseAuth.instance;
       final newMenu = Menu(
         title: title.controller.text,
         recipeList: [],
         menuUrl: 'Temporary empty',
       );
-      final menuDoc = FirebaseFirestore.instance
-          .collection("Menu")
-          .doc(auth.currentUser!.email);
-      final snapshot = await menuDoc.get();
-      if (snapshot.exists){
-        await menuDoc.update({
-          "menus" : FieldValue.arrayUnion([newMenu.toJson()]),
-        });
-      }else{
-        await menuDoc.set({
-          "menus" : FieldValue.arrayUnion([newMenu.toJson()]),
-        });
-      }
+      Provider.of<MenuControllerProvider>(context, listen: false).addMenuToList(newMenu);
       setState(() => isLoading = false);
     } catch (e) {
       Utils.showPopup(context, "Database Error",

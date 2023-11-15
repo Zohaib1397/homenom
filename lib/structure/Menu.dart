@@ -1,6 +1,7 @@
 import 'Recipe.dart';
 
 class Menu{
+  late String id;
   late String title;
   late int menuRating;
   late String menuUrl;

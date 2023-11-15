@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:homenom/services/Location.dart' as geolocation;
+import 'package:homenom/structure/Location.dart' as geolocation;
 import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

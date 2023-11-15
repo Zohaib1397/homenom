@@ -5,10 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/add_menu_screen.dart';
-import 'package:homenom/services/TextFieldHandler.dart';
+import 'package:homenom/services/menu_controller.dart';
+import 'package:homenom/structure/TextFieldHandler.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import '../services/Utlis.dart';
+import '../structure/Menu.dart';
 import '../structure/Recipe.dart';
 
 class AddRecipeScreen extends StatefulWidget {
@@ -21,6 +24,7 @@ class AddRecipeScreen extends StatefulWidget {
 }
 
 class _AddRecipeScreenState extends State<AddRecipeScreen> {
+  final menuControllerProvider = MenuControllerProvider();
   late AssetImage recipeImage;
   final imagePicker = ImagePicker();
   File? image;
@@ -40,6 +44,40 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     } catch (e) {
       Utils.showPopup(context, "Image Error", "Error: $e");
     }
+  }
+
+  Widget _createMenuCardWidget(Menu menu) {
+    return Card(
+      color: true ? Colors.grey : Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: InkWell(
+        onTap: () {
+          //TODO implement on click selection here
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            title: Text(
+              menu.title,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            leading: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image(
+                image: AssetImage("assets/temporary/food_background.jpg"),
+              ),
+            ),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Recipes"),
+                Text("${menu.recipeList.length}")
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -64,79 +102,93 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
               ),
               Column(
                 children: [
-                  StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection("Menu")
-                        .doc(currentUser.email)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data!.data() != null) {
-                          final data =
-                              snapshot.data!.data() as Map<String, dynamic>;
-                          final menuList = data['menus'] as List<dynamic>;
-                          return Container(
-                            decoration: BoxDecoration(
-                                color: kAppBackgroundColor,
-                                borderRadius: BorderRadius.circular(29),
-                                border:
-                                    Border.all(width: 2, color: Colors.black)),
-                            height: 200,
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: ListView.builder(
-                                  itemCount: menuList.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    final recipeList = menuList[index]
-                                        ['recipeList'] as List<dynamic>;
-                                    return Card(
-                                      color: index == selectedMenuIndex
-                                          ? Colors.grey
-                                          : Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(16)),
-                                      child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedMenuIndex = index;
-                                          });
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: ListTile(
-                                            title: Text(
-                                              menuList[index]['title'],
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            leading: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                              child: Image(
-                                                image: AssetImage(
-                                                    "assets/temporary/food_background.jpg"),
-                                              ),
-                                            ),
-                                            trailing: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                const Text("Recipes"),
-                                                Text("${recipeList.length}")
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                            ),
-                          );
-                        }
-                      }
-                      return Container();
+                  // StreamBuilder(
+                  //   stream: FirebaseFirestore.instance
+                  //       .collection("Menu")
+                  //       .doc(currentUser.email)
+                  //       .snapshots(),
+                  //   builder: (context, snapshot) {
+                  //     if (snapshot.hasData) {
+                  //       if (snapshot.data!.data() != null) {
+                  //         final data =
+                  //             snapshot.data!.data() as Map<String, dynamic>;
+                  //         final menuList = data['menus'] as List<dynamic>;
+                  //         return Container(
+                  //           decoration: BoxDecoration(
+                  //               color: kAppBackgroundColor,
+                  //               borderRadius: BorderRadius.circular(29),
+                  //               border:
+                  //                   Border.all(width: 2, color: Colors.black)),
+                  //           height: 200,
+                  //           child: Padding(
+                  //             padding: const EdgeInsets.all(10.0),
+                  //             child: ListView.builder(
+                  //                 itemCount: menuList.length,
+                  //                 itemBuilder:
+                  //                     (BuildContext context, int index) {
+                  //                   final recipeList = menuList[index]
+                  //                       ['recipeList'] as List<dynamic>;
+                  //                   return Card(
+                  //                     color: index == selectedMenuIndex
+                  //                         ? Colors.grey
+                  //                         : Colors.white,
+                  //                     shape: RoundedRectangleBorder(
+                  //                         borderRadius:
+                  //                             BorderRadius.circular(16)),
+                  //                     child: InkWell(
+                  //                       onTap: () {
+                  //                         setState(() {
+                  //                           selectedMenuIndex = index;
+                  //                         });
+                  //                       },
+                  //                       child: Padding(
+                  //                         padding: const EdgeInsets.all(8.0),
+                  //                         child: ListTile(
+                  //                           title: Text(
+                  //                             menuList[index]['title'],
+                  //                             style: const TextStyle(
+                  //                                 fontWeight: FontWeight.bold),
+                  //                           ),
+                  //                           leading: ClipRRect(
+                  //                             borderRadius:
+                  //                                 BorderRadius.circular(16),
+                  //                             child: Image(
+                  //                               image: AssetImage(
+                  //                                   "assets/temporary/food_background.jpg"),
+                  //                             ),
+                  //                           ),
+                  //                           trailing: Column(
+                  //                             mainAxisAlignment:
+                  //                                 MainAxisAlignment.center,
+                  //                             children: [
+                  //                               const Text("Recipes"),
+                  //                               Text("${recipeList.length}")
+                  //                             ],
+                  //                           ),
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                   );
+                  //                 }),
+                  //           ),
+                  //         );
+                  //       }
+                  //     }
+                  //     return Container();
+                  //   },
+                  // ),
+                  Consumer<MenuControllerProvider>(
+                    builder: (context, menuControllerProvider, _) {
+                      List<Menu> menuList = menuControllerProvider.menuList;
+                      List<Widget> menuWidgets = [];
+                      menuWidgets = menuList
+                          .map((menu) => _createMenuCardWidget(menu))
+                          .toList();
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [...menuWidgets],
+                      );
                     },
                   ),
                   MaterialButton(
@@ -301,7 +353,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
               'quantity': recipe.quantity,
               'rating': recipe.rating,
               'deliveryPrice': recipe.deliveryPrice,
-              'numberSold' : recipe.numberSold,
+              'numberSold': recipe.numberSold,
             });
 
             // Update the recipeList in the selected menu

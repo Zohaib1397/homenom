@@ -5,7 +5,7 @@ import 'package:homenom/screens/authentication_status.dart';
 import '../structure/Role.dart';
 import '../structure/User.dart' as Model;
 import '../constants/constants.dart';
-import '../services/TextFieldHandler.dart';
+import '../structure/TextFieldHandler.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

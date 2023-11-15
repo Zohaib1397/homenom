@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:pinput/pinput.dart';
 
-import '../services/TextFieldHandler.dart';
+import '../structure/TextFieldHandler.dart';
 
 class OTPScreen extends StatefulWidget {
   final String phoneNumber;

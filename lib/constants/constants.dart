@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../services/TextFieldHandler.dart';
+import '../structure/TextFieldHandler.dart';
 import '../structure/Address.dart';
 import '../structure/Role.dart';
 

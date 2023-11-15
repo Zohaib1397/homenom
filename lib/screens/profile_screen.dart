@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/location_screen.dart';
 import 'package:homenom/screens/widgets/profile_card.dart';
-import 'package:homenom/services/TextFieldHandler.dart';
+import 'package:homenom/structure/TextFieldHandler.dart';
 import 'package:homenom/services/Utlis.dart';
 
 class ProfileScreen extends StatefulWidget {
