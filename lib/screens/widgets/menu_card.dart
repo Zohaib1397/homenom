@@ -2,21 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:homenom/screens/recipe_screen.dart';
 
 import '../../constants/constants.dart';
+import '../../structure/Menu.dart';
 
 class MenuCard extends StatefulWidget {
-  final AssetImage menuImage;
-  final String menuName;
-  final double sellerRating;
-  final int numberOfItemsSold;
-  final String deliveryPrice;
+  final Menu menu;
 
   const MenuCard(
       {super.key,
-      required this.menuImage,
-      required this.menuName,
-      required this.deliveryPrice,
-      required this.sellerRating,
-      required this.numberOfItemsSold});
+      required this.menu});
 
   @override
   State<MenuCard> createState() => _MenuCardState();
@@ -24,30 +17,28 @@ class MenuCard extends StatefulWidget {
 
 class _MenuCardState extends State<MenuCard> {
   List<Icon> ratingStars = [];
+  String deliveryPriceRange = "";
 
   @override
   void initState() {
     super.initState();
     // The following loop checks for the rating of the seller in double
     // and fills the icon or half fill or add outlined icon accordingly
+    deliveryPriceRange = "${widget.menu.minimum} - ${widget.menu.maximum}";
     for (int i = 0; i < 5; i++) {
-      if (i + 1 <= widget.sellerRating) {
+      if (i + 1 <= widget.menu.averageRating) {
         ratingStars.add(
           const Icon(
             Icons.star,
             size: kRatingStarIconSize,
           ),
         );
-      }
-      else if(i+1 > widget.sellerRating && i < widget.sellerRating){
-        ratingStars.add(
-          const Icon(
-            Icons.star_half_outlined,
-            size: kRatingStarIconSize,
-          )
-        );
-      }
-      else {
+      } else if (i + 1 > widget.menu.averageRating && i < widget.menu.averageRating) {
+        ratingStars.add(const Icon(
+          Icons.star_half_outlined,
+          size: kRatingStarIconSize,
+        ));
+      } else {
         ratingStars.add(
           const Icon(
             Icons.star_border_outlined,
@@ -64,8 +55,14 @@ class _MenuCardState extends State<MenuCard> {
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const RecipeScreen()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => RecipeScreen(
+                        menu: widget.menu,
+                        priceRange: deliveryPriceRange,
+                        ratingStars: ratingStars,
+                      )));
         },
         child: Material(
           borderRadius: BorderRadius.circular(kDefaultBorderRadius),
@@ -76,7 +73,8 @@ class _MenuCardState extends State<MenuCard> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(kDefaultBorderRadius),
                 child: Image(
-                  image: widget.menuImage,
+                  // image: widget.menuImage,
+                  image: AssetImage("assets/temporary/food_background.jpg"),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -98,7 +96,7 @@ class _MenuCardState extends State<MenuCard> {
                             "Name: ",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Text(widget.menuName),
+                          Text(widget.menu.title),
                         ],
                       ),
                       subtitle: Row(
@@ -107,7 +105,7 @@ class _MenuCardState extends State<MenuCard> {
                             "Delivery: ",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Text('${widget.deliveryPrice} Rs'),
+                          Text('$deliveryPriceRange Rs'),
                         ],
                       ),
                       trailing: SizedBox(
@@ -120,7 +118,7 @@ class _MenuCardState extends State<MenuCard> {
                               children: ratingStars,
                             ),
                             Text(
-                              "${widget.numberOfItemsSold} Sold",
+                              "${widget.menu.numberSold} Sold",
                               style: const TextStyle(fontSize: 10),
                               textAlign: TextAlign.center,
                             ),

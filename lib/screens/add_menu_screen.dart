@@ -10,7 +10,7 @@ import 'package:homenom/structure/TextFieldHandler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../services/Utlis.dart';
+import '../services/Utils.dart';
 import '../structure/Menu.dart';
 
 class AddMenuScreen extends StatefulWidget {

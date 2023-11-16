@@ -38,6 +38,24 @@ class MenuHandler implements ItemDAO {
     }
   }
 
+  Future<bool> createRecipe(recipe) async {
+    try{
+      String menuID = recipe.menuID;
+      DocumentReference menuRef = collection.collection("Menu").doc(menuID);
+      var data = (await menuRef.get()).data() as Map<String, dynamic>?;
+
+      List<dynamic> currentRecipeList = data?['recipeList'] as List<dynamic>;
+
+      // Add the new recipe to the list
+      currentRecipeList.add(recipe.toJson());
+      await menuRef.update({'recipeList': currentRecipeList});
+      return true;
+    }catch(e){
+      print(e.toString());
+      return false;
+    }
+  }
+
   @override
   bool deleteItemAtIndex(int index) {
     // TODO: implement deleteItemAtIndex
@@ -46,17 +64,19 @@ class MenuHandler implements ItemDAO {
 
   @override
   Future<List<Menu>> getAll() {
+    print("Getting Data");
     Completer<List<Menu>> completer = Completer();
     bool completerCompleted = false;
     collection.collection('Menu').snapshots().listen((snapshot) {
+      print("Hearing snapshots");
       List<Menu> menuList = [];
       final list = snapshot.docs;
       for (final menu in list) {
         final title = menu.data()['title'];
         final id = menu.id;
-        final url = menu.data()['url'];
+        final url = menu.data()['menuUrl'];
         print(title);
-        final recipeList = menu.data()['recipeList'] as List<Recipe>;
+        final recipeList = menu.data()['recipeList'];
 
         Menu temporaryMenu = Menu(
           menuUrl: url,

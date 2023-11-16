@@ -8,6 +8,7 @@ class Recipe {
   late int rating;
   late int quantity;
   late int numberSold;
+  late String menuID;
 
   Recipe({
     required this.id,

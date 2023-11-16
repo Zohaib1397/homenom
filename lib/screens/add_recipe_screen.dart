@@ -10,7 +10,7 @@ import 'package:homenom/structure/TextFieldHandler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../services/Utlis.dart';
+import '../services/Utils.dart';
 import '../structure/Menu.dart';
 import '../structure/Recipe.dart';
 
@@ -46,13 +46,13 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     }
   }
 
-  Widget _createMenuCardWidget(Menu menu) {
+  Widget _createMenuCardWidget(Menu menu, int index, ValueChanged<int> onSelect) {
     return Card(
-      color: true ? Colors.grey : Colors.white,
+      color: index != selectedMenuIndex? Colors.white38 :Colors.grey,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () {
-          //TODO implement on click selection here
+          onSelect(index);
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -101,93 +101,19 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 ),
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // StreamBuilder(
-                  //   stream: FirebaseFirestore.instance
-                  //       .collection("Menu")
-                  //       .doc(currentUser.email)
-                  //       .snapshots(),
-                  //   builder: (context, snapshot) {
-                  //     if (snapshot.hasData) {
-                  //       if (snapshot.data!.data() != null) {
-                  //         final data =
-                  //             snapshot.data!.data() as Map<String, dynamic>;
-                  //         final menuList = data['menus'] as List<dynamic>;
-                  //         return Container(
-                  //           decoration: BoxDecoration(
-                  //               color: kAppBackgroundColor,
-                  //               borderRadius: BorderRadius.circular(29),
-                  //               border:
-                  //                   Border.all(width: 2, color: Colors.black)),
-                  //           height: 200,
-                  //           child: Padding(
-                  //             padding: const EdgeInsets.all(10.0),
-                  //             child: ListView.builder(
-                  //                 itemCount: menuList.length,
-                  //                 itemBuilder:
-                  //                     (BuildContext context, int index) {
-                  //                   final recipeList = menuList[index]
-                  //                       ['recipeList'] as List<dynamic>;
-                  //                   return Card(
-                  //                     color: index == selectedMenuIndex
-                  //                         ? Colors.grey
-                  //                         : Colors.white,
-                  //                     shape: RoundedRectangleBorder(
-                  //                         borderRadius:
-                  //                             BorderRadius.circular(16)),
-                  //                     child: InkWell(
-                  //                       onTap: () {
-                  //                         setState(() {
-                  //                           selectedMenuIndex = index;
-                  //                         });
-                  //                       },
-                  //                       child: Padding(
-                  //                         padding: const EdgeInsets.all(8.0),
-                  //                         child: ListTile(
-                  //                           title: Text(
-                  //                             menuList[index]['title'],
-                  //                             style: const TextStyle(
-                  //                                 fontWeight: FontWeight.bold),
-                  //                           ),
-                  //                           leading: ClipRRect(
-                  //                             borderRadius:
-                  //                                 BorderRadius.circular(16),
-                  //                             child: Image(
-                  //                               image: AssetImage(
-                  //                                   "assets/temporary/food_background.jpg"),
-                  //                             ),
-                  //                           ),
-                  //                           trailing: Column(
-                  //                             mainAxisAlignment:
-                  //                                 MainAxisAlignment.center,
-                  //                             children: [
-                  //                               const Text("Recipes"),
-                  //                               Text("${recipeList.length}")
-                  //                             ],
-                  //                           ),
-                  //                         ),
-                  //                       ),
-                  //                     ),
-                  //                   );
-                  //                 }),
-                  //           ),
-                  //         );
-                  //       }
-                  //     }
-                  //     return Container();
-                  //   },
-                  // ),
                   Consumer<MenuControllerProvider>(
                     builder: (context, menuControllerProvider, _) {
                       List<Menu> menuList = menuControllerProvider.menuList;
-                      List<Widget> menuWidgets = [];
-                      menuWidgets = menuList
-                          .map((menu) => _createMenuCardWidget(menu))
-                          .toList();
-
                       return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [...menuWidgets],
+                        children: List.generate(menuList.length, (index) {
+                          return _createMenuCardWidget(menuList[index], index, (selectedIndex) {
+                            setState(() {
+                              selectedMenuIndex = selectedIndex;
+                            });
+                          });
+                        }),
                       );
                     },
                   ),
@@ -317,52 +243,64 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
             "Please select a menu to add the recipe");
         return;
       }
+      final recipe = Recipe(
+        id: "Temporary Empty",
+        url: "Temporary Empty",
+        name: recipeTitle.controller.text,
+        description: recipeDescription.controller.text,
+        price: double.parse(recipePrice.controller.text),
+        quantity: int.parse(recipeQuantity.controller.text),
+        rating: 0,
+        deliveryPrice: double.parse(deliveryPrice.controller.text),
+        numberSold: 0,
+      );
       try {
-        final auth = FirebaseAuth.instance;
-        final recipe = Recipe(
-          id: "Temporary Empty",
-          url: "Temporary Empty",
-          name: recipeTitle.controller.text,
-          description: recipeDescription.controller.text,
-          price: double.parse(recipePrice.controller.text),
-          quantity: int.parse(recipeQuantity.controller.text),
-          rating: 0,
-          deliveryPrice: double.parse(deliveryPrice.controller.text),
-          numberSold: 0,
-        );
-        final recipeDoc = FirebaseFirestore.instance
-            .collection("Menu")
-            .doc(auth.currentUser!.email);
-        final snapshot = await recipeDoc.get();
-        if (snapshot.exists) {
-          final data = snapshot.data() as Map<String, dynamic>;
-          final menuList = data['menus'] as List<dynamic>;
-
-          if (selectedMenuIndex >= 0 && selectedMenuIndex < menuList.length) {
-            final selectedMenu = menuList[selectedMenuIndex];
-
-            final recipeList = selectedMenu['recipeList'] as List<dynamic>;
-
-            // Add the new recipe to the recipeList
-            recipeList.add({
-              'id': recipe.id,
-              'url': recipe.url,
-              'name': recipe.name,
-              'description': recipe.description,
-              'price': recipe.price,
-              'quantity': recipe.quantity,
-              'rating': recipe.rating,
-              'deliveryPrice': recipe.deliveryPrice,
-              'numberSold': recipe.numberSold,
-            });
-
-            // Update the recipeList in the selected menu
-            selectedMenu['recipeList'] = recipeList;
-
-            // Update the entire menuList in the Firestore document
-            await recipeDoc.update({
-              'menus': menuList,
-            });
+        Provider.of<MenuControllerProvider>(context,listen: false).addRecipeToMenu(recipe, selectedMenuIndex);
+      //   final auth = FirebaseAuth.instance;
+      //   final recipe = Recipe(
+      //     id: "Temporary Empty",
+      //     url: "Temporary Empty",
+      //     name: recipeTitle.controller.text,
+      //     description: recipeDescription.controller.text,
+      //     price: double.parse(recipePrice.controller.text),
+      //     quantity: int.parse(recipeQuantity.controller.text),
+      //     rating: 0,
+      //     deliveryPrice: double.parse(deliveryPrice.controller.text),
+      //     numberSold: 0,
+      //   );
+      //   final recipeDoc = FirebaseFirestore.instance
+      //       .collection("Menu")
+      //       .doc(auth.currentUser!.email);
+      //   final snapshot = await recipeDoc.get();
+      //   if (snapshot.exists) {
+      //     final data = snapshot.data() as Map<String, dynamic>;
+      //     final menuList = data['menus'] as List<dynamic>;
+      //
+      //     if (selectedMenuIndex >= 0 && selectedMenuIndex < menuList.length) {
+      //       final selectedMenu = menuList[selectedMenuIndex];
+      //
+      //       final recipeList = selectedMenu['recipeList'] as List<dynamic>;
+      //
+      //       // Add the new recipe to the recipeList
+      //       recipeList.add({
+      //         'id': recipe.id,
+      //         'url': recipe.url,
+      //         'name': recipe.name,
+      //         'description': recipe.description,
+      //         'price': recipe.price,
+      //         'quantity': recipe.quantity,
+      //         'rating': recipe.rating,
+      //         'deliveryPrice': recipe.deliveryPrice,
+      //         'numberSold': recipe.numberSold,
+      //       });
+      //
+      //       // Update the recipeList in the selected menu
+      //       selectedMenu['recipeList'] = recipeList;
+      //
+      //       // Update the entire menuList in the Firestore document
+      //       await recipeDoc.update({
+      //         'menus': menuList,
+      //       });
 
             print(
                 "Recipe added successfully to the menu at index $selectedMenuIndex");
@@ -374,10 +312,9 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
             recipeDescription.controller.text = "";
             recipeQuantity.controller.text = "";
             deliveryPrice.controller.text = "";
-          } else {
-            print("Invalid selectedMenuIndex");
-          }
-        }
+            selectedMenuIndex = -1;
+            image = null;
+
       } catch (e) {
         Utils.showPopup(context, "Database Connectivity Issue",
             "Something went wrong. Error: $e");

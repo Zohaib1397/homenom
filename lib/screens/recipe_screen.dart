@@ -2,31 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/order_screen.dart';
 import 'package:homenom/screens/widgets/recipe_card.dart';
+import 'package:homenom/services/menu_controller.dart';
+import 'package:provider/provider.dart';
 
-class RecipeScreen extends StatelessWidget {
-  //TODO add title here
-  //final AssetImage menuImage;
-  //final String sellerShopName;
-  //final int deliveryCharges;
-  const RecipeScreen({super.key});
+import '../structure/Menu.dart';
+
+class RecipeScreen extends StatefulWidget {
+  final Menu menu;
+  final String priceRange;
+  final List<Icon> ratingStars;
+
+  const RecipeScreen(
+      {super.key,
+      required this.menu,
+      required this.priceRange,
+      required this.ratingStars});
 
   static const String id = "Recipe_Screen";
 
+  @override
+  State<RecipeScreen> createState() => _RecipeScreenState();
+}
+
+class _RecipeScreenState extends State<RecipeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kAppBackgroundColor,
-        title: Text("Temporary Foods"),
+        title: const Text("Menu Recipes"),
       ),
       body: Column(
         children: [
-          Hero(
-            tag: "FoodMenu",
-            child: Image(
-              image: AssetImage("assets/temporary/food_background.jpg"),
-              fit: BoxFit.cover,
-            ),
+          Image(
+            image: AssetImage("assets/temporary/food_background.jpg"),
+            fit: BoxFit.cover,
           ),
           ListTile(
             title: Row(
@@ -35,7 +45,7 @@ class RecipeScreen extends StatelessWidget {
                   "Name: ",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text("widget.menuName"),
+                Text(widget.menu.title),
               ],
             ),
             subtitle: Row(
@@ -44,7 +54,7 @@ class RecipeScreen extends StatelessWidget {
                   "Delivery: ",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text('${"widget.deliveryPrice"} Rs'),
+                Text('${widget.priceRange} Rs'),
               ],
             ),
             trailing: SizedBox(
@@ -54,11 +64,11 @@ class RecipeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
-                    children: [Icon(Icons.star)],
+                    children: widget.ratingStars,
                   ),
                   Text(
-                    // "${"widget.numberOfItemsSold"} Sold",
-                    "125 Sold",
+                    "${widget.menu.numberSold} Sold",
+                    // "125 Sold",
                     style: const TextStyle(fontSize: 10),
                     textAlign: TextAlign.center,
                   ),
@@ -66,8 +76,11 @@ class RecipeScreen extends StatelessWidget {
               ),
             ),
           ),
-          RecipeCard(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> const OrderScreen()));
+          RecipeCard(
+              recipeList: widget.menu.recipeList,
+              onPressed: () {
+                Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const OrderScreen()));
           }),
         ],
       ),

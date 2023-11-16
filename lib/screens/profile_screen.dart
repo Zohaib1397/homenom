@@ -5,7 +5,7 @@ import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/location_screen.dart';
 import 'package:homenom/screens/widgets/profile_card.dart';
 import 'package:homenom/structure/TextFieldHandler.dart';
-import 'package:homenom/services/Utlis.dart';
+import 'package:homenom/services/Utils.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({super.key});

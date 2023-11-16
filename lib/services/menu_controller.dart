@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../handlers/MenuHandler.dart';
 import '../structure/Menu.dart';
+import '../structure/Recipe.dart';
 
 class MenuControllerProvider extends ChangeNotifier{
   final menuHandler = MenuHandler();
@@ -10,6 +11,14 @@ class MenuControllerProvider extends ChangeNotifier{
 
   MenuControllerProvider(){
     menusFromHandler();
+  }
+
+  Future<String> getMenuId(int index) async {
+    print(menuList);
+    menuList = [];
+    await menusFromHandler();
+    print(menuList);
+    return menuList[index].id;
   }
 
   Future<void> menusFromHandler()async{
@@ -21,7 +30,7 @@ class MenuControllerProvider extends ChangeNotifier{
     menuList.clear();
     notifyListeners();
   }
-  bool removeTaskFromList(Menu menu){
+  bool removeMenuFromList(Menu menu){
     try{
       menuHandler.delete(menu);
       menuList.remove(menu);
@@ -43,4 +52,18 @@ class MenuControllerProvider extends ChangeNotifier{
       return false;
     }
   }
+  Future<bool> addRecipeToMenu(Recipe recipe, int index) async {
+    try{
+      String menuID = await getMenuId(index);
+      recipe.menuID = menuID;
+      menuHandler.createRecipe(recipe);
+      menuList[index].recipeList.add(recipe);
+      notifyListeners();
+      return true;
+    }catch(e){
+      print(e.toString());
+      return false;
+    }
+  }
+
 }

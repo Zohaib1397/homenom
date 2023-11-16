@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/seller_screen.dart';
-import 'package:homenom/services/Utlis.dart';
+import 'package:homenom/services/Utils.dart';
 import '../structure/Role.dart';
 import 'home_screen.dart';
 

@@ -9,8 +9,12 @@ import 'package:homenom/screens/login_screen.dart';
 import 'package:homenom/screens/profile_screen.dart';
 import 'package:homenom/screens/widgets/drawer.dart';
 import 'package:homenom/screens/widgets/menu_card.dart';
+import 'package:provider/provider.dart';
 
-import '../services/Utlis.dart';
+import '../services/Utils.dart';
+import '../services/menu_controller.dart';
+import '../services/recipe_card_brain.dart';
+import '../structure/Menu.dart';
 import '../structure/Role.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -180,134 +184,100 @@ class SellerView extends StatelessWidget {
     super.key,
   });
 
-  final auth = FirebaseAuth.instance;
-  Future<void> removeMenu(dynamic menuList, int menuIndex, BuildContext context) async {
-    try {
-      final auth = FirebaseAuth.instance;
-      final menuDoc = FirebaseFirestore.instance.collection("Menu").doc(auth.currentUser!.email);
-
-      // Get the document ID from your menuList or use another method to obtain it
-      final documentId = 'your_document_id'; // Replace with your actual logic
-
-      // Ensure menuIndex is valid
-      if (menuIndex >= 0 && menuIndex < menuList.length) {
-        // Remove the item from the local list
-        dynamic removedItem = menuList[menuIndex];
-
-        // Update the document in Firebase
-        await menuDoc.collection("menus").doc(documentId).update({
-          "menus": FieldValue.arrayRemove([removedItem]),
-        });
-      } else {
-        print("Invalid menuIndex");
-      }
-    } catch (e) {
-      Utils.showPopup(context, "Database Error",
-          "Something went wrong with Firebase. Error: $e");
-    }
-  }
-
-
+  final menuController = MenuControllerProvider();
+  final calculate = Calculations();
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection("Menu")
-                  .doc(auth.currentUser!.email)
-                  .snapshots(),
-              builder: (context, snapshots) {
-                if(snapshots.hasData){
-                  if(snapshots.data!.data()!=null){
-                    final data = snapshots.data!.data() as Map<String, dynamic>;
-                    final menuList = data['menus'] as List<dynamic>;
-                    return SizedBox(
-                      height: MediaQuery.of(context).size.height,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: ListView.builder(
-                            itemCount: menuList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final recipeList = menuList[index]['recipeList'] as List<dynamic>;
-                              int rating = 0;
-                              double averageRating = 0;
-                              double minimum = 0;
-                              double maximum = 0;
-                              int numberSold = 0;
-                              if(recipeList.isNotEmpty){
-                                //Display the minimum and maximum delivery price of recipe
-                                minimum = recipeList[0]['deliveryPrice'] as double;
-                                maximum = minimum;
-                                //Calculate average rating on the recipes of menu
-                                for(int i =0; i < recipeList.length;i++){
-                                  //for rating
-                                  rating += recipeList[i]['rating'] as int;
-                                  //for delivery price
-                                  final deliveryPrice = recipeList[i]['deliveryPrice'] as double;
-                                  if(minimum > deliveryPrice){
-                                    minimum = deliveryPrice;
-                                  }
-                                  if(maximum < deliveryPrice){
-                                    maximum = deliveryPrice;
-                                  }
-                                  //for sold items
-                                  numberSold += recipeList[i]['numberSold'] as int;
-                                }
-                                averageRating = rating/recipeList.length;
-
-
-                              }
-                              return Dismissible(
-                                key: Key("${menuList[index]['title']}+${menuList[index]['recipeList']}"),
-                                direction: DismissDirection.endToStart,
-                                confirmDismiss: (DismissDirection direction) async {
-                                  final confirmDismiss =  await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text("Confirm"),
-                                        content: const Text("Are you sure you want to dismiss this Menu?. All recipes will be removed."),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () => Navigator.of(context).pop(false),
-                                            child: const Text("Cancel"),
-                                          ),
-                                          TextButton(
-                                            onPressed: () => Navigator.of(context).pop(true),
-                                            child: const Text("Dismiss"),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                  if(confirmDismiss){
-                                    await removeMenu(menuList, index, context);
-                                  }
-                                },
-                                child: MenuCard(
-                                  menuImage: AssetImage("assets/temporary/food_background.jpg"),
-                                  menuName: menuList[index]['title'],
-                                  deliveryPrice: "$minimum - $maximum",
-                                  sellerRating: averageRating,
-                                  numberOfItemsSold: numberSold,
-
-                                ),
-                              );
-                            }),
-                      ),
-                    );
-                  }
-                  return Container();
-                }else{
-                  return Container();
-                }
-              }),
+          Consumer<MenuControllerProvider>(
+            builder: (context, menuControllerProvider, _) {
+              List<Menu> menuList = menuControllerProvider.menuList;
+              return Column(
+                children: List.generate(menuList.length, (index){
+                  // calculate.clear();
+                  // if(menuList[index].recipeList.isNotEmpty){
+                  //   //Display the minimum and maximum delivery price of recipe
+                  //   calculate.minimum = menuList[index].recipeList[0]['deliveryPrice'] as double;
+                  //   calculate.maximum = calculate.minimum;
+                  //   //Calculate average rating on the recipes of menu
+                  //   for(int i =0; i < menuList[index].recipeList.length;i++){
+                  //     //for rating
+                  //     calculate.rating += menuList[index].recipeList[i]['rating'] as int;
+                  //     //for delivery price
+                  //     final deliveryPrice = menuList[index].recipeList[i]['deliveryPrice'] as double;
+                  //     if(calculate.minimum > deliveryPrice){
+                  //       calculate.minimum = deliveryPrice;
+                  //     }
+                  //     if(calculate.maximum < deliveryPrice){
+                  //       calculate.maximum = deliveryPrice;
+                  //     }
+                  //     //for sold items
+                  //     calculate.numberSold += menuList[index].recipeList[i]['numberSold'] as int;
+                  //   }
+                  //   calculate.averageRating = calculate.rating/menuList[index].recipeList.length;
+                  //
+                  //
+                  // }
+                  menuList[index].computeRequiredCalculation();
+                  return Dismissible(
+                    key: Key("${menuList[index].title}+${menuList[index].recipeList}"), //Getting a unique key
+                    direction: DismissDirection.endToStart,
+                    confirmDismiss: (DismissDirection direction) async {
+                      final confirmDismiss =  await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text("Confirm"),
+                            content: const Text("Are you sure you want to dismiss this Menu?. All recipes will be removed."),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                child: const Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(true),
+                                child: const Text("Dismiss"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      if(confirmDismiss){
+                        Provider.of<MenuControllerProvider>(context, listen: false).removeMenuFromList(menuList[index]);
+                      }
+                    },
+                    background: buildSwipingContainer(
+                        Colors.red, "Delete", Icons.delete, Alignment.centerRight),
+                    child: MenuCard(
+                      menu: menuList[index],
+                    ),
+                  );
+                }),
+              );
+            },
+          ),
         ],
       ),
     );
   }
+  Widget buildSwipingContainer(
+      Color color, String text, IconData icon, Alignment alignment) =>
+      Container(
+        color: color,
+        alignment: alignment,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: Colors.white),
+              Text(text, style: const TextStyle(color: Colors.white)),
+            ],
+          ),
+        ),
+      );
 }
 
 class CustomerView extends StatelessWidget {
@@ -320,13 +290,14 @@ class CustomerView extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          MenuCard(
-            menuImage: AssetImage("assets/temporary/food_background.jpg"),
-            menuName: "BackCAPS Food",
-            deliveryPrice: "150",
-            sellerRating: 2.1,
-            numberOfItemsSold: 125,
-          ),
+          // MenuCard(
+          //   menuImage: AssetImage("assets/temporary/food_background.jpg"),
+          //   menuName: "BackCAPS Food",
+          //   deliveryPrice: "150",
+          //   sellerRating: 2.1,
+          //   numberOfItemsSold: 125,
+          //   index: 0,
+          // ),
         ],
       ),
     );
