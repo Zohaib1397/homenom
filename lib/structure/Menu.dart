@@ -2,6 +2,7 @@
 class Menu{
   late String id;
   late String title;
+  // late String email;
   late int menuRating;
   late String menuUrl;
   late List<dynamic> recipeList;
@@ -24,12 +25,14 @@ class Menu{
   Menu({
     required this.menuUrl,
     required this.title,
+    // required this.email,
     required this.recipeList,
   });
 
   factory Menu.fromJson(Map<String, dynamic> json) => Menu(
       menuUrl: json['menuUrl'],
       title: json['title'],
+      // email: json['email'],
       recipeList: json['recipeList']
   );
 
@@ -37,6 +40,7 @@ class Menu{
     Map<String, dynamic> data = {
       'menuUrl': menuUrl,
       'title' : title,
+      // 'email' : email,
       'recipeList' : recipeList,
     };
 

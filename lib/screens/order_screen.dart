@@ -3,9 +3,16 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/cart_screen.dart';
+import 'package:homenom/services/menu_controller.dart';
+import 'package:provider/provider.dart';
+
+import '../services/Utils.dart';
+import '../structure/Menu.dart';
 
 class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key});
+  final Menu menu;
+  final dynamic recipe;
+  const OrderScreen({super.key, required this.recipe, required this.menu});
 
   static const String id = "Order_Screen";
 
@@ -21,7 +28,7 @@ class _OrderScreenState extends State<OrderScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kAppBackgroundColor,
-        title: Text("Shop Name here"),
+        title: Text(widget.menu.title),
         actions: [
           IconButton(
               icon: Icon(Icons.shopping_cart_outlined),
@@ -34,19 +41,17 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Hero(
-                tag: "RecipePic",
-                child: Image(
-                  image: AssetImage("assets/temporary/food_background.jpg"),
-                  fit: BoxFit.contain,
-                )),
+            Image(
+              image: AssetImage("assets/temporary/food_background.jpg"),
+              fit: BoxFit.contain,
+            ),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    "Recipe Name here",
-                    style: TextStyle(
+                    widget.recipe['name'],
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
@@ -56,11 +61,11 @@ class _OrderScreenState extends State<OrderScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           "Description",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text(loremText,
+                        Text(widget.recipe['description'],
                           textAlign: TextAlign.justify,),
                       ],
                     ),
@@ -78,7 +83,9 @@ class _OrderScreenState extends State<OrderScreen> {
                           },
                           onIncrement: () {
                             setState(() {
-                              numberOfItems += 1;
+                              if (numberOfItems != widget.recipe['quantity']) {
+                                numberOfItems += 1;
+                              }
                             });
                           },
                           orderCount: numberOfItems),
@@ -90,13 +97,18 @@ class _OrderScreenState extends State<OrderScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text("Price: 350 Rs"),
+                Text("Price: ${widget.recipe['price']} Rs"),
                 MaterialButton(
                   shape: RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(kDefaultBorderRadius)),
                   color: kAppBackgroundColor,
-                  onPressed: () {},
+                  onPressed: () async {
+                    widget.recipe['currentOrder'] = numberOfItems;
+                      Provider.of<MenuControllerProvider>(context, listen: false).addItemToCart(widget.recipe);
+                      Utils.showPopup(context, "Success", "Item added to cart successfully");
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CartScreen()));
+                  },
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(

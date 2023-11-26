@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
+import 'package:homenom/services/menu_controller.dart';
+import 'package:provider/provider.dart';
+
+import '../services/Utils.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -12,6 +16,13 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  late List<dynamic> recipeList;
+
+  @override
+  void initState() {
+    super.initState();
+    recipeList =Provider.of<MenuControllerProvider>(context, listen: false).cartList;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +50,11 @@ class _CartScreenState extends State<CartScreen> {
               backgroundColor: kAppBackgroundColor,
               icon: const Icon(Icons.clear_all),
               onPressed: () {
+                setState(() {
+                  Provider.of<MenuControllerProvider>(context,listen: false).clearCart();
+
+                });
+                Utils.showPopup(context, "Success", "Cart cleared successfully.");
                 // clearCartNow(context);
                 //
                 // Navigator.push(context,
@@ -73,97 +89,30 @@ class _CartScreenState extends State<CartScreen> {
           ),
         ],
       ),
-      body: Container(
+      body: SingleChildScrollView(
+        child: Column(
+          children: List.generate(Provider.of<MenuControllerProvider>(context, listen: false).cartList.length, (index) {
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  title: Text(recipeList[index]['name'], style: const TextStyle(fontWeight: FontWeight.bold),),
+                  isThreeLine: true,
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Description: ${recipeList[index]['description']}"),
+                      Text("Price: ${recipeList[index]['price']}"),
+                      Text("Sold: ${recipeList[index]['numberSold']}"),
+                      Text("Total Quantity: ${recipeList[index]['currentOrder']}"),
+                    ],
+                  ),
+                  trailing: Image(image: AssetImage("assets/temporary/food_background.jpg"), fit: BoxFit.contain,),
 
-        child: CustomScrollView(
-          slivers: [
-            //overall total price
-
-
-            // SliverToBoxAdapter(
-            //   child: Consumer2<TotalAmount, CartItemCounter>(
-            //       builder: (context, amountProvider, cartProvider, c) {
-            //         return Padding(
-            //           padding: const EdgeInsets.all(8),
-            //           child: Center(
-            //             child: cartProvider.count == 0
-            //                 ? Container()
-            //                 : Text(
-            //               "Total Price: ${"\$" + amountProvider.tAmount.toString()}",
-            //               style: GoogleFonts.lato(
-            //                 textStyle: const TextStyle(
-            //                   fontSize: 20,
-            //                   fontWeight: FontWeight.bold,
-            //                   color: Colors.black87,
-            //                 ),
-            //               ),
-            //             ),
-            //           ),
-            //         );
-            //       }),
-            // ),
-
-            //display cart items with quantity numbers
-            // StreamBuilder<QuerySnapshot>(
-            //   stream: FirebaseFirestore.instance
-            //       .collection("items")
-            //       .where("itemID", whereIn: separateItemIDs())
-            //       .orderBy("publishedDate", descending: true)
-            //       .snapshots(),
-            //   builder: (context, snapshot) {
-            //     return !snapshot.hasData
-            //         ? SliverToBoxAdapter(
-            //       child: Center(
-            //         child: circularProgress(),
-            //       ),
-            //     )
-            //     //if length = 0 no data
-            //     // : snapshot.data!.docs.length == 0
-            //     //     ? Container()
-            //         : SliverList(
-            //       delegate: SliverChildBuilderDelegate(
-            //             (context, index) {
-            //           Items model = Items.fromJson(
-            //             snapshot.data!.docs[index].data()!
-            //             as Map<String, dynamic>,
-            //           );
-            //
-            //           //calculating total price in cart list
-            //           if (index == 0) {
-            //             totalAmount = 0;
-            //             totalAmount = totalAmount +
-            //                 (model.price! *
-            //                     separateItemQuantityList![index]);
-            //           } else {
-            //             totalAmount = totalAmount +
-            //                 (model.price! *
-            //                     separateItemQuantityList![index]);
-            //           }
-            //           //update in real time
-            //           if (snapshot.data!.docs.length - 1 == index) {
-            //             WidgetsBinding.instance.addPostFrameCallback(
-            //                   (timeStamp) {
-            //                 Provider.of<TotalAmount>(context,
-            //                     listen: false)
-            //                     .displayTotalAmount(
-            //                     totalAmount.toDouble());
-            //               },
-            //             );
-            //           }
-            //
-            //           return CartItemDesign(
-            //             model: model,
-            //             context: context,
-            //             quanNumber: separateItemQuantityList![index],
-            //           );
-            //         },
-            //         childCount:
-            //         snapshot.hasData ? snapshot.data!.docs.length : 0,
-            //       ),
-            //     );
-            //   },
-            // ),
-          ],
+                ),
+              ),
+            );
+          }),
         ),
       ),
     );

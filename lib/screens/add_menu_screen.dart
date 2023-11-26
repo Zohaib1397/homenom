@@ -46,6 +46,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
       final newMenu = Menu(
         title: title.controller.text,
         recipeList: [],
+        // email: FirebaseAuth.instance.currentUser!.email?? "No Email",
         menuUrl: 'Temporary empty',
       );
       Provider.of<MenuControllerProvider>(context, listen: false).addMenuToList(newMenu);
@@ -111,7 +112,9 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                             await createMenu();
                             Navigator.pop(context, true);
                           } else {
-                            title.errorText = "Title & Image is required";
+                            setState(() {
+                              title.errorText = "Title & Image is required";
+                            });
                           }
                         },
                         child: const Text(

@@ -13,24 +13,54 @@ class MenuHandler implements ItemDAO {
   late dynamic collection;
 
   MenuHandler() {
-    collection = _firestore.collection("Data").doc(_auth.currentUser!.email);
+    collection = _firestore.collection('Menus');
   }
 
   @override
   Future<bool> create(item) async {
     try {
-      await collection.collection("Menu").add(item.toJson());
+      await collection.doc().set(item.toJson());
       return true;
     } catch (e) {
       print(e.toString());
       return false;
     }
   }
+  //
+  // Future<void> getEveryMenu() async {
+  //   Completer<List<Menu>> completer = Completer();
+  //   bool completerCompleted = false;
+  //   _firestore.collection("Data").snapshots().listen((snapshot) {
+  //     // print(snapshot);
+  //   //   List<Menu> menuList = [];
+  //   //   final list = snapshot.docs;
+  //   //   for (final menu in list) {
+  //   //     final title = menu.data()['title'];
+  //   //     final id = menu.id;
+  //   //     final url = menu.data()['menuUrl'];
+  //   //     final recipeList = menu.data()['recipeList'];
+  //   //
+  //   //     Menu temporaryMenu = Menu(
+  //   //       menuUrl: url,
+  //   //       title: title,
+  //   //       recipeList: recipeList,
+  //   //     );
+  //   //     temporaryMenu.id = id;
+  //   //     menuList.add(temporaryMenu);
+  //   //   }
+  //   //   if (!completerCompleted) {
+  //   //     completer.complete(menuList);
+  //   //     completerCompleted = true; // Mark the completer as completed
+  //   //   }
+  //   });
+  //   // return completer.future;
+  // }
+
 
   @override
   Future<bool> delete(item) async {
     try {
-      await collection.collection("Menu").doc(item.id).delete();
+      await collection.doc(item.id).delete();
       return true;
     } catch (e) {
       print(e.toString());
@@ -38,28 +68,28 @@ class MenuHandler implements ItemDAO {
     }
   }
 
-  Future<bool> deleteRecipe(recipe) async{
-    try{
-      String menuID = recipe.menuID;
-      DocumentReference menuRef = collection.collection("Menu").doc(menuID);
-      var data = (await menuRef.get()).data() as Map<String, dynamic>?;
-
-      List<dynamic> currentRecipeList = data?['recipeList'] as List<dynamic>;
-
-      // Add the new recipe to the list
-      currentRecipeList.remove(recipe.toJson());
-      await menuRef.update({'recipeList': currentRecipeList});
-      return true;
-    }catch(e){
-      print(e.toString());
-      return false;
-    }
-  }
+  // Future<bool> deleteRecipe(recipe) async{
+  //   try{
+  //     String menuID = recipe.menuID;
+  //     DocumentReference menuRef = collection.collection(_auth.currentUser!.email).doc(menuID);
+  //     var data = (await menuRef.get()).data() as Map<String, dynamic>?;
+  //
+  //     List<dynamic> currentRecipeList = data?['recipeList'] as List<dynamic>;
+  //
+  //     // Add the new recipe to the list
+  //     currentRecipeList.remove(recipe.toJson());
+  //     await menuRef.update({'recipeList': currentRecipeList});
+  //     return true;
+  //   }catch(e){
+  //     print(e.toString());
+  //     return false;
+  //   }
+  // }
 
   Future<bool> createRecipe(recipe) async {
     try{
       String menuID = recipe.menuID;
-      DocumentReference menuRef = collection.collection("Menu").doc(menuID);
+      DocumentReference menuRef = collection.doc(menuID);
       var data = (await menuRef.get()).data() as Map<String, dynamic>?;
 
       List<dynamic> currentRecipeList = data?['recipeList'] as List<dynamic>;
@@ -73,6 +103,35 @@ class MenuHandler implements ItemDAO {
       return false;
     }
   }
+  // Future<bool> createRecipe(Recipe recipe) async {
+  //   try {
+  //     String menuID = recipe.menuID;
+  //     DocumentReference menuRef = collection.doc(menuID);
+  //
+  //     // Get the current data of the menu
+  //     var menuData = (await menuRef.get()).data() as Map<String, dynamic>?;
+  //
+  //     if (menuData != null) {
+  //       // Extract the current recipe list or initialize it if it doesn't exist
+  //       List<dynamic> currentRecipeList = menuData['recipeList'] as List<dynamic>? ?? [];
+  //
+  //       // Add the new recipe to the list
+  //       currentRecipeList.add(recipe.toJson());
+  //
+  //       // Update the 'recipeList' field in the document
+  //       await menuRef.update({'recipeList': currentRecipeList});
+  //
+  //       return true;
+  //     } else {
+  //       print('Menu not found for ID: $menuID');
+  //       return false;
+  //     }
+  //   } catch (e) {
+  //     print(e.toString());
+  //     return false;
+  //   }
+  // }
+
 
   @override
   bool deleteItemAtIndex(int index) {
@@ -81,35 +140,22 @@ class MenuHandler implements ItemDAO {
   }
 
   @override
-  Future<List<Menu>> getAll() {
-    print("Getting Data");
-    Completer<List<Menu>> completer = Completer();
-    bool completerCompleted = false;
-    collection.collection('Menu').snapshots().listen((snapshot) {
-      print("Hearing snapshots");
-      List<Menu> menuList = [];
-      final list = snapshot.docs;
-      for (final menu in list) {
-        final title = menu.data()['title'];
-        final id = menu.id;
-        final url = menu.data()['menuUrl'];
-        print(title);
-        final recipeList = menu.data()['recipeList'];
+  Future<List<Menu>> getAll() async {
+    List<Menu> menuList = [];
 
-        Menu temporaryMenu = Menu(
-          menuUrl: url,
-          title: title,
-          recipeList: recipeList,
+    await FirebaseFirestore.instance.collection("Menus").get().then(
+          (value) {
+        value.docs.forEach(
+              (element) {
+            Menu menu = Menu.fromJson(element.data());
+            menu.id = element.id;
+            menuList.add(menu);
+          },
         );
-        temporaryMenu.id = id;
-        menuList.add(temporaryMenu);
-      }
-      if (!completerCompleted) {
-        completer.complete(menuList);
-        completerCompleted = true; // Mark the completer as completed
-      }
-    });
-    return completer.future;
+      },
+    );
+
+    return menuList;
   }
 
   @override

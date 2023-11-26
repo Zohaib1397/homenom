@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/state_manager.dart';
 
 import '../handlers/MenuHandler.dart';
 import '../structure/Menu.dart';
@@ -6,12 +7,24 @@ import '../structure/Recipe.dart';
 
 class MenuControllerProvider extends ChangeNotifier{
   final menuHandler = MenuHandler();
-
   List<Menu> menuList = [];
+  List<Menu> customerMenus = [];
+  List<dynamic> cartList = [];
 
   MenuControllerProvider(){
     menusFromHandler();
   }
+
+  void addItemToCart(dynamic item){
+     cartList.add(item);
+     notifyListeners();
+     print(cartList);
+  }
+  void clearCart(){
+    cartList.clear();
+    notifyListeners();
+  }
+
 
   Future<String> getMenuId(int index) async {
     print(menuList);
@@ -22,7 +35,11 @@ class MenuControllerProvider extends ChangeNotifier{
   }
 
   Future<void> menusFromHandler()async{
+    //TODO This handler is needed to be adjusted
     menuList = await menuHandler.getAll();
+    notifyListeners();
+    customerMenus =await menuHandler.getAll();
+    // await menuHandler.getEveryMenu();
     notifyListeners();
   }
 

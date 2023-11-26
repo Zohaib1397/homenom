@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         AddMenuScreen.id: (context) => const AddMenuScreen(),
         AddRecipeScreen.id: (context) => const AddRecipeScreen(),
         // SellerScreen.id: (context) => const SellerScreen(),
-        OrderScreen.id: (context) => const OrderScreen(),
+        // OrderScreen.id: (context) => const OrderScreen(),
         // RecipeScreen.id: (context) => const RecipeScreen(),
         CartScreen.id: (context) => const CartScreen(),
         HomeScreen.id: (context) => const HomeScreen(),

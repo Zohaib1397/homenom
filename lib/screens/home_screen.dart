@@ -194,7 +194,7 @@ class CustomerView extends StatelessWidget {
       child: Column(
         children: [
           Consumer<MenuControllerProvider>(builder: (context, menuControllerProvider, _){
-            List<Menu> menuList = menuControllerProvider.menuList;
+            List<Menu> menuList = menuControllerProvider.customerMenus;
             return Column(
               children: List.generate(menuList.length, (index){
                 menuList[index].computeRequiredCalculation();

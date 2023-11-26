@@ -9,6 +9,7 @@ class Recipe {
   late int quantity;
   late int numberSold;
   late String menuID;
+  late int currentOrder;
 
   Recipe({
     required this.id,

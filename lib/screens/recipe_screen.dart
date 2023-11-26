@@ -76,12 +76,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
               ),
             ),
           ),
-          RecipeCard(
-              recipeList: widget.menu.recipeList,
-              onPressed: () {
-                Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const OrderScreen()));
-          }),
+          RecipeCard(menu: widget.menu),
         ],
       ),
     );

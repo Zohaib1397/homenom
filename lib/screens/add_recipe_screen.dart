@@ -193,14 +193,14 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                         ),
                         Expanded(
                             flex: 1,
-                            child: buildTextField("Price", recipePrice)),
+                            child: buildTextField("Price", recipePrice,inputType: TextInputType.number)),
                       ],
                     ),
                     const SizedBox(
                       height: 10,
                     ),
                     buildTextField("Description", recipeDescription,
-                        maxLines: 5, inputType: TextInputType.number),
+                        maxLines: 5),
                     const SizedBox(
                       height: 10,
                     ),
