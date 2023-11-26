@@ -18,7 +18,24 @@ final kInputFieldDecoration = InputDecoration(
   ),
 );
 
-ROLE currentRole = ROLE.CUSTOMER;
+Widget buildSwipingContainer(
+    Color color, String text, IconData icon, Alignment alignment) =>
+    Container(
+      color: color,
+      alignment: alignment,
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: Colors.white),
+            Text(text, style: const TextStyle(color: Colors.white)),
+          ],
+        ),
+      ),
+    );
+
+ROLE currentRole = ROLE.UNSELECTED;
 
 UserAddress currentUserAddress = UserAddress(userAddress: Address(), latitude: 0.0, longitude: 0.0);
 const initialLocation = LatLng(33.6844, 73.0479);

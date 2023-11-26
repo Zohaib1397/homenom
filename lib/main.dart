@@ -17,6 +17,7 @@ import 'package:homenom/screens/recipe_screen.dart';
 import 'package:homenom/screens/seller_screen.dart';
 import 'package:homenom/screens/signup_screen.dart';
 import 'package:homenom/services/menu_controller.dart';
+import 'package:homenom/services/user_controller.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -25,7 +26,8 @@ void main() async {
   runApp(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => MenuControllerProvider())
+          ChangeNotifierProvider(create: (context) => MenuControllerProvider()),
+          ChangeNotifierProvider(create: (context) => UserControllerProvider())
         ],
         child: MyApp(),
       ),
@@ -44,7 +46,7 @@ class MyApp extends StatelessWidget {
       routes: {
         AddMenuScreen.id: (context) => const AddMenuScreen(),
         AddRecipeScreen.id: (context) => const AddRecipeScreen(),
-        SellerScreen.id: (context) => const SellerScreen(),
+        // SellerScreen.id: (context) => const SellerScreen(),
         OrderScreen.id: (context) => const OrderScreen(),
         // RecipeScreen.id: (context) => const RecipeScreen(),
         CartScreen.id: (context) => const CartScreen(),

@@ -34,7 +34,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   TextFieldHandler recipeDescription = TextFieldHandler();
   TextFieldHandler recipeQuantity = TextFieldHandler();
   TextFieldHandler deliveryPrice = TextFieldHandler();
-  int selectedMenuIndex = -1;
+  int selectedMenuIndex = 0;
 
   Future<void> getImageFromGallery(ImageSource source) async {
     try {
@@ -256,51 +256,6 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
       );
       try {
         Provider.of<MenuControllerProvider>(context,listen: false).addRecipeToMenu(recipe, selectedMenuIndex);
-      //   final auth = FirebaseAuth.instance;
-      //   final recipe = Recipe(
-      //     id: "Temporary Empty",
-      //     url: "Temporary Empty",
-      //     name: recipeTitle.controller.text,
-      //     description: recipeDescription.controller.text,
-      //     price: double.parse(recipePrice.controller.text),
-      //     quantity: int.parse(recipeQuantity.controller.text),
-      //     rating: 0,
-      //     deliveryPrice: double.parse(deliveryPrice.controller.text),
-      //     numberSold: 0,
-      //   );
-      //   final recipeDoc = FirebaseFirestore.instance
-      //       .collection("Menu")
-      //       .doc(auth.currentUser!.email);
-      //   final snapshot = await recipeDoc.get();
-      //   if (snapshot.exists) {
-      //     final data = snapshot.data() as Map<String, dynamic>;
-      //     final menuList = data['menus'] as List<dynamic>;
-      //
-      //     if (selectedMenuIndex >= 0 && selectedMenuIndex < menuList.length) {
-      //       final selectedMenu = menuList[selectedMenuIndex];
-      //
-      //       final recipeList = selectedMenu['recipeList'] as List<dynamic>;
-      //
-      //       // Add the new recipe to the recipeList
-      //       recipeList.add({
-      //         'id': recipe.id,
-      //         'url': recipe.url,
-      //         'name': recipe.name,
-      //         'description': recipe.description,
-      //         'price': recipe.price,
-      //         'quantity': recipe.quantity,
-      //         'rating': recipe.rating,
-      //         'deliveryPrice': recipe.deliveryPrice,
-      //         'numberSold': recipe.numberSold,
-      //       });
-      //
-      //       // Update the recipeList in the selected menu
-      //       selectedMenu['recipeList'] = recipeList;
-      //
-      //       // Update the entire menuList in the Firestore document
-      //       await recipeDoc.update({
-      //         'menus': menuList,
-      //       });
 
             print(
                 "Recipe added successfully to the menu at index $selectedMenuIndex");
@@ -312,7 +267,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
             recipeDescription.controller.text = "";
             recipeQuantity.controller.text = "";
             deliveryPrice.controller.text = "";
-            selectedMenuIndex = -1;
+            selectedMenuIndex = 0;
             image = null;
 
       } catch (e) {

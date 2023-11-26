@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/seller_screen.dart';
+import 'package:homenom/screens/widgets/drawer_items.dart';
 import 'package:homenom/services/Utils.dart';
+import 'package:homenom/services/user_controller.dart';
+import 'package:provider/provider.dart';
 import '../structure/Role.dart';
 import 'home_screen.dart';
 
@@ -27,6 +30,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   int countDownDuration = 60;
   int _currentTickerValue = 0;
   String role = "";
+  UserControllerProvider userControllerProvider = UserControllerProvider();
 
   @override
   void initState() {
@@ -106,6 +110,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   Future<void> identifyRole() async {
     await FirebaseFirestore.instance.collection('Users').doc(user.email).get().then((DocumentSnapshot snapshot){
       if(snapshot.exists){
+        print(snapshot.get('role'));
         if(snapshot.get('role') == ROLE.CUSTOMER.toString()){
           setState(() {
             print("Role is set to Customer ${snapshot.get('role')}");
@@ -120,12 +125,18 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
           });
           // role = "ROLE.SELLER";
         }
-        else{
+        else if (snapshot.get('role') == ROLE.DRIVER.toString()){
           setState(() {
             currentRole = ROLE.DRIVER;
           });
           // role = "ROLE.DRIVER";
         }
+        else{
+          setState(() {
+            currentRole = ROLE.UNSELECTED;
+          });
+        }
+        
       }
       else{
         Utils.showPopup(context, "No Data Found", "Something is wrong with the database");
@@ -137,7 +148,53 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return isEmailVerified
-        ? HomeScreen() //role == "SELLER"? SellerScreen():
+        ? currentRole == ROLE.UNSELECTED ? SimpleDialog(
+      title:const Text('Please select account type'),
+      children: <Widget>[
+        SimpleDialogOption(
+          onPressed: () {
+            setState(() {
+              currentRole = ROLE.CUSTOMER;
+            });
+            Provider.of<UserControllerProvider>(context, listen: false).updateRole(currentRole);
+          },
+          child:const DrawerItem(
+            icon: Icons.camera_front_outlined,
+            text: "Customer Account",
+            onTap: null,
+          ),
+        ),
+        SimpleDialogOption(
+          onPressed: () {
+            setState(() {
+              currentRole = ROLE.DRIVER;
+            });
+            Provider.of<UserControllerProvider>(context, listen: false).updateRole(currentRole);
+          },
+          child: const DrawerItem(
+            icon: Icons.pedal_bike,
+            text: "Driver Account",
+            onTap: null,
+          ),
+        ),
+        SimpleDialogOption(
+          onPressed: (){
+            setState(() {
+              currentRole = ROLE.SELLER;
+            });
+            Provider.of<UserControllerProvider>(context, listen: false).updateRole(currentRole);
+          },
+          child: const DrawerItem(
+            icon: Icons.business,
+            text: "Seller Account",
+            onTap: null,
+          ),
+        ),
+        const SimpleDialogOption(
+          child: Text("Note: You won't be able to change account type on this email."),
+        ),
+      ],
+    ): HomeScreen() //role == "SELLER"? SellerScreen():
         : Scaffold(
             backgroundColor: kAppBackgroundColor,
             appBar: AppBar(

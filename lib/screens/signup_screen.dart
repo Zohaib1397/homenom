@@ -37,7 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       );
-      ROLE role = ROLE.CUSTOMER;
+      ROLE role = ROLE.UNSELECTED;
       final userCredentials = await _auth.createUserWithEmailAndPassword(
           email: _emailField.controller.text,
           password: _passwordField.controller.text);

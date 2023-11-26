@@ -13,7 +13,7 @@ class MenuHandler implements ItemDAO {
   late dynamic collection;
 
   MenuHandler() {
-    collection = _firestore.collection("data").doc(_auth.currentUser!.email);
+    collection = _firestore.collection("Data").doc(_auth.currentUser!.email);
   }
 
   @override
@@ -33,6 +33,24 @@ class MenuHandler implements ItemDAO {
       await collection.collection("Menu").doc(item.id).delete();
       return true;
     } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> deleteRecipe(recipe) async{
+    try{
+      String menuID = recipe.menuID;
+      DocumentReference menuRef = collection.collection("Menu").doc(menuID);
+      var data = (await menuRef.get()).data() as Map<String, dynamic>?;
+
+      List<dynamic> currentRecipeList = data?['recipeList'] as List<dynamic>;
+
+      // Add the new recipe to the list
+      currentRecipeList.remove(recipe.toJson());
+      await menuRef.update({'recipeList': currentRecipeList});
+      return true;
+    }catch(e){
       print(e.toString());
       return false;
     }

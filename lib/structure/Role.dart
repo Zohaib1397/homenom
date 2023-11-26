@@ -1,5 +1,6 @@
 enum ROLE{
   CUSTOMER,
   SELLER,
-  DRIVER
+  DRIVER,
+  UNSELECTED
 }
