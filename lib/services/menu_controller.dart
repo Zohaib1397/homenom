@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
-
+import 'package:collection/collection.dart';
 import '../handlers/MenuHandler.dart';
 import '../structure/Menu.dart';
 import '../structure/Recipe.dart';
@@ -27,10 +26,8 @@ class MenuControllerProvider extends ChangeNotifier{
 
 
   Future<String> getMenuId(int index) async {
-    print(menuList);
     menuList = [];
     await menusFromHandler();
-    print(menuList);
     return menuList[index].id;
   }
 
@@ -69,12 +66,18 @@ class MenuControllerProvider extends ChangeNotifier{
       return false;
     }
   }
-  Future<bool> removeRecipeFromList(Recipe recipe, int index) async{
+  Future<bool> removeRecipeFromList(Recipe recipe,int menuIndex, int index) async{
     try{
-      recipe.menuID = await getMenuId(index);
-      menuHandler.deleteRecipe(recipe);
-      // menuList.remove(menu);
-      // notifyListeners();
+      String menuID = await getMenuId(menuIndex);
+      recipe.menuID = menuID;
+      await menuHandler.deleteRecipe(recipe);
+      //Get menu index with menu ID
+      menuList[menuIndex].recipeList.removeWhere((item) {
+        return const MapEquality().equals(item, recipe.toJson());
+      });
+      // menuList[menuIndex].recipeList[index].remove(recipe.toJson());
+      // menuList[index].recipeList.remove(recipe.toJson());
+      notifyListeners();
       return true;
     }catch(e){
       print(e.toString());

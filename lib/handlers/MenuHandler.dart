@@ -6,6 +6,8 @@ import 'package:homenom/structure/Database/ItemDAO.dart';
 
 import '../structure/Menu.dart';
 import '../structure/Recipe.dart';
+import 'package:collection/collection.dart';
+
 
 class MenuHandler implements ItemDAO {
   final _auth = FirebaseAuth.instance;
@@ -71,13 +73,14 @@ class MenuHandler implements ItemDAO {
   Future<bool> deleteRecipe(recipe) async{
     try{
       String menuID = recipe.menuID;
+      print(menuID);
       DocumentReference menuRef = collection.doc(menuID);
       var data = (await menuRef.get()).data() as Map<String, dynamic>?;
 
       List<dynamic> currentRecipeList = data?['recipeList'] as List<dynamic>;
-
-      // Add the new recipe to the list
-      currentRecipeList.remove(recipe.toJson());
+      currentRecipeList.removeWhere((item) {
+        return const MapEquality().equals(item, recipe.toJson());
+      });
       await menuRef.update({'recipeList': currentRecipeList});
       return true;
     }catch(e){

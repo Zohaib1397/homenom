@@ -6,10 +6,12 @@ import '../../structure/Menu.dart';
 
 class MenuCard extends StatefulWidget {
   final Menu menu;
-
+  final int menuIndex;
   const MenuCard(
       {super.key,
-      required this.menu});
+      required this.menu,
+      required this.menuIndex
+      });
 
   @override
   State<MenuCard> createState() => _MenuCardState();
@@ -59,6 +61,7 @@ class _MenuCardState extends State<MenuCard> {
               context,
               MaterialPageRoute(
                   builder: (context) => RecipeScreen(
+                        menuIndex: widget.menuIndex,
                         menu: widget.menu,
                         priceRange: deliveryPriceRange,
                         ratingStars: ratingStars,

@@ -55,6 +55,7 @@ class SellerView extends StatelessWidget {
                     background: buildSwipingContainer(
                         Colors.red, "Delete", Icons.delete, Alignment.centerRight),
                     child: MenuCard(
+                      menuIndex: index,
                       menu: menuList[index],
                     ),
                   );

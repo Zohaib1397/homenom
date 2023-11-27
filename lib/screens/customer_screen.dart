@@ -23,6 +23,7 @@ class CustomerView extends StatelessWidget {
               children: List.generate(menuList.length, (index){
                 menuList[index].computeRequiredCalculation();
                 return MenuCard(
+                  menuIndex: index,
                   menu: menuList[index],
                 );
               }),

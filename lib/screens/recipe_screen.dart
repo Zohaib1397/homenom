@@ -9,12 +9,14 @@ import '../structure/Menu.dart';
 
 class RecipeScreen extends StatefulWidget {
   final Menu menu;
+  final int menuIndex;
   final String priceRange;
   final List<Icon> ratingStars;
 
   const RecipeScreen(
       {super.key,
       required this.menu,
+        required this.menuIndex,
       required this.priceRange,
       required this.ratingStars});
 
@@ -85,7 +87,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
             ) :
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: RecipeCard(menu: widget.menu),
+              child: RecipeCard(menuIndex: widget.menuIndex, menu: widget.menu),
             ),
           ],
         ),

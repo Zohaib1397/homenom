@@ -8,10 +8,10 @@ import '../../structure/Menu.dart';
 import '../../structure/Recipe.dart';
 import '../../structure/Role.dart';
 import '../order_screen.dart';
-
 class RecipeCard extends StatefulWidget {
   final Menu menu;
-  const RecipeCard({super.key, required this.menu});
+  final int menuIndex;
+  const RecipeCard({super.key, required this.menu, required this.menuIndex});
 
   @override
   State<RecipeCard> createState() => _RecipeCardState();
@@ -22,74 +22,124 @@ class _RecipeCardState extends State<RecipeCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: List.generate(widget.menu.recipeList.length, (index){
-        return Dismissible(
-          key: UniqueKey(),
-          direction: currentRole == ROLE.SELLER? DismissDirection.endToStart : DismissDirection.none,
-          confirmDismiss: (DismissDirection direction) async {
-            final confirmDismiss =  await showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text("Confirm"),
-                  content: const Text("Are you sure you want to dismiss this Recipe?"),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: const Text("Cancel"),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(true),
-                      child: const Text("Dismiss"),
-                    ),
-                  ],
+    return Consumer<MenuControllerProvider>(
+      builder: (context, menuProvider, _) {
+        List<Menu> menuList = menuProvider.menuList;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: List.generate(menuList[widget.menuIndex].recipeList.length, (index) {
+            return Dismissible(
+              key: UniqueKey(),
+              direction: currentRole == ROLE.SELLER
+                  ? DismissDirection.endToStart
+                  : DismissDirection.none,
+              confirmDismiss: (DismissDirection direction) async {
+                final confirmDismiss = await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text("Confirm"),
+                      content: const Text("Are you sure you want to delete this Recipe?"),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: const Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: const Text("Delete"),
+                        ),
+                      ],
+                    );
+                  },
                 );
-              },
-            );
-            if(confirmDismiss){
-              //TODO implement dismiss function of recipe card
-
-              // Provider.of<MenuControllerProvider>(context, listen: false).removeMenuFromList(menuList[index]);
-            }
-          },
-          background: buildSwipingContainer(
-              currentRole == ROLE.SELLER? Colors.red: Colors.transparent, "Delete", Icons.delete, Alignment.centerRight),
-          child: Card(
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 1000),
-              child: ListTile(
-                onTap: (){
-                  setState(() {
-                    currentRole != ROLE.SELLER? Navigator.push(context, MaterialPageRoute(builder: (context) => OrderScreen(
-                        menu: widget.menu,
-                        recipe: widget.menu.recipeList[index]
-                    ))): isExpanded = !isExpanded;
+                if (confirmDismiss) {
+                  setState(() async {
+                    await menuProvider.removeRecipeFromList(
+                      Recipe.fromJson(menuList[widget.menuIndex].recipeList[index]),
+                      widget.menuIndex,
+                      index,
+                    );
                   });
-                },
-                title: Text(widget.menu.recipeList[index]['name'], style: const TextStyle(fontWeight: FontWeight.bold),),
-                isThreeLine: true,
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Description: ${widget.menu.recipeList[index]['description']}"),
-                    Text("Price: ${widget.menu.recipeList[index]['price']}"),
-                    Text("Sold: ${widget.menu.recipeList[index]['numberSold']}"),
-                    isExpanded? Row(children: [
-                      IconButton.filled(onPressed: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => AddRecipeScreen(index: index, recipe: widget.menu.recipeList[index])));
-                      }, icon: Icon(Icons.edit_outlined, color: Theme.of(context).colorScheme.onPrimary,)),
-                    ],): Container(),
-                  ],
-                ),
-                trailing: ClipRRect(borderRadius: BorderRadius.circular(12), child: Image(image: AssetImage("assets/temporary/food_background.jpg"), fit: BoxFit.contain,)),
-
+                }
+                return;
+              },
+              background: buildSwipingContainer(
+                currentRole == ROLE.SELLER ? Colors.red : Colors.transparent,
+                "Delete",
+                Icons.delete,
+                Alignment.centerRight,
               ),
-            ),
-          ),
+              child: Card(
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 1000),
+                  child: ListTile(
+                    onTap: () {
+                      setState(() {
+                        currentRole != ROLE.SELLER
+                            ? Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrderScreen(
+                              menu: widget.menu,
+                              recipe: menuList[widget.menuIndex].recipeList[index],
+                            ),
+                          ),
+                        )
+                            : isExpanded = !isExpanded;
+                      });
+                    },
+                    title: Text(
+                      menuList[widget.menuIndex].recipeList[index]['name'],
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    isThreeLine: true,
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Description: ${menuList[widget.menuIndex].recipeList[index]['description']}"),
+                        Text("Price: ${menuList[widget.menuIndex].recipeList[index]['price']}"),
+                        Text("Sold: ${menuList[widget.menuIndex].recipeList[index]['numberSold']}"),
+                        isExpanded
+                            ? Row(
+                          children: [
+                            IconButton.filled(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddRecipeScreen(
+                                      index: index,
+                                      recipe: menuList[widget.menuIndex].recipeList[index],
+                                      menuIndex: widget.menuIndex,
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: Icon(
+                                Icons.edit_outlined,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
+                            ),
+                          ],
+                        )
+                            : Container(),
+                      ],
+                    ),
+                    trailing: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image(
+                        image: AssetImage("assets/temporary/food_background.jpg"),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
         );
-      }),
+      },
     );
   }
 }
