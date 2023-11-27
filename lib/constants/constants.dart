@@ -20,17 +20,20 @@ final kInputFieldDecoration = InputDecoration(
 
 Widget buildSwipingContainer(
     Color color, String text, IconData icon, Alignment alignment) =>
-    Container(
-      color: color,
-      alignment: alignment,
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.white),
-            Text(text, style: const TextStyle(color: Colors.white)),
-          ],
+    ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        color: color,
+        alignment: alignment,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: Colors.white),
+              Text(text, style: const TextStyle(color: Colors.white)),
+            ],
+          ),
         ),
       ),
     );

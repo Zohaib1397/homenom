@@ -1,4 +1,6 @@
 
+import 'Recipe.dart';
+
 class Menu{
   late String id;
   late String title;
@@ -33,7 +35,7 @@ class Menu{
       menuUrl: json['menuUrl'],
       title: json['title'],
       // email: json['email'],
-      recipeList: json['recipeList']
+      recipeList:  json['recipeList']
   );
 
   Map<String, dynamic> toJson(){
@@ -49,15 +51,17 @@ class Menu{
   void computeRequiredCalculation(){
     // clear();
     if(recipeList.isNotEmpty){
+      final list = (recipeList as List<dynamic>).map((recipeJson) => Recipe.fromJson(recipeJson))
+          .toList();
       //Display the minimum and maximum delivery price of recipe
-      minimum = recipeList[0]['deliveryPrice'] as double;
+      minimum = list[0].deliveryPrice as double;
       maximum = minimum;
       //Calculate average rating on the recipes of menu
-      for(int i =0; i < recipeList.length;i++){
+      for(int i =0; i < list.length;i++){
         //for rating
-        rating += recipeList[i]['rating'] as int;
+        rating += list[i].rating as int;
         //for delivery price
-        final deliveryPrice = recipeList[i]['deliveryPrice'] as double;
+        final deliveryPrice = list[i].deliveryPrice as double;
         if(minimum > deliveryPrice){
           minimum = deliveryPrice;
         }
@@ -65,9 +69,9 @@ class Menu{
           maximum = deliveryPrice;
         }
         //for sold items
-        numberSold += recipeList[i]['numberSold'] as int;
+        numberSold += list[i].numberSold as int;
       }
-      averageRating = rating/recipeList.length;
+      averageRating = rating/list.length;
 
     }
   }

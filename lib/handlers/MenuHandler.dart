@@ -68,23 +68,23 @@ class MenuHandler implements ItemDAO {
     }
   }
 
-  // Future<bool> deleteRecipe(recipe) async{
-  //   try{
-  //     String menuID = recipe.menuID;
-  //     DocumentReference menuRef = collection.collection(_auth.currentUser!.email).doc(menuID);
-  //     var data = (await menuRef.get()).data() as Map<String, dynamic>?;
-  //
-  //     List<dynamic> currentRecipeList = data?['recipeList'] as List<dynamic>;
-  //
-  //     // Add the new recipe to the list
-  //     currentRecipeList.remove(recipe.toJson());
-  //     await menuRef.update({'recipeList': currentRecipeList});
-  //     return true;
-  //   }catch(e){
-  //     print(e.toString());
-  //     return false;
-  //   }
-  // }
+  Future<bool> deleteRecipe(recipe) async{
+    try{
+      String menuID = recipe.menuID;
+      DocumentReference menuRef = collection.doc(menuID);
+      var data = (await menuRef.get()).data() as Map<String, dynamic>?;
+
+      List<dynamic> currentRecipeList = data?['recipeList'] as List<dynamic>;
+
+      // Add the new recipe to the list
+      currentRecipeList.remove(recipe.toJson());
+      await menuRef.update({'recipeList': currentRecipeList});
+      return true;
+    }catch(e){
+      print(e.toString());
+      return false;
+    }
+  }
 
   Future<bool> createRecipe(recipe) async {
     try{

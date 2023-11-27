@@ -26,7 +26,7 @@ class SellerView extends StatelessWidget {
                 children: List.generate(menuList.length, (index){
                   menuList[index].computeRequiredCalculation();
                   return Dismissible(
-                    key: Key("${menuList[index].title}+${menuList[index].recipeList}"), //Getting a unique key
+                    key: UniqueKey(), //Getting a unique key
                     direction: DismissDirection.endToStart,
                     confirmDismiss: (DismissDirection direction) async {
                       final confirmDismiss =  await showDialog(

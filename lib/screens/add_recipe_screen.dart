@@ -92,6 +92,13 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     if (widget.index != null) {
       selectedMenuIndex = widget.index!;
     }
+    if(widget.recipe!=null){
+      recipeTitle.controller.text = widget.recipe!['name'];
+      recipePrice.controller.text = widget.recipe!['price'].toString();
+      recipeDescription.controller.text = widget.recipe!['description'];
+      recipeQuantity.controller.text = widget.recipe!['quantity'].toString();
+      deliveryPrice.controller.text = widget.recipe!['deliveryPrice'].toString();
+    }
   }
 
   @override
@@ -267,6 +274,32 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         Utils.showPopup(context, "Menu Selection Error",
             "Please select a menu to add the recipe");
         return;
+      }
+      if(widget.recipe!=null && widget.index!=null){
+        if(widget.index != selectedMenuIndex){
+          final confirmChange =  await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Confirm Menu Change"),
+                content: const Text("Are you sure you want to add this recipe to another Menu?"),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text("Cancel"),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text("Confirm"),
+                  ),
+                ],
+              );
+            },
+          );
+          if(!confirmChange){
+              return;
+          }
+        }
       }
       final recipe = Recipe(
         id: "Temporary Empty",

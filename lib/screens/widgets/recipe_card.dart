@@ -26,7 +26,7 @@ class _RecipeCardState extends State<RecipeCard> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: List.generate(widget.menu.recipeList.length, (index){
         return Dismissible(
-          key: Key(widget.menu.recipeList.toString()),
+          key: UniqueKey(),
           direction: currentRole == ROLE.SELLER? DismissDirection.endToStart : DismissDirection.none,
           confirmDismiss: (DismissDirection direction) async {
             final confirmDismiss =  await showDialog(
@@ -49,6 +49,8 @@ class _RecipeCardState extends State<RecipeCard> {
               },
             );
             if(confirmDismiss){
+              //TODO implement dismiss function of recipe card
+
               // Provider.of<MenuControllerProvider>(context, listen: false).removeMenuFromList(menuList[index]);
             }
           },

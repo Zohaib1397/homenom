@@ -69,24 +69,24 @@ class MenuControllerProvider extends ChangeNotifier{
       return false;
     }
   }
-  // Future<bool> removeRecipeFromList(Recipe recipe, int index) async{
-  //   try{
-  //     String recipeID = await get
-  //     menuHandler.deleteRecipe(recipe);
-  //     menuList.remove(menu);
-  //     notifyListeners();
-  //     return true;
-  //   }catch(e){
-  //     print(e.toString());
-  //     return false;
-  //   }
-  // }
+  Future<bool> removeRecipeFromList(Recipe recipe, int index) async{
+    try{
+      recipe.menuID = await getMenuId(index);
+      menuHandler.deleteRecipe(recipe);
+      // menuList.remove(menu);
+      // notifyListeners();
+      return true;
+    }catch(e){
+      print(e.toString());
+      return false;
+    }
+  }
   Future<bool> addRecipeToMenu(Recipe recipe, int index) async {
     try{
       String menuID = await getMenuId(index);
       recipe.menuID = menuID;
       menuHandler.createRecipe(recipe);
-      menuList[index].recipeList.add(recipe);
+      menuList[index].recipeList.add(recipe.toJson());
       notifyListeners();
       return true;
     }catch(e){

@@ -33,60 +33,62 @@ class _RecipeScreenState extends State<RecipeScreen> {
         // backgroundColor: kAppBackgroundColor,
         title: const Text("Menu Recipes"),
       ),
-      body: Column(
-        children: [
-          Image(
-            image: AssetImage("assets/temporary/food_background.jpg"),
-            fit: BoxFit.cover,
-          ),
-          ListTile(
-            title: Row(
-              children: [
-                const Text(
-                  "Name: ",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(widget.menu.title),
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Image(
+              image: AssetImage("assets/temporary/food_background.jpg"),
+              fit: BoxFit.cover,
             ),
-            subtitle: Row(
-              children: [
-                const Text(
-                  "Delivery: ",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text('${widget.priceRange} Rs'),
-              ],
-            ),
-            trailing: SizedBox(
-              width: 50,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+            ListTile(
+              title: Row(
                 children: [
-                  Row(
-                    children: widget.ratingStars,
+                  const Text(
+                    "Name: ",
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    "${widget.menu.numberSold} Sold",
-                    // "125 Sold",
-                    style: const TextStyle(fontSize: 10),
-                    textAlign: TextAlign.center,
-                  ),
+                  Text(widget.menu.title),
                 ],
               ),
+              subtitle: Row(
+                children: [
+                  const Text(
+                    "Delivery: ",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text('${widget.priceRange} Rs'),
+                ],
+              ),
+              trailing: SizedBox(
+                width: 50,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: widget.ratingStars,
+                    ),
+                    Text(
+                      "${widget.menu.numberSold} Sold",
+                      // "125 Sold",
+                      style: const TextStyle(fontSize: 10),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-          const Text("Recipes under this menu are", style: TextStyle(fontWeight: FontWeight.bold),),
-          widget.menu.recipeList.isEmpty? const Padding(
-            padding: EdgeInsets.all(20.0),
-            child: Image(image: AssetImage("assets/empty_data_icon.png"), fit: BoxFit.cover,),
-          ) :
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: RecipeCard(menu: widget.menu),
-          ),
-        ],
+            const Text("Recipes under this menu are", style: TextStyle(fontWeight: FontWeight.bold),),
+            widget.menu.recipeList.isEmpty? const Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Image(image: AssetImage("assets/empty_data_icon.png"), fit: BoxFit.cover,),
+            ) :
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RecipeCard(menu: widget.menu),
+            ),
+          ],
+        ),
       ),
     );
   }
