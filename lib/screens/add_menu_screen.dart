@@ -61,7 +61,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kAppBackgroundColor,
+        elevation: 10,
         title: const Text("Add Menu"),
       ),
       body: Stack(
@@ -80,10 +80,13 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                                 color: Colors.grey,
                                 size: 200,
                               )
-                            : Image.file(
-                                image!,
-                                fit: BoxFit.cover,
-                              ),
+                            : ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                              child: Image.file(
+                                  image!,
+                                  fit: BoxFit.cover,
+                                ),
+                            ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

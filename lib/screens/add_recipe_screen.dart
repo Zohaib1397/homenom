@@ -15,7 +15,10 @@ import '../structure/Menu.dart';
 import '../structure/Recipe.dart';
 
 class AddRecipeScreen extends StatefulWidget {
-  const AddRecipeScreen({super.key});
+  int? index;
+  dynamic recipe;
+
+  AddRecipeScreen({super.key, this.index, this.recipe});
 
   static const String id = "Add_Recipe_Screen";
 
@@ -46,9 +49,12 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     }
   }
 
-  Widget _createMenuCardWidget(Menu menu, int index, ValueChanged<int> onSelect) {
+  Widget _createMenuCardWidget(
+      Menu menu, int index, ValueChanged<int> onSelect) {
     return Card(
-      color: index != selectedMenuIndex? Colors.white38 :Colors.grey,
+      color: index != selectedMenuIndex
+          ? Theme.of(context).colorScheme.surface
+          : Theme.of(context).colorScheme.surfaceVariant,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () {
@@ -81,11 +87,19 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.index != null) {
+      selectedMenuIndex = widget.index!;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Recipe"),
-        backgroundColor: kAppBackgroundColor,
+        elevation: 10,
+        title: Text(widget.recipe == null ? "Add Recipe" : "Edit Recipe"),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -108,7 +122,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                       List<Menu> menuList = menuControllerProvider.menuList;
                       return Column(
                         children: List.generate(menuList.length, (index) {
-                          return _createMenuCardWidget(menuList[index], index, (selectedIndex) {
+                          return _createMenuCardWidget(menuList[index], index,
+                              (selectedIndex) {
                             setState(() {
                               selectedMenuIndex = selectedIndex;
                             });
@@ -117,8 +132,12 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                       );
                     },
                   ),
-                  MaterialButton(
-                    color: kAppBackgroundColor,
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                    ),
                     onPressed: () async {
                       final answer = await Navigator.push(
                               context,
@@ -133,7 +152,6 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                     },
                     child: const Icon(
                       Icons.add,
-                      color: Colors.white,
                     ),
                   ),
                 ],
@@ -158,9 +176,12 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                   color: Colors.grey,
                                   size: 200,
                                 )
-                              : Image.file(
-                                  image!,
-                                  fit: BoxFit.cover,
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: Image.file(
+                                    image!,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -193,7 +214,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                         ),
                         Expanded(
                             flex: 1,
-                            child: buildTextField("Price", recipePrice,inputType: TextInputType.number)),
+                            child: buildTextField("Price", recipePrice,
+                                inputType: TextInputType.number)),
                       ],
                     ),
                     const SizedBox(
@@ -210,9 +232,12 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                     buildTextField("Delivery Price", deliveryPrice,
                         inputType: TextInputType.number),
                     const SizedBox(height: 10),
-                    MaterialButton(
-                      color: kAppBackgroundColor,
-                      textColor: Colors.white,
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
                       onPressed: () {
                         addRecipeToDatabase();
                       },
@@ -255,21 +280,21 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         numberSold: 0,
       );
       try {
-        Provider.of<MenuControllerProvider>(context,listen: false).addRecipeToMenu(recipe, selectedMenuIndex);
+        Provider.of<MenuControllerProvider>(context, listen: false)
+            .addRecipeToMenu(recipe, selectedMenuIndex);
 
-            print(
-                "Recipe added successfully to the menu at index $selectedMenuIndex");
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: const Text(
-                    "Recipe Added Successfully. You can add more..")));
-            recipeTitle.controller.text = "";
-            recipePrice.controller.text = "";
-            recipeDescription.controller.text = "";
-            recipeQuantity.controller.text = "";
-            deliveryPrice.controller.text = "";
-            selectedMenuIndex = 0;
-            image = null;
-
+        print(
+            "Recipe added successfully to the menu at index $selectedMenuIndex");
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                const Text("Recipe Added Successfully. You can add more..")));
+        recipeTitle.controller.text = "";
+        recipePrice.controller.text = "";
+        recipeDescription.controller.text = "";
+        recipeQuantity.controller.text = "";
+        deliveryPrice.controller.text = "";
+        selectedMenuIndex = 0;
+        image = null;
       } catch (e) {
         Utils.showPopup(context, "Database Connectivity Issue",
             "Something went wrong. Error: $e");

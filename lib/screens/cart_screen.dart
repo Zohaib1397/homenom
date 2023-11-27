@@ -21,7 +21,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    recipeList =Provider.of<MenuControllerProvider>(context, listen: false).cartList;
+    recipeList = Provider.of<MenuControllerProvider>(context, listen: false).cartList;
   }
   @override
   Widget build(BuildContext context) {

@@ -156,7 +156,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             setState(() {
               currentRole = ROLE.CUSTOMER;
             });
-            Provider.of<UserControllerProvider>(context, listen: false).updateRole(currentRole);
+            Provider.of<UserControllerProvider>(context, listen: false).updateRole(currentRole!);
           },
           child:const DrawerItem(
             icon: Icons.camera_front_outlined,
@@ -169,7 +169,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             setState(() {
               currentRole = ROLE.DRIVER;
             });
-            Provider.of<UserControllerProvider>(context, listen: false).updateRole(currentRole);
+            Provider.of<UserControllerProvider>(context, listen: false).updateRole(currentRole!);
           },
           child: const DrawerItem(
             icon: Icons.pedal_bike,
@@ -182,7 +182,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             setState(() {
               currentRole = ROLE.SELLER;
             });
-            Provider.of<UserControllerProvider>(context, listen: false).updateRole(currentRole);
+            Provider.of<UserControllerProvider>(context, listen: false).updateRole(currentRole!);
           },
           child: const DrawerItem(
             icon: Icons.business,
@@ -194,7 +194,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
           child: Text("Note: You won't be able to change account type on this email."),
         ),
       ],
-    ): HomeScreen() //role == "SELLER"? SellerScreen():
+    ): currentRole == null? Center(child: CircularProgressIndicator()) : HomeScreen() //role == "SELLER"? SellerScreen():
         : Scaffold(
             backgroundColor: kAppBackgroundColor,
             appBar: AppBar(

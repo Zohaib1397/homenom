@@ -8,7 +8,7 @@ import '../structure/Role.dart';
 
 final kInputFieldDecoration = InputDecoration(
   filled: true,
-  fillColor: Colors.white,
+  // fillColor: Colors.black12,
   border: OutlineInputBorder(
     borderRadius: BorderRadius.circular(40),
     borderSide: BorderSide.none,
@@ -35,7 +35,7 @@ Widget buildSwipingContainer(
       ),
     );
 
-ROLE currentRole = ROLE.UNSELECTED;
+ROLE? currentRole;
 
 UserAddress currentUserAddress = UserAddress(userAddress: Address(), latitude: 0.0, longitude: 0.0);
 const initialLocation = LatLng(33.6844, 73.0479);

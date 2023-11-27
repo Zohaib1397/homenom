@@ -17,6 +17,7 @@ import '../services/menu_controller.dart';
 import '../services/recipe_card_brain.dart';
 import '../structure/Menu.dart';
 import '../structure/Role.dart';
+import 'customer_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -54,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Theme.of(context).colorScheme.background,
       key: _scaffoldKey,
       appBar: buildAppBar(context),
       body: currentRole == ROLE.SELLER ? SellerView() : CustomerView(),
@@ -62,24 +64,48 @@ class _HomeScreenState extends State<HomeScreen> {
         onProfileOption: showProfileScreen,
       ),
       floatingActionButton: currentRole == ROLE.SELLER
-          ? FloatingActionButton(
-              backgroundColor: kAppBackgroundColor,
-              child: Icon(Icons.add),
+          ? FloatingActionButton.extended(
+        label: const Text("Add Recipe"),
+              icon: Icon(Icons.add),
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const AddRecipeScreen()));
+                        builder: (context) => AddRecipeScreen()));
               },
             )
           : null,
+      // bottomNavigationBar: NavigationBar(
+      //   onDestinationSelected: (int index) {
+      //     print('Selected $index');
+      //   },
+      //   selectedIndex: 0,
+      //   destinations: const <NavigationDestination>[
+      //     NavigationDestination(
+      //       selectedIcon: Icon(Icons.person),
+      //       icon: Icon(Icons.person_outline),
+      //       label: 'Learn',
+      //     ),
+      //     NavigationDestination(
+      //       selectedIcon: Icon(Icons.engineering),
+      //       icon: Icon(Icons.engineering_outlined),
+      //       label: 'Relearn',
+      //     ),
+      //     NavigationDestination(
+      //       selectedIcon: Icon(Icons.bookmark),
+      //       icon: Icon(Icons.bookmark_border),
+      //       label: 'Unlearn',
+      //     ),
+      //   ],
+      // ),
     );
   }
 
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: kAppBackgroundColor,
-      title: StreamBuilder(
+      elevation: 10,
+      // backgroundColor: Theme.of(context).colorScheme.primary,
+      title: currentRole == ROLE.CUSTOMER? StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('Users')
             .doc(currentUser.email)
@@ -103,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   "longitude": currentUserAddress.longitude,
                 });
               },
-              child: Row(
+              child:Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
@@ -122,19 +148,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         "Location",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
                         "${user['address'] == "Null" ? "Deliver To Location" : "${user['address']}"} ",
                         style: TextStyle(
-                            fontSize: 10, color: Colors.white.withAlpha(100)),
+                          fontSize: 10,
+                        ),
                       ),
                     ],
                   ),
                   Icon(
                     Icons.arrow_drop_down,
-                    color: Colors.white,
                   ),
                 ],
               ),
@@ -151,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }
         },
-      ),
+      ) : const Text("Seller View", style: TextStyle(fontWeight: FontWeight.bold),),
       leading: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: GestureDetector(
@@ -165,6 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: [
         currentRole == ROLE.CUSTOMER
             ? IconButton(
+
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -174,38 +200,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(
                   Icons.shopping_cart_outlined,
                 ))
-            : Container(),
+            : IconButton.filledTonal(
+
+                onPressed: () {},
+                icon: const Icon(Icons.notifications_outlined),
+              ),
       ],
-    );
-  }
-}
-
-
-
-class CustomerView extends StatelessWidget {
-  CustomerView({
-    super.key,
-  });
-
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Consumer<MenuControllerProvider>(builder: (context, menuControllerProvider, _){
-            List<Menu> menuList = menuControllerProvider.customerMenus;
-            return Column(
-              children: List.generate(menuList.length, (index){
-                menuList[index].computeRequiredCalculation();
-                return MenuCard(
-                  menu: menuList[index],
-                );
-              }),
-            );
-          }),
-        ],
-      ),
     );
   }
 }

@@ -29,7 +29,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kAppBackgroundColor,
+        elevation: 10,
+        // backgroundColor: kAppBackgroundColor,
         title: const Text("Menu Recipes"),
       ),
       body: Column(
@@ -76,7 +77,15 @@ class _RecipeScreenState extends State<RecipeScreen> {
               ),
             ),
           ),
-          RecipeCard(menu: widget.menu),
+          const Text("Recipes under this menu are", style: TextStyle(fontWeight: FontWeight.bold),),
+          widget.menu.recipeList.isEmpty? const Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Image(image: AssetImage("assets/empty_data_icon.png"), fit: BoxFit.cover,),
+          ) :
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: RecipeCard(menu: widget.menu),
+          ),
         ],
       ),
     );
