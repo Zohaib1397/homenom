@@ -24,7 +24,7 @@ class _RecipeCardState extends State<RecipeCard> {
   Widget build(BuildContext context) {
     return Consumer<MenuControllerProvider>(
       builder: (context, menuProvider, _) {
-        List<Menu> menuList = menuProvider.menuList;
+        List<Menu> menuList = currentRole == ROLE.SELLER? menuProvider.menuList : menuProvider.customerMenus;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: List.generate(menuList[widget.menuIndex].recipeList.length, (index) {

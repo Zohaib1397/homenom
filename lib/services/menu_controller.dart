@@ -32,8 +32,7 @@ class MenuControllerProvider extends ChangeNotifier{
   }
 
   Future<void> menusFromHandler()async{
-    //TODO This handler is needed to be adjusted
-    menuList = await menuHandler.getAll();
+    menuList = await menuHandler.getRespectiveMenus();
     notifyListeners();
     customerMenus =await menuHandler.getAll();
     // await menuHandler.getEveryMenu();

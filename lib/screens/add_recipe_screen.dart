@@ -314,11 +314,6 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
           numberSold: widget.recipe!['numberSold'],
         );
         try {
-          // //TODO if condition to check same menu
-          // if(widget.index == selectedMenuIndex){
-          //
-          // }
-          // TODO update recipe function
           Provider.of<MenuControllerProvider>(context, listen: false).removeRecipeFromList(Recipe.fromJson(widget.recipe!), widget.menuIndex!, widget.index!);
           Provider.of<MenuControllerProvider>(context, listen: false)
               .addRecipeToMenu(recipe, selectedMenuIndex);

@@ -43,10 +43,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         useMaterial3: true, colorSchemeSeed: kAppBackgroundColor,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-
-        ),
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: AuthenticationStatus.id,

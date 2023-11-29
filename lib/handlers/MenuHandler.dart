@@ -135,6 +135,23 @@ class MenuHandler implements ItemDAO {
   //   }
   // }
 
+  Future<List<Menu>> getRespectiveMenus() async{
+    List<Menu> menuList = [];
+    await collection.get().then(
+        (value){
+          value.docs.forEach(
+              (element){
+                Menu menu = Menu.fromJson(element.data());
+                menu.id = element.id;
+                if(_auth.currentUser!.email == menu.email){
+                  menuList.add(menu);
+                }
+              }
+          );
+        }
+    );
+    return menuList;
+  }
 
   @override
   bool deleteItemAtIndex(int index) {

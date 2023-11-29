@@ -40,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void signOut() {
     final _auth = FirebaseAuth.instance;
+    Provider.of<MenuControllerProvider>(context,listen: false).clearForDispose();
     _auth.signOut();
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const LoginScreen()));

@@ -22,17 +22,45 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   int numberOfItems = 1;
+  List<Icon> ratingStars = [];
+
+  @override
+  void initState() {
+    super.initState();
+    int rating = widget.recipe['rating'];
+    for (int i = 0; i < 5; i++) {
+      if (i + 1 <= rating) {
+        ratingStars.add(
+          const Icon(
+            Icons.star,
+            size: kRatingStarIconSize,
+          ),
+        );
+      } else if (i + 1 > rating && i < rating) {
+        ratingStars.add(const Icon(
+          Icons.star_half_outlined,
+          size: kRatingStarIconSize,
+        ));
+      } else {
+        ratingStars.add(
+          const Icon(
+            Icons.star_border_outlined,
+            size: kRatingStarIconSize,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kAppBackgroundColor,
+        elevation: 10,
         title: Text(widget.menu.title),
         actions: [
           IconButton(
               icon: Icon(Icons.shopping_cart_outlined),
-              color: Colors.white,
               onPressed: () => Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const CartScreen())))
         ],
@@ -55,6 +83,10 @@ class _OrderScreenState extends State<OrderScreen> {
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: ratingStars
                   ),
                   Padding(
                     padding: const EdgeInsets.all(20.0),

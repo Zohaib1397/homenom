@@ -8,6 +8,7 @@ import 'package:homenom/screens/widgets/drawer_items.dart';
 import 'package:homenom/services/Utils.dart';
 import 'package:homenom/services/user_controller.dart';
 import 'package:provider/provider.dart';
+import '../services/menu_controller.dart';
 import '../structure/Role.dart';
 import 'home_screen.dart';
 
@@ -44,6 +45,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       sendVerificationEmail();
       countDownRefresher();
     }
+    Provider.of<MenuControllerProvider>(context,listen: false).menusFromHandler();
   }
 
   void toggleCountDownTimer() {

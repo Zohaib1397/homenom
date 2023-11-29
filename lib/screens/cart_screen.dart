@@ -28,10 +28,9 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Cart List"),
-        backgroundColor: kAppBackgroundColor,
         centerTitle: true,
         automaticallyImplyLeading: true,
-        elevation: 0,
+        elevation: 10,
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -46,8 +46,8 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
       final newMenu = Menu(
         title: title.controller.text,
         recipeList: [],
-        // email: FirebaseAuth.instance.currentUser!.email?? "No Email",
-        menuUrl: 'Temporary empty',
+        email: FirebaseAuth.instance.currentUser!.email?? "No Email",
+        menuUrl: 'Temporarily null',
       );
       Provider.of<MenuControllerProvider>(context, listen: false).addMenuToList(newMenu);
       setState(() => isLoading = false);

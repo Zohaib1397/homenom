@@ -26,7 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: kAppBackgroundColor,
+        elevation: 10,
         title: const Text("Profile Page"),
       ),
       body: Padding(
