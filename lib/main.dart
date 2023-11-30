@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/firebase_options.dart';
 import 'package:homenom/screens/ForgetPasswordScreen.dart';
+import 'package:homenom/screens/Signup%20Screens/driver_signup_screen.dart';
 import 'package:homenom/screens/add_menu_screen.dart';
 import 'package:homenom/screens/add_recipe_screen.dart';
 import 'package:homenom/screens/askRoleScreen.dart';
@@ -16,7 +17,7 @@ import 'package:homenom/screens/otp_screen.dart';
 import 'package:homenom/screens/profile_screen.dart';
 import 'package:homenom/screens/recipe_screen.dart';
 import 'package:homenom/screens/seller_screen.dart';
-import 'package:homenom/screens/signup_screen.dart';
+import 'package:homenom/screens/Signup%20Screens/customer_signup_screen.dart';
 import 'package:homenom/services/menu_controller.dart';
 import 'package:homenom/services/user_controller.dart';
 import 'package:provider/provider.dart';
@@ -46,8 +47,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true, colorSchemeSeed: kAppBackgroundColor,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: AuthenticationStatus.id,
+      initialRoute: DriverSignUpScreen.id,
       routes: {
+        DriverSignUpScreen.id : (context) => const DriverSignUpScreen(),
         AskRoleScreen.id: (context) => const AskRoleScreen(),
         AddMenuScreen.id: (context) => const AddMenuScreen(),
         AddRecipeScreen.id: (context) => AddRecipeScreen(),

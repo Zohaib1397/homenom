@@ -18,6 +18,8 @@ import '../services/recipe_card_brain.dart';
 import '../structure/Menu.dart';
 import '../structure/Role.dart';
 import 'customer_screen.dart';
+import 'driver_screen.dart';
+import 'notification_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -60,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // backgroundColor: Theme.of(context).colorScheme.background,
       key: _scaffoldKey,
       appBar: buildAppBar(context),
-      body: currentRole == ROLE.SELLER ? SellerView() : CustomerView(),
+      body: currentRole == ROLE.SELLER ? SellerView() : currentRole == ROLE.DRIVER? DriverView(): CustomerView(),
       drawer: MyDrawer(
         onSignOut: signOut,
         onProfileOption: showProfileScreen,
@@ -215,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icons.shopping_cart_outlined,
                 ))
             : IconButton.filledTonal(
-                onPressed: () {},
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationScreen())),
                 icon: const Icon(Icons.notifications_outlined),
               ),
       ],

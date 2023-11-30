@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/screens/authentication_status.dart';
 import 'package:homenom/screens/login_screen.dart';
-import '../structure/Role.dart';
-import '../structure/User.dart' as Model;
-import '../constants/constants.dart';
-import '../structure/TextFieldHandler.dart';
+import '../../structure/Role.dart';
+import '../../structure/User.dart' as Model;
+import '../../constants/constants.dart';
+import '../../structure/TextFieldHandler.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -38,7 +38,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       );
-      ROLE role = ROLE.UNSELECTED;
+      ROLE role = ROLE.CUSTOMER;
       final userCredentials = await _auth.createUserWithEmailAndPassword(
           email: _emailField.controller.text,
           password: _passwordField.controller.text);
@@ -54,7 +54,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         rating: 0,
         role: role.toString(),
         latitude: 0.0,
-        longitude: 0.0
+        longitude: 0.0,
+        restaurantName: "Null"
       );
       await FirebaseFirestore.instance.collection("Users").doc(userCredentials.user!.email).set(newUser.toJson());
       await _auth.currentUser!.updateDisplayName(_username.controller.text);

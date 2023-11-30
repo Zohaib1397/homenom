@@ -3,15 +3,13 @@ import 'package:homenom/screens/recipe_screen.dart';
 
 import '../../constants/constants.dart';
 import '../../structure/Menu.dart';
+import '../../structure/Role.dart';
 
 class MenuCard extends StatefulWidget {
   final Menu menu;
   final int menuIndex;
-  const MenuCard(
-      {super.key,
-      required this.menu,
-      required this.menuIndex
-      });
+
+  const MenuCard({super.key, required this.menu, required this.menuIndex});
 
   @override
   State<MenuCard> createState() => _MenuCardState();
@@ -35,7 +33,8 @@ class _MenuCardState extends State<MenuCard> {
             size: kRatingStarIconSize,
           ),
         );
-      } else if (i + 1 > widget.menu.averageRating && i < widget.menu.averageRating) {
+      } else if (i + 1 > widget.menu.averageRating &&
+          i < widget.menu.averageRating) {
         ratingStars.add(const Icon(
           Icons.star_half_outlined,
           size: kRatingStarIconSize,
@@ -102,14 +101,14 @@ class _MenuCardState extends State<MenuCard> {
                           Text(widget.menu.title),
                         ],
                       ),
-                      subtitle: Row(
-                        children: [
-                          const Text(
-                            "Delivery: ",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text('$deliveryPriceRange Rs'),
-                        ],
+                      subtitle: currentRole == ROLE.CUSTOMER
+                          ? buildRelevantRow(
+                              "Delivery: ",
+                              '$deliveryPriceRange Rs',
+                            )
+                          : buildRelevantRow(
+                        "Total Recipes: ",
+                        '${widget.menu.recipeList.length}'
                       ),
                       trailing: SizedBox(
                         width: 50,
@@ -136,6 +135,21 @@ class _MenuCardState extends State<MenuCard> {
           ),
         ),
       ),
+    );
+  }
+
+  Row buildRelevantRow(
+    String title,
+    String content,
+  ) {
+    return Row(
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        Text(content),
+      ],
     );
   }
 }

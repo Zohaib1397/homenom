@@ -15,6 +15,7 @@ class User {
   late String role;
   late double latitude;
   late double longitude;
+  late String restaurantName;
 
   User({
     required this.name,
@@ -29,6 +30,7 @@ class User {
     required this.role,
     required this.latitude,
     required this.longitude,
+    required this.restaurantName
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -43,7 +45,8 @@ class User {
     rating : json['rating'],
     role: json['role'],
     latitude: json['latitude'],
-    longitude: json['longitude']
+    longitude: json['longitude'],
+    restaurantName: json['restaurantName']
   );
 
   Map<String, dynamic> toJson(){
@@ -59,7 +62,8 @@ class User {
       'rating': rating,
       'role' : role,
       'latitude': latitude,
-      'longitude' : longitude
+      'longitude' : longitude,
+      'restaurantName' :restaurantName
     };
 
     return data;

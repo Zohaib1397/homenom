@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:homenom/screens/driver_seller_signup_screen.dart';
-import 'package:homenom/screens/signup_screen.dart';
+import 'package:homenom/screens/Signup%20Screens/driver_signup_screen.dart';
+import 'package:homenom/screens/Signup%20Screens/seller_signup_screen.dart';
+import 'package:homenom/screens/Signup%20Screens/customer_signup_screen.dart';
 import 'package:homenom/screens/widgets/drawer_items.dart';
 
 import '../structure/Role.dart';
@@ -48,13 +49,13 @@ class AskRoleScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                DriverSellerSignUpScreen(role: ROLE.SELLER)))),
+                                SellerSignUpScreen()))),
                 buildExpandedCard(
                     AssetImage("assets/Driver.png"), "Driver", () => Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            DriverSellerSignUpScreen(role: ROLE.DRIVER)))),
+                            DriverSignUpScreen()))),
                 buildExpandedCard(
                   AssetImage("assets/Customer.png"),
                   "Customer",

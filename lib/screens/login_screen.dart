@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/askRoleScreen.dart';
 import 'package:homenom/screens/authentication_status.dart';
-import 'package:homenom/screens/signup_screen.dart';
+import 'package:homenom/screens/Signup%20Screens/customer_signup_screen.dart';
 
 import '../structure/TextFieldHandler.dart';
 import 'ForgetPasswordScreen.dart';

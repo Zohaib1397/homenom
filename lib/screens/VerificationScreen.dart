@@ -134,9 +134,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
           // role = "ROLE.DRIVER";
         }
         else{
-          setState(() {
-            currentRole = ROLE.UNSELECTED;
-          });
+          Utils.showPopup(context, "Role Error", "Sorry unable to find role");
         }
         
       }
@@ -150,53 +148,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return isEmailVerified
-        ? currentRole == ROLE.UNSELECTED ? SimpleDialog(
-      title:const Text('Please select account type'),
-      children: <Widget>[
-        SimpleDialogOption(
-          onPressed: () {
-            setState(() {
-              currentRole = ROLE.CUSTOMER;
-            });
-            Provider.of<UserControllerProvider>(context, listen: false).updateRole(currentRole!);
-          },
-          child:const DrawerItem(
-            icon: Icons.camera_front_outlined,
-            text: "Customer Account",
-            onTap: null,
-          ),
-        ),
-        SimpleDialogOption(
-          onPressed: () {
-            setState(() {
-              currentRole = ROLE.DRIVER;
-            });
-            Provider.of<UserControllerProvider>(context, listen: false).updateRole(currentRole!);
-          },
-          child: const DrawerItem(
-            icon: Icons.pedal_bike,
-            text: "Driver Account",
-            onTap: null,
-          ),
-        ),
-        SimpleDialogOption(
-          onPressed: (){
-            setState(() {
-              currentRole = ROLE.SELLER;
-            });
-            Provider.of<UserControllerProvider>(context, listen: false).updateRole(currentRole!);
-          },
-          child: const DrawerItem(
-            icon: Icons.business,
-            text: "Seller Account",
-            onTap: null,
-          ),
-        ),
-        const SimpleDialogOption(
-          child: Text("Note: You won't be able to change account type on this email."),
-        ),
-      ],
-    ): currentRole == null? Center(child: CircularProgressIndicator()) : HomeScreen() //role == "SELLER"? SellerScreen():
+        ?  currentRole == null? Center(child: CircularProgressIndicator()) : HomeScreen() //role == "SELLER"? SellerScreen():
         : Scaffold(
             appBar: AppBar(
               iconTheme: IconThemeData(color: Colors.black),

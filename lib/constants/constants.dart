@@ -13,9 +13,9 @@ final kInputFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.circular(40),
     borderSide: BorderSide.none,
   ),
-  errorStyle: TextStyle(
-    color: Colors.black
-  ),
+  // errorStyle: TextStyle(
+  //   color: Colors.black
+  // ),
 );
 
 Widget buildSwipingContainer(
