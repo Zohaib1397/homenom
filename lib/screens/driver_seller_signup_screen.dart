@@ -2,24 +2,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/screens/authentication_status.dart';
-import 'package:homenom/screens/login_screen.dart';
 import '../structure/Role.dart';
 import '../structure/User.dart' as Model;
 import '../constants/constants.dart';
 import '../structure/TextFieldHandler.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class DriverSellerSignUpScreen extends StatefulWidget {
+  final ROLE role;
+  const DriverSellerSignUpScreen({super.key, required this.role});
 
   static const String id = "Signup_Screen";
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<DriverSellerSignUpScreen> createState() => _DriverSellerSignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _DriverSellerSignUpScreenState extends State<DriverSellerSignUpScreen> {
   final _emailField = TextFieldHandler();
   final _phoneField = TextFieldHandler();
+  final _cnicField = TextFieldHandler();
   final _passwordField = TextFieldHandler();
   final _confirmPasswordField = TextFieldHandler();
   final _username = TextFieldHandler();
@@ -38,7 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       );
-      ROLE role = ROLE.UNSELECTED;
+      ROLE role = widget.role;
       final userCredentials = await _auth.createUserWithEmailAndPassword(
           email: _emailField.controller.text,
           password: _passwordField.controller.text);
@@ -50,7 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         id: "Temporary Empty",
         phoneNum: _phoneField.controller.text,
         isPhoneVerified: false,
-        CNIC: "Null",
+        CNIC: _cnicField.controller.text,
         rating: 0,
         role: role.toString(),
         latitude: 0.0,
@@ -115,6 +116,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               errorText: _username.errorText,
                             ),
                           ),
+
                           TextField(
                             controller: _emailField.controller,
                             keyboardType: TextInputType.emailAddress,
@@ -132,6 +134,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   padding: EdgeInsets.all(15),
                                   child: Text('+92 ')),
                               errorText: _phoneField.errorText,
+                            ),
+                          ),
+                          TextField(
+                            controller: _cnicField.controller,
+                            decoration: kInputFieldDecoration.copyWith(
+                              hintText: "Enter CNIC",
+                              errorText: _cnicField.errorText,
                             ),
                           ),
                           TextField(
@@ -194,7 +203,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () async {
-                                if(_emailField.controller.text.isEmpty || _username.controller.text.isEmpty || _passwordField.controller.text.isEmpty){
+                                if(_emailField.controller.text.isEmpty || _username.controller.text.isEmpty || _passwordField.controller.text.isEmpty || _cnicField.controller.text.isEmpty){
                                   if(_emailField.controller.text.isEmpty){
                                     setState(() {
                                       _emailField.errorText = "Email is required";
@@ -208,6 +217,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   if( _passwordField.controller.text.isEmpty){
                                     setState(() {
                                       _passwordField.errorText="Password is required";
+                                    });
+                                  }
+                                  if(_cnicField.controller.text.isEmpty){
+                                    setState(() {
+                                      _cnicField.errorText="CNIC is required";
                                     });
                                   }
                                   if(_confirmPasswordField.controller.text.isEmpty){
@@ -237,6 +251,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   });
                                   return;
                                 }
+                                if(_cnicField.controller.text.length!=13){
+                                  setState(() {
+                                    _cnicField.errorText = "Invalid CNIC";
+                                  });
+                                  return;
+                                }
                                 if(await createAccount()){
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Inside if")));
                                   Navigator.pushNamed(context, AuthenticationStatus.id);
@@ -258,7 +278,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               if(_auth.currentUser!=null){
                                 _auth.signOut();
                               }
-                              Navigator.popAndPushNamed(context, LoginScreen.id);
+                              Navigator.pop(context);
                             },
                           )
                         ],

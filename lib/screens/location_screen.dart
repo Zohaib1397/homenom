@@ -59,7 +59,6 @@ class _LocationScreenState extends State<LocationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kAppBackgroundColor,
         title: const Text("Please select your location"),
       ),
       body: isLoading

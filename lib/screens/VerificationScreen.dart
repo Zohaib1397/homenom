@@ -198,7 +198,6 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       ],
     ): currentRole == null? Center(child: CircularProgressIndicator()) : HomeScreen() //role == "SELLER"? SellerScreen():
         : Scaffold(
-            backgroundColor: kAppBackgroundColor,
             appBar: AppBar(
               iconTheme: IconThemeData(color: Colors.black),
               elevation: 0,

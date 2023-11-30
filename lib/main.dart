@@ -5,6 +5,7 @@ import 'package:homenom/firebase_options.dart';
 import 'package:homenom/screens/ForgetPasswordScreen.dart';
 import 'package:homenom/screens/add_menu_screen.dart';
 import 'package:homenom/screens/add_recipe_screen.dart';
+import 'package:homenom/screens/askRoleScreen.dart';
 import 'package:homenom/screens/authentication_status.dart';
 import 'package:homenom/screens/cart_screen.dart';
 import 'package:homenom/screens/home_screen.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: AuthenticationStatus.id,
       routes: {
+        AskRoleScreen.id: (context) => const AskRoleScreen(),
         AddMenuScreen.id: (context) => const AddMenuScreen(),
         AddRecipeScreen.id: (context) => AddRecipeScreen(),
         // SellerScreen.id: (context) => const SellerScreen(),

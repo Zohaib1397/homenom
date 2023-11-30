@@ -40,7 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void signOut() {
     final _auth = FirebaseAuth.instance;
-    Provider.of<MenuControllerProvider>(context,listen: false).clearForDispose();
+    Provider.of<MenuControllerProvider>(context, listen: false)
+        .clearForDispose();
     _auth.signOut();
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const LoginScreen()));
@@ -66,16 +67,20 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: currentRole == ROLE.SELLER
           ? FloatingActionButton.extended(
-        label: const Text("Add Recipe"),
-              icon: Icon(Icons.add),
+              label: const Text("Add Recipe"),
+              icon: const Icon(Icons.add),
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AddRecipeScreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddRecipeScreen()));
               },
             )
-          : null,
+          : currentRole == ROLE.DRIVER?  FloatingActionButton(
+        child: const Icon(Icons.location_on_outlined),
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddRecipeScreen()));
+        },
+      ): null,
       // bottomNavigationBar: NavigationBar(
       //   onDestinationSelected: (int index) {
       //     print('Selected $index');
@@ -106,78 +111,87 @@ class _HomeScreenState extends State<HomeScreen> {
     return AppBar(
       elevation: 10,
       // backgroundColor: Theme.of(context).colorScheme.primary,
-      title: currentRole == ROLE.CUSTOMER? StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('Users')
-            .doc(currentUser.email)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final user = snapshot.data!.data() as Map<String, dynamic>;
-            return MaterialButton(
-              onPressed: () async {
-                await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LocationScreen()));
-                await FirebaseFirestore.instance
-                    .collection("Users")
-                    .doc(currentUser.email)
-                    .update({
-                  "address":
-                      "${currentUserAddress.userAddress.streetAddress}, ${currentUserAddress.userAddress.city}",
-                  "latitude": currentUserAddress.latitude,
-                  "longitude": currentUserAddress.longitude,
-                });
-              },
-              child:Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.location_on,
-                    color: Colors.green,
-                  ),
-                  SizedBox(
-                    width: 10,
-                    child: const Text(
-                      "|",
-                      style: TextStyle(fontSize: 20, color: Colors.green),
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Location",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "${user['address'] == "Null" ? "Deliver To Location" : "${user['address']}"} ",
-                        style: TextStyle(
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Icon(
-                    Icons.arrow_drop_down,
-                  ),
-                ],
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Utils.showPopup(context, "Database Error",
-                "Error accessing data. Contact developer");
-          } else {
-            return Center(
-              child: Container(
-                padding: const EdgeInsets.all(40),
-                child: const CircularProgressIndicator(),
-              ),
-            );
-          }
-        },
-      ) : const Text("Seller View", style: TextStyle(fontWeight: FontWeight.bold),),
+      title: currentRole == ROLE.CUSTOMER
+          ? const Text(
+              "Customer View",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )
+          : currentRole == ROLE.SELLER ? const Text(
+              "Seller View",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ) : const Text("Driver View", style: TextStyle(fontWeight: FontWeight.bold),),
+      // StreamBuilder(
+      //   stream: FirebaseFirestore.instance
+      //       .collection('Users')
+      //       .doc(currentUser.email)
+      //       .snapshots(),
+      //   builder: (context, snapshot) {
+      //     if (snapshot.hasData) {
+      //       final user = snapshot.data!.data() as Map<String, dynamic>;
+      //       return MaterialButton(
+      //         onPressed: () async {
+      //           await Navigator.push(
+      //               context,
+      //               MaterialPageRoute(
+      //                   builder: (context) => const LocationScreen()));
+      //           await FirebaseFirestore.instance
+      //               .collection("Users")
+      //               .doc(currentUser.email)
+      //               .update({
+      //             "address":
+      //             "${currentUserAddress.userAddress.streetAddress}, ${currentUserAddress.userAddress.city}",
+      //             "latitude": currentUserAddress.latitude,
+      //             "longitude": currentUserAddress.longitude,
+      //           });
+      //         },
+      //         child:Row(
+      //           mainAxisAlignment: MainAxisAlignment.center,
+      //           children: [
+      //             Icon(
+      //               Icons.location_on,
+      //               color: Colors.green,
+      //             ),
+      //             SizedBox(
+      //               width: 10,
+      //               child: const Text(
+      //                 "|",
+      //                 style: TextStyle(fontSize: 20, color: Colors.green),
+      //               ),
+      //             ),
+      //             Column(
+      //               crossAxisAlignment: CrossAxisAlignment.start,
+      //               children: [
+      //                 Text(
+      //                   "Location",
+      //                   style: TextStyle(fontWeight: FontWeight.bold),
+      //                 ),
+      //                 Text(
+      //                   "${user['address'] == "Null" ? "Deliver To Location" : "${user['address']}"} ",
+      //                   style: TextStyle(
+      //                     fontSize: 10,
+      //                   ),
+      //                 ),
+      //               ],
+      //             ),
+      //             Icon(
+      //               Icons.arrow_drop_down,
+      //             ),
+      //           ],
+      //         ),
+      //       );
+      //     } else if (snapshot.hasError) {
+      //       return Utils.showPopup(context, "Database Error",
+      //           "Error accessing data. Contact developer");
+      //     } else {
+      //       return Center(
+      //         child: Container(
+      //           padding: const EdgeInsets.all(40),
+      //           child: const CircularProgressIndicator(),
+      //         ),
+      //       );
+      //     }
+      //   },
+      // )
       leading: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: GestureDetector(
@@ -191,7 +205,6 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: [
         currentRole == ROLE.CUSTOMER
             ? IconButton(
-
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -202,7 +215,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icons.shopping_cart_outlined,
                 ))
             : IconButton.filledTonal(
-
                 onPressed: () {},
                 icon: const Icon(Icons.notifications_outlined),
               ),

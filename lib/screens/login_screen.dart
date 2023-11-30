@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:homenom/constants/constants.dart';
+import 'package:homenom/screens/askRoleScreen.dart';
 import 'package:homenom/screens/authentication_status.dart';
 import 'package:homenom/screens/signup_screen.dart';
 
@@ -163,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextButton(
                             child: const Text("Signup"),
                             onPressed: () {
-                              Navigator.pushNamed(context, SignUpScreen.id);
+                              Navigator.pushNamed(context, AskRoleScreen.id);
                             },
                           )
                         ],
