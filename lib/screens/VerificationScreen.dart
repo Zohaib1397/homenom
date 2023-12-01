@@ -3,14 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:homenom/constants/constants.dart';
-import 'package:homenom/screens/seller_screen.dart';
-import 'package:homenom/screens/widgets/drawer_items.dart';
 import 'package:homenom/services/Utils.dart';
 import 'package:homenom/services/user_controller.dart';
 import 'package:provider/provider.dart';
 import '../services/menu_controller.dart';
 import '../structure/Role.dart';
 import 'home_screen.dart';
+import 'login_screen.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
   const EmailVerificationScreen({super.key});
@@ -110,47 +109,57 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   }
 
   Future<void> identifyRole() async {
+    setState(() {
+      currentRole = null;
+    });
     await FirebaseFirestore.instance.collection('Users').doc(user.email).get().then((DocumentSnapshot snapshot){
       if(snapshot.exists){
         print(snapshot.get('role'));
         if(snapshot.get('role') == ROLE.CUSTOMER.toString()){
           setState(() {
-            print("Role is set to Customer ${snapshot.get('role')}");
+            print("Role is set to ${snapshot.get('role')}");
             currentRole = ROLE.CUSTOMER;
           });
           // role = "ROLE.CUSTOMER";
         }
         else if(snapshot.get('role') == ROLE.SELLER.toString()){
           setState(() {
-            print("Role is set to Seller ");
+            print("Role is set to ${snapshot.get('role')}");
             currentRole = ROLE.SELLER;
           });
           // role = "ROLE.SELLER";
         }
         else if (snapshot.get('role') == ROLE.DRIVER.toString()){
           setState(() {
+            print("Role is set to ${snapshot.get('role')}");
             currentRole = ROLE.DRIVER;
           });
-          // role = "ROLE.DRIVER";
-        }
-        else{
-          Utils.showPopup(context, "Role Error", "Sorry unable to find role");
+
         }
         
       }
       else{
         Utils.showPopup(context, "No Data Found", "Something is wrong with the database");
+        _auth.signOut();
         role = "";
       }
     });
   }
-
+  void signOut() {
+    final _auth = FirebaseAuth.instance;
+    Provider.of<MenuControllerProvider>(context, listen: false)
+        .clearForDispose();
+    _auth.signOut();
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+  }
   @override
   Widget build(BuildContext context) {
     return isEmailVerified
-        ?  currentRole == null? Center(child: CircularProgressIndicator()) : HomeScreen() //role == "SELLER"? SellerScreen():
+        ? (currentRole == null? Center(child: CircularProgressIndicator()) : HomeScreen())
         : Scaffold(
             appBar: AppBar(
+              leading: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: signOut,),
               iconTheme: IconThemeData(color: Colors.black),
               elevation: 0,
               title: const Center(

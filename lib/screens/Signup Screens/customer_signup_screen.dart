@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/screens/authentication_status.dart';
 import 'package:homenom/screens/login_screen.dart';
+import '../../services/Utils.dart';
 import '../../structure/Role.dart';
 import '../../structure/User.dart' as Model;
 import '../../constants/constants.dart';
@@ -239,10 +240,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   return;
                                 }
                                 if(await createAccount()){
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Inside if")));
-                                  Navigator.pushNamed(context, AuthenticationStatus.id);
-                                }else {
-                                  return;
+                                  print("Account Status: Created But wait for approval");
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Email verification required")));
+                                  Navigator.popAndPushNamed(context, AuthenticationStatus.id);
+                                }else{
+                                  Utils.showPopup(context, "Error Creating Account", "Something went wrong please refer to Driver Signup Function");
                                 }
                               },
                             ),

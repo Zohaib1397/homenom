@@ -383,13 +383,14 @@ class _DriverSignUpScreenState extends State<DriverSignUpScreen> {
                                   });
                                   return;
                                 }
-                                if (await createAccount()) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text("Inside if")));
-                                  Navigator.pushNamed(
-                                      context, AuthenticationStatus.id);
-                                } else {
-                                  return;
+
+
+                                if(await createAccount()){
+                                  print("Account Status: Created But wait for approval");
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Email verification required")));
+                                  Navigator.popAndPushNamed(context, AuthenticationStatus.id);
+                                }else{
+                                  Utils.showPopup(context, "Error Creating Account", "Something went wrong please refer to Driver Signup Function");
                                 }
                               },
                             ),

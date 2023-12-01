@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/screens/authentication_status.dart';
+import '../../services/Utils.dart';
 import '../../structure/Role.dart';
 import '../../structure/User.dart' as Model;
 import '../../constants/constants.dart';
@@ -50,7 +51,7 @@ class _SellerSignUpScreenState extends State<SellerSignUpScreen> {
       final newUser = Model.User(
           name: _username.controller.text,
           username: _emailField.controller.text.split('@')[0],
-          address: "Null",
+          address: _address.controller.text,
           email: _emailField.controller.text,
           id: "Temporary Empty",
           phoneNum: _phoneField.controller.text,
@@ -159,7 +160,7 @@ class _SellerSignUpScreenState extends State<SellerSignUpScreen> {
                             ),
                           ),
                           TextField(
-                            readOnly: true,
+                            // readOnly: true,
                             controller: _address.controller,
                             decoration: kInputFieldDecoration.copyWith(
                               hintText: "Select from map",
@@ -322,19 +323,19 @@ class _SellerSignUpScreenState extends State<SellerSignUpScreen> {
                                   });
                                   return;
                                 }
-                                if (await createAccount()) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text("Inside if")));
-                                  Navigator.pushNamed(
-                                      context, AuthenticationStatus.id);
-                                } else {
-                                  return;
+                                if(await createAccount()){
+                                  print("Account Status: Created But wait for approval");
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Email verification required")));
+                                  Navigator.popAndPushNamed(context, AuthenticationStatus.id);
+                                }else{
+                                  Utils.showPopup(context, "Error Creating Account", "Something went wrong please refer to Driver Signup Function");
                                 }
                               },
                             ),
                           ),
                         ],
                       ),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
