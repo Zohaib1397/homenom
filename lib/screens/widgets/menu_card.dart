@@ -74,9 +74,10 @@ class _MenuCardState extends State<MenuCard> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(kDefaultBorderRadius),
-                child: const Image(
+                child: Image(
                   // image: widget.menuImage,
-                  image: AssetImage("assets/temporary/food_background.jpg"),
+                  image: NetworkImage(widget.menu.menuUrl),
+                  // image: AssetImage("assets/temporary/food_background.jpg"),
                   fit: BoxFit.cover,
                 ),
               ),

@@ -34,8 +34,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Image(
-              image: AssetImage("assets/temporary/food_background.jpg"),
+            Image(
+              image: NetworkImage(widget.menu.menuUrl),
               fit: BoxFit.cover,
             ),
             ListTile(

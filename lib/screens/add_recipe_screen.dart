@@ -69,8 +69,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
             ),
             leading: ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: const Image(
-                image: AssetImage("assets/temporary/food_background.jpg"),
+              child: Image(
+                image: NetworkImage(menu.menuUrl),
               ),
             ),
             trailing: Column(
