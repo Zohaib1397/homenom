@@ -59,7 +59,7 @@ class Menu{
       //Calculate average rating on the recipes of menu
       for(int i =0; i < list.length;i++){
         //for rating
-        rating += list[i].rating as int;
+        rating += list[i].rating;
         //for delivery price
         final deliveryPrice = list[i].deliveryPrice;
         if(minimum > deliveryPrice){

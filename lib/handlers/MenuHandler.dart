@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:homenom/structure/Database/ItemDAO.dart';
 
 import '../structure/Menu.dart';
-import '../structure/Recipe.dart';
 import 'package:collection/collection.dart';
 
 
@@ -165,13 +164,11 @@ class MenuHandler implements ItemDAO {
 
     await FirebaseFirestore.instance.collection("Menus").get().then(
           (value) {
-        value.docs.forEach(
-              (element) {
+        for (var element in value.docs) {
             Menu menu = Menu.fromJson(element.data());
             menu.id = element.id;
             menuList.add(menu);
-          },
-        );
+          }
       },
     );
 

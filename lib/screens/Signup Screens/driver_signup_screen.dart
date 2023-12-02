@@ -8,7 +8,6 @@ import '../../structure/Role.dart';
 import '../../structure/User.dart' as Model;
 import '../../constants/constants.dart';
 import '../../structure/TextFieldHandler.dart';
-import '../location_screen.dart';
 import 'dart:io';
 
 import '../login_screen.dart';
@@ -231,16 +230,16 @@ class _DriverSignUpScreenState extends State<DriverSignUpScreen> {
                               suffixIcon: DropdownButton(
                                   items: const [
                                     DropdownMenuItem(
-                                      child: Text("50cc"),
                                       value: "50cc",
+                                      child: Text("50cc"),
                                     ),
                                     DropdownMenuItem(
-                                      child: Text("70cc"),
                                       value: "70cc",
+                                      child: Text("70cc"),
                                     ),
                                     DropdownMenuItem(
-                                      child: Text("125cc"),
                                       value: "125cc",
+                                      child: Text("125cc"),
                                     ),
                                   ],
                                   onChanged: (value) {
@@ -387,7 +386,7 @@ class _DriverSignUpScreenState extends State<DriverSignUpScreen> {
 
                                 if(await createAccount()){
                                   print("Account Status: Created But wait for approval");
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Email verification required")));
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Email verification required")));
                                   Navigator.popAndPushNamed(context, AuthenticationStatus.id);
                                 }else{
                                   Utils.showPopup(context, "Error Creating Account", "Something went wrong please refer to Driver Signup Function");

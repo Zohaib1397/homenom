@@ -10,13 +10,8 @@ import 'package:homenom/screens/askRoleScreen.dart';
 import 'package:homenom/screens/authentication_status.dart';
 import 'package:homenom/screens/cart_screen.dart';
 import 'package:homenom/screens/home_screen.dart';
-import 'package:homenom/screens/location_screen.dart';
 import 'package:homenom/screens/login_screen.dart';
-import 'package:homenom/screens/order_screen.dart';
-import 'package:homenom/screens/otp_screen.dart';
 import 'package:homenom/screens/profile_screen.dart';
-import 'package:homenom/screens/recipe_screen.dart';
-import 'package:homenom/screens/seller_screen.dart';
 import 'package:homenom/screens/Signup%20Screens/customer_signup_screen.dart';
 import 'package:homenom/services/menu_controller.dart';
 import 'package:homenom/services/user_controller.dart';
@@ -31,7 +26,7 @@ void main() async {
           ChangeNotifierProvider(create: (context) => MenuControllerProvider()),
           ChangeNotifierProvider(create: (context) => UserControllerProvider())
         ],
-        child: MyApp(),
+        child: const MyApp(),
       ),
 
   );
@@ -55,7 +50,7 @@ class MyApp extends StatelessWidget {
         AddRecipeScreen.id: (context) => AddRecipeScreen(),
         CartScreen.id: (context) => const CartScreen(),
         HomeScreen.id: (context) => const HomeScreen(),
-        ProfileScreen.id: (context) => ProfileScreen(),
+        ProfileScreen.id: (context) => const ProfileScreen(),
         LoginScreen.id: (context) => const LoginScreen(),
         SignUpScreen.id: (context) => const SignUpScreen(),
         AuthenticationStatus.id: (context) => const AuthenticationStatus(),

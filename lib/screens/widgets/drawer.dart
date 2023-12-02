@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:homenom/screens/authentication_status.dart';
 import 'package:homenom/screens/history_screen.dart';
-import 'package:homenom/screens/seller_screen.dart';
 
-import '../../constants/constants.dart';
-import '../../structure/Role.dart';
 import 'drawer_items.dart';
 
 class MyDrawer extends StatefulWidget {

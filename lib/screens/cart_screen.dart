@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/services/menu_controller.dart';
@@ -106,7 +105,7 @@ class _CartScreenState extends State<CartScreen> {
                       Text("Total Quantity: ${recipeList[index]['currentOrder']}"),
                     ],
                   ),
-                  trailing: Image(image: AssetImage("assets/temporary/food_background.jpg"), fit: BoxFit.contain,),
+                  trailing: const Image(image: AssetImage("assets/temporary/food_background.jpg"), fit: BoxFit.contain,),
 
                 ),
               ),

@@ -51,6 +51,7 @@ class SellerView extends StatelessWidget {
                       if(confirmDismiss){
                         Provider.of<MenuControllerProvider>(context, listen: false).removeMenuFromList(menuList[index]);
                       }
+                      return null;
                     },
                     background: buildSwipingContainer(
                         Colors.red, "Delete", Icons.delete, Alignment.centerRight),

@@ -14,7 +14,7 @@ class HistoryScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.all(30.0),
+              padding: EdgeInsets.all(30.0),
               child: Image(image: AssetImage("assets/empty_data_icon.png"),),
             ),
             Text("No History found"),

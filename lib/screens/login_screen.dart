@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/askRoleScreen.dart';
 import 'package:homenom/screens/authentication_status.dart';
-import 'package:homenom/screens/Signup%20Screens/customer_signup_screen.dart';
 
 import '../structure/TextFieldHandler.dart';
 import 'ForgetPasswordScreen.dart';
@@ -135,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               height: 50,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(40)),
-                              color: Color(0xff3D3D3D),
+                              color: const Color(0xff3D3D3D),
                               child: const Text(
                                 "Login",
                                 style: TextStyle(color: Colors.white),

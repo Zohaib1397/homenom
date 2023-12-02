@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/add_menu_screen.dart';
 import 'package:homenom/services/menu_controller.dart';
@@ -71,7 +69,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
             ),
             leading: ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: Image(
+              child: const Image(
                 image: AssetImage("assets/temporary/food_background.jpg"),
               ),
             ),
@@ -320,9 +318,9 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
           print(
               "Recipe added successfully to the menu at menu index $selectedMenuIndex");
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content:
-              const Text("Recipe Updated Successfully. You can add more..")));
+              Text("Recipe Updated Successfully. You can add more..")));
           setState(() {
             recipeTitle.controller.text = "";
             recipePrice.controller.text = "";

@@ -128,7 +128,7 @@ class _RecipeCardState extends State<RecipeCard> {
                     ),
                     trailing: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image(
+                      child: const Image(
                         image: AssetImage("assets/temporary/food_background.jpg"),
                         fit: BoxFit.contain,
                       ),

@@ -89,12 +89,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       }
     } catch (e) {
       print(e.toString());
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Something wrong in verification checking")));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Something wrong in verification checking")));
     }
   }
   void countDownRefresher() {
     if (timer == null || !timer!.isActive) {
-      timer = Timer.periodic(Duration(seconds: 3), (timer) {
+      timer = Timer.periodic(const Duration(seconds: 3), (timer) {
         checkEmailVerification();
       });
     }
@@ -126,6 +126,8 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
           setState(() {
             print("Role is set to ${snapshot.get('role')}");
             currentRole = ROLE.SELLER;
+            print("Hello world");
+            // Ok that is great
           });
           // role = "ROLE.SELLER";
         }
@@ -146,21 +148,21 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     });
   }
   void signOut() {
-    final _auth = FirebaseAuth.instance;
+    final auth = FirebaseAuth.instance;
     Provider.of<MenuControllerProvider>(context, listen: false)
         .clearForDispose();
-    _auth.signOut();
+    auth.signOut();
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
   @override
   Widget build(BuildContext context) {
     return isEmailVerified
-        ? (currentRole == null? Center(child: CircularProgressIndicator()) : HomeScreen())
+        ? (currentRole == null? const Center(child: CircularProgressIndicator()) : const HomeScreen())
         : Scaffold(
             appBar: AppBar(
-              leading: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: signOut,),
-              iconTheme: IconThemeData(color: Colors.black),
+              leading: IconButton(icon: const Icon(Icons.arrow_back_ios), onPressed: signOut,),
+              iconTheme: const IconThemeData(color: Colors.black),
               elevation: 0,
               title: const Center(
                 child: Text(

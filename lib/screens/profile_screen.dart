@@ -8,7 +8,7 @@ import 'package:homenom/structure/TextFieldHandler.dart';
 import 'package:homenom/services/Utils.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen({super.key});
+  const ProfileScreen({super.key});
 
 
   static const String id = "Profile_Screen";
@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onEdit: () async {
                         await Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LocationScreen()),
+                          MaterialPageRoute(builder: (context) => const LocationScreen()),
                         );
                         await FirebaseFirestore.instance.collection("Users").doc(currentUser.email).update({"address": "${currentUserAddress.userAddress.streetAddress}, ${currentUserAddress.userAddress.city}"});
                       },

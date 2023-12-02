@@ -107,7 +107,7 @@ class _OTPScreenState extends State<OTPScreen> {
       backgroundColor: kAppBackgroundColor,
       appBar: AppBar(
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(

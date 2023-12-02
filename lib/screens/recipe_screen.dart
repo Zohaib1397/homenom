@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:homenom/constants/constants.dart';
-import 'package:homenom/screens/order_screen.dart';
 import 'package:homenom/screens/widgets/recipe_card.dart';
-import 'package:homenom/services/menu_controller.dart';
-import 'package:provider/provider.dart';
 
 import '../structure/Menu.dart';
 
@@ -38,7 +34,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image(
+            const Image(
               image: AssetImage("assets/temporary/food_background.jpg"),
               fit: BoxFit.cover,
             ),

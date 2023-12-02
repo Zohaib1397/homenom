@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:homenom/services/Utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class Location {

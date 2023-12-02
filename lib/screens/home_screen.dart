@@ -1,21 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/add_recipe_screen.dart';
 import 'package:homenom/screens/cart_screen.dart';
-import 'package:homenom/screens/location_screen.dart';
 import 'package:homenom/screens/login_screen.dart';
 import 'package:homenom/screens/profile_screen.dart';
 import 'package:homenom/screens/seller_screen.dart';
 import 'package:homenom/screens/widgets/drawer.dart';
-import 'package:homenom/screens/widgets/menu_card.dart';
 import 'package:provider/provider.dart';
 
-import '../services/Utils.dart';
 import '../services/menu_controller.dart';
-import '../services/recipe_card_brain.dart';
-import '../structure/Menu.dart';
 import '../structure/Role.dart';
 import 'customer_screen.dart';
 import 'driver_screen.dart';
@@ -41,10 +35,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void signOut() {
-    final _auth = FirebaseAuth.instance;
+    final auth = FirebaseAuth.instance;
     Provider.of<MenuControllerProvider>(context, listen: false)
         .clearForDispose();
-    _auth.signOut();
+    auth.signOut();
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
@@ -53,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // First pop out drawer
     Navigator.pop(context);
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+        context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
   }
 
   @override
@@ -62,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // backgroundColor: Theme.of(context).colorScheme.background,
       key: _scaffoldKey,
       appBar: buildAppBar(context),
-      body: currentRole == ROLE.SELLER ? SellerView() : currentRole == ROLE.DRIVER? DriverView(): CustomerView(),
+      body: currentRole == ROLE.SELLER ? SellerView() : currentRole == ROLE.DRIVER? const DriverView(): const CustomerView(),
       drawer: MyDrawer(
         onSignOut: signOut,
         onProfileOption: showProfileScreen,

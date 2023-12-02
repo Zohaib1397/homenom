@@ -241,7 +241,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 }
                                 if(await createAccount()){
                                   print("Account Status: Created But wait for approval");
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Email verification required")));
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Email verification required")));
                                   Navigator.popAndPushNamed(context, AuthenticationStatus.id);
                                 }else{
                                   Utils.showPopup(context, "Error Creating Account", "Something went wrong please refer to Driver Signup Function");

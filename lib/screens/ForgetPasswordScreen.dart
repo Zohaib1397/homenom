@@ -71,7 +71,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       backgroundColor: kAppBackgroundColor,
       appBar: AppBar(
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
         title: const Text(
           "Forget Password",

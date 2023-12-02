@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
@@ -60,7 +59,7 @@ class _OrderScreenState extends State<OrderScreen> {
         title: Text(widget.menu.title),
         actions: [
           IconButton(
-              icon: Icon(Icons.shopping_cart_outlined),
+              icon: const Icon(Icons.shopping_cart_outlined),
               onPressed: () => Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const CartScreen())))
         ],
@@ -69,7 +68,7 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image(
+            const Image(
               image: AssetImage("assets/temporary/food_background.jpg"),
               fit: BoxFit.contain,
             ),
@@ -139,7 +138,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     widget.recipe['currentOrder'] = numberOfItems;
                       Provider.of<MenuControllerProvider>(context, listen: false).addItemToCart(widget.recipe);
                       Utils.showPopup(context, "Success", "Item added to cart successfully");
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CartScreen()));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const CartScreen()));
                   },
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),

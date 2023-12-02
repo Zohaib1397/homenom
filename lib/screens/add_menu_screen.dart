@@ -1,10 +1,9 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
-import 'package:homenom/screens/recipe_screen.dart';
 import 'package:homenom/services/menu_controller.dart';
 import 'package:homenom/structure/TextFieldHandler.dart';
 import 'package:image_picker/image_picker.dart';
@@ -43,11 +42,18 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
   Future<void> createMenu() async {
     try {
       setState(() => isLoading = true);
+      final path = "menus/${FirebaseAuth.instance.currentUser!.email}/${title.controller.text}.jpg";
+      final reference = FirebaseStorage.instance.ref().child(path);
+      final uploadTask = reference.putFile(image!);
+      final snapshot = await uploadTask.whenComplete(() => null);
+
+      final urlDownload = await snapshot.ref.getDownloadURL();
+
       final newMenu = Menu(
         title: title.controller.text,
         recipeList: [],
         email: FirebaseAuth.instance.currentUser!.email?? "No Email",
-        menuUrl: 'Temporarily null',
+        menuUrl: urlDownload,
       );
       Provider.of<MenuControllerProvider>(context, listen: false).addMenuToList(newMenu);
       setState(() => isLoading = false);

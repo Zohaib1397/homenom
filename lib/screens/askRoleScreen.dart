@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:homenom/screens/Signup%20Screens/driver_signup_screen.dart';
 import 'package:homenom/screens/Signup%20Screens/seller_signup_screen.dart';
 import 'package:homenom/screens/Signup%20Screens/customer_signup_screen.dart';
-import 'package:homenom/screens/widgets/drawer_items.dart';
 
-import '../structure/Role.dart';
 
 class AskRoleScreen extends StatelessWidget {
   const AskRoleScreen({super.key});
@@ -43,21 +41,21 @@ class AskRoleScreen extends StatelessWidget {
             child: Row(
               children: [
                 buildExpandedCard(
-                    AssetImage("assets/Seller.png"),
+                    const AssetImage("assets/Seller.png"),
                     "Seller",
                     () => Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                SellerSignUpScreen()))),
+                                const SellerSignUpScreen()))),
                 buildExpandedCard(
-                    AssetImage("assets/Driver.png"), "Driver", () => Navigator.push(
+                    const AssetImage("assets/Driver.png"), "Driver", () => Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            DriverSignUpScreen()))),
+                            const DriverSignUpScreen()))),
                 buildExpandedCard(
-                  AssetImage("assets/Customer.png"),
+                  const AssetImage("assets/Customer.png"),
                   "Customer",
                   () => Navigator.pushNamed(context, SignUpScreen.id),
                 ),
