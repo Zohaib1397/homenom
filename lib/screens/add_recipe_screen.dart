@@ -1,10 +1,13 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/add_menu_screen.dart';
+import 'package:homenom/screens/widgets/build_cache_image.dart';
 import 'package:homenom/services/menu_controller.dart';
 import 'package:homenom/structure/TextFieldHandler.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,6 +16,7 @@ import 'package:provider/provider.dart';
 import '../services/Utils.dart';
 import '../structure/Menu.dart';
 import '../structure/Recipe.dart';
+import 'package:http/http.dart' as http;
 
 class AddRecipeScreen extends StatefulWidget {
   int? index;
@@ -69,12 +73,13 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
               menu.title,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image(
-                image: NetworkImage(menu.menuUrl),
-              ),
-            ),
+            leading: generateCachedImage(url: menu.menuUrl, clip: 16),
+            // leading: ClipRRect(
+            //   borderRadius: BorderRadius.circular(16),
+            //   child: Image(
+            //     image: NetworkImage(menu.menuUrl),
+            //   ),
+            // ),
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -101,9 +106,30 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
       recipeQuantity.controller.text = widget.recipe!['quantity'].toString();
       deliveryPrice.controller.text =
           widget.recipe!['deliveryPrice'].toString();
+      downloadImageAndGetFile();
     }
   }
 
+  Future<void> downloadImageAndGetFile() async {
+    final url = widget.recipe!['url']; // Replace with your image URL
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final Uint8List bytes = response.bodyBytes;
+      final tempDir = await getTemporaryDirectory();
+      final tempPath = tempDir.path;
+
+      final file = File('$tempPath/${recipePrice.controller.text}.jpg');
+      await file.writeAsBytes(bytes);
+
+      setState(() {
+        image = file;
+      });
+    } else {
+      // Handle error
+      print('Failed to download image: ${response.statusCode}');
+    }
+  }
   Future<String> getImageURL() async {
     setState(() => isLoading = true);
     try {
@@ -272,8 +298,9 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                           onPressed: () {
                             addRecipeToDatabase();
                           },
-                          child: const Text(
-                            "Create Recipe",
+                          child: Text(
+                            widget.recipe != null?
+                            "Edit Recipe" : "Create Recipe",
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -354,17 +381,15 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
           numberSold: widget.recipe!['numberSold'],
         );
         try {
-          Provider.of<MenuControllerProvider>(context, listen: false)
-              .removeRecipeFromList(Recipe.fromJson(widget.recipe!),
-                  widget.menuIndex!, widget.index!);
-          Provider.of<MenuControllerProvider>(context, listen: false)
-              .addRecipeToMenu(recipe, selectedMenuIndex);
-
+          final result = await Provider.of<MenuControllerProvider>(context, listen: false)
+                  .updateRecipeInList(recipe, widget.menuIndex!, widget.index!);
+          print("Recipe update Status : $result");
           print(
               "Recipe added successfully to the menu at menu index $selectedMenuIndex");
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content:
-                  Text("Recipe Updated Successfully. You can add more..")));
+                  Text("Recipe Updated Successfully. Add more recipe..")));
+          // Navigator.pop(context)
           setState(() {
             recipeTitle.controller.text = "";
             recipePrice.controller.text = "";

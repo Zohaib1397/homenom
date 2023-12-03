@@ -7,7 +7,6 @@ import 'package:homenom/structure/Database/ItemDAO.dart';
 import '../structure/Menu.dart';
 import 'package:collection/collection.dart';
 
-
 class MenuHandler implements ItemDAO {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
@@ -27,6 +26,7 @@ class MenuHandler implements ItemDAO {
       return false;
     }
   }
+
   //
   // Future<void> getEveryMenu() async {
   //   Completer<List<Menu>> completer = Completer();
@@ -57,7 +57,6 @@ class MenuHandler implements ItemDAO {
   //   // return completer.future;
   // }
 
-
   @override
   Future<bool> delete(item) async {
     try {
@@ -69,8 +68,8 @@ class MenuHandler implements ItemDAO {
     }
   }
 
-  Future<bool> deleteRecipe(recipe) async{
-    try{
+  Future<bool> deleteRecipe(recipe) async {
+    try {
       String menuID = recipe.menuID;
       print(menuID);
       DocumentReference menuRef = collection.doc(menuID);
@@ -82,14 +81,34 @@ class MenuHandler implements ItemDAO {
       });
       await menuRef.update({'recipeList': currentRecipeList});
       return true;
-    }catch(e){
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> updateRecipe(recipe, newRecipe) async {
+    try {
+      String menuID = newRecipe.menuID;
+      DocumentReference menuRef = collection.doc(menuID);
+      var data = (await menuRef.get()).data() as Map<String, dynamic>?;
+
+      List<dynamic> currentRecipeList = data?['recipeList'] as List<dynamic>;
+      currentRecipeList.removeWhere((item) {
+        return const MapEquality().equals(item, recipe.toJson());
+      });
+      // Add the new recipe to the list
+      currentRecipeList.add(newRecipe.toJson());
+      await menuRef.update({'recipeList': currentRecipeList});
+      return true;
+    } catch (e) {
       print(e.toString());
       return false;
     }
   }
 
   Future<bool> createRecipe(recipe) async {
-    try{
+    try {
       String menuID = recipe.menuID;
       DocumentReference menuRef = collection.doc(menuID);
       var data = (await menuRef.get()).data() as Map<String, dynamic>?;
@@ -100,11 +119,12 @@ class MenuHandler implements ItemDAO {
       currentRecipeList.add(recipe.toJson());
       await menuRef.update({'recipeList': currentRecipeList});
       return true;
-    }catch(e){
+    } catch (e) {
       print(e.toString());
       return false;
     }
   }
+
   // Future<bool> createRecipe(Recipe recipe) async {
   //   try {
   //     String menuID = recipe.menuID;
@@ -134,21 +154,17 @@ class MenuHandler implements ItemDAO {
   //   }
   // }
 
-  Future<List<Menu>> getRespectiveMenus() async{
+  Future<List<Menu>> getRespectiveMenus() async {
     List<Menu> menuList = [];
-    await collection.get().then(
-        (value){
-          value.docs.forEach(
-              (element){
-                Menu menu = Menu.fromJson(element.data());
-                menu.id = element.id;
-                if(_auth.currentUser!.email == menu.email){
-                  menuList.add(menu);
-                }
-              }
-          );
+    await collection.get().then((value) {
+      value.docs.forEach((element) {
+        Menu menu = Menu.fromJson(element.data());
+        menu.id = element.id;
+        if (_auth.currentUser!.email == menu.email) {
+          menuList.add(menu);
         }
-    );
+      });
+    });
     return menuList;
   }
 
@@ -163,12 +179,12 @@ class MenuHandler implements ItemDAO {
     List<Menu> menuList = [];
 
     await FirebaseFirestore.instance.collection("Menus").get().then(
-          (value) {
+      (value) {
         for (var element in value.docs) {
-            Menu menu = Menu.fromJson(element.data());
-            menu.id = element.id;
-            menuList.add(menu);
-          }
+          Menu menu = Menu.fromJson(element.data());
+          menu.id = element.id;
+          menuList.add(menu);
+        }
       },
     );
 

@@ -18,7 +18,13 @@ class RecipeCard extends StatefulWidget {
 }
 
 class _RecipeCardState extends State<RecipeCard> {
-  bool isExpanded = false;
+  List<bool> isRecipeExpanded = [];
+
+  @override
+  void initState() {
+    super.initState();
+    isRecipeExpanded = List.generate(widget.menu.recipeList.length, (index) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +34,7 @@ class _RecipeCardState extends State<RecipeCard> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: List.generate(menuList[widget.menuIndex].recipeList.length, (index) {
+            print("Length of list: ${menuList[widget.menuIndex].recipeList.length}");
             return Dismissible(
               key: UniqueKey(),
               direction: currentRole == ROLE.SELLER
@@ -54,13 +61,12 @@ class _RecipeCardState extends State<RecipeCard> {
                   },
                 );
                 if (confirmDismiss) {
-                  setState(() async {
-                    await menuProvider.removeRecipeFromList(
-                      Recipe.fromJson(menuList[widget.menuIndex].recipeList[index]),
-                      widget.menuIndex,
-                      index,
-                    );
-                  });
+                  await menuProvider.removeRecipeFromList(
+                    Recipe.fromJson(menuList[widget.menuIndex].recipeList[index]),
+                    widget.menuIndex,
+                    index,
+                  );
+                  setState((){});
                 }
                 return;
               },
@@ -75,6 +81,7 @@ class _RecipeCardState extends State<RecipeCard> {
                   duration: const Duration(milliseconds: 1000),
                   child: ListTile(
                     onTap: () {
+                      print("Recipe Index chosen: $index");
                       setState(() {
                         currentRole != ROLE.SELLER
                             ? Navigator.push(
@@ -86,7 +93,7 @@ class _RecipeCardState extends State<RecipeCard> {
                             ),
                           ),
                         )
-                            : isExpanded = !isExpanded;
+                            : isRecipeExpanded[index] = !isRecipeExpanded[index];
                       });
                     },
                     title: Text(
@@ -100,11 +107,12 @@ class _RecipeCardState extends State<RecipeCard> {
                         Text("Description: ${menuList[widget.menuIndex].recipeList[index]['description']}"),
                         Text("Price: ${menuList[widget.menuIndex].recipeList[index]['price']}"),
                         Text("Sold: ${menuList[widget.menuIndex].recipeList[index]['numberSold']}"),
-                        isExpanded
+                        isRecipeExpanded[index]
                             ? Row(
                           children: [
                             IconButton.filled(
                               onPressed: () {
+                                print("Edit Recipe at: $index");
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

@@ -65,6 +65,26 @@ class MenuControllerProvider extends ChangeNotifier{
       return false;
     }
   }
+  Future<bool> updateRecipeInList(Recipe recipe, int menuIndex, int index) async{
+    try{
+      String menuID = await getMenuId(menuIndex);
+      recipe.menuID = menuID;
+      print("Menu: $menuID");
+      final db_result = await menuHandler.updateRecipe(Recipe.fromJson(menuList[menuIndex].recipeList[index]), recipe);
+      print("Database Update status: $db_result");
+      //Get menu index with menu ID
+      // menuList[menuIndex].recipeList.removeWhere((item) {
+      //   return const MapEquality().equals(item, recipe.toJson());
+      // });
+      menuList[menuIndex].recipeList.removeAt(index);
+      menuList[menuIndex].recipeList.add(recipe.toJson());
+      notifyListeners();
+      return true;
+    }catch(e){
+      print(e.toString());
+      return false;
+    }
+  }
   Future<bool> removeRecipeFromList(Recipe recipe,int menuIndex, int index) async{
     try{
       String menuID = await getMenuId(menuIndex);
