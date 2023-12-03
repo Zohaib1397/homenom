@@ -68,8 +68,8 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Image(
-              image: AssetImage("assets/temporary/food_background.jpg"),
+            Image(
+              image: NetworkImage(widget.recipe['url']),
               fit: BoxFit.contain,
             ),
             Expanded(

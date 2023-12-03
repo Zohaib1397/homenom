@@ -42,7 +42,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
   Future<void> createMenu() async {
     try {
       setState(() => isLoading = true);
-      final path = "menus/${"CurrentMenus"}/${title.controller.text}.jpg";
+      final path = "menus/${FirebaseAuth.instance.currentUser!.email}/${title.controller.text}.jpg";
       print("Getting path: $path");
       final reference = FirebaseStorage.instance.ref().child(path);
       print("Getting reference: $reference");
@@ -144,7 +144,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
           ),
           isLoading
               ? Scaffold(
-                  backgroundColor: Colors.grey.withAlpha(200),
+                  backgroundColor: Colors.black.withAlpha(200),
                 )
               : Container(),
           isLoading

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/add_menu_screen.dart';
@@ -38,6 +39,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   TextFieldHandler recipeQuantity = TextFieldHandler();
   TextFieldHandler deliveryPrice = TextFieldHandler();
   int selectedMenuIndex = 0;
+  bool isLoading = false;
 
   Future<void> getImageFromGallery(ImageSource source) async {
     try {
@@ -92,12 +94,32 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     if (widget.index != null) {
       selectedMenuIndex = widget.index!;
     }
-    if(widget.recipe!=null){
+    if (widget.recipe != null) {
       recipeTitle.controller.text = widget.recipe!['name'];
       recipePrice.controller.text = widget.recipe!['price'].toString();
       recipeDescription.controller.text = widget.recipe!['description'];
       recipeQuantity.controller.text = widget.recipe!['quantity'].toString();
-      deliveryPrice.controller.text = widget.recipe!['deliveryPrice'].toString();
+      deliveryPrice.controller.text =
+          widget.recipe!['deliveryPrice'].toString();
+    }
+  }
+
+  Future<String> getImageURL() async {
+    setState(() => isLoading = true);
+    try {
+      String path = "menus/recipes/${FirebaseAuth.instance.currentUser!.email}/${recipeTitle.controller.text}.jpg";
+      final reference = FirebaseStorage.instance.ref().child(path);
+      print("Getting reference: $reference");
+      UploadTask? uploadTask = reference.putFile(image!);
+      final snapshot = await uploadTask.whenComplete((){});
+
+      final urlDownload = await snapshot.ref.getDownloadURL();
+
+      setState(() => isLoading = false);
+      return urlDownload;
+    } catch (error) {
+      setState(() => isLoading = false);
+      return "Unexpected Error";
     }
   }
 
@@ -108,157 +130,171 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         elevation: 10,
         title: Text(widget.recipe == null ? "Add Recipe" : "Edit Recipe"),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "Select Menu",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Consumer<MenuControllerProvider>(
-                    builder: (context, menuControllerProvider, _) {
-                      List<Menu> menuList = menuControllerProvider.menuList;
-                      return Column(
-                        children: List.generate(menuList.length, (index) {
-                          return _createMenuCardWidget(menuList[index], index,
-                              (selectedIndex) {
-                            setState(() {
-                              selectedMenuIndex = selectedIndex;
-                            });
-                          });
-                        }),
-                      );
-                    },
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Select Menu",
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    onPressed: () async {
-                      final answer = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const AddMenuScreen()))
-                          as bool;
-                      if (answer) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Menu added successfully")));
-                      }
-                    },
-                    child: const Icon(
-                      Icons.add,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Consumer<MenuControllerProvider>(
+                        builder: (context, menuControllerProvider, _) {
+                          List<Menu> menuList = menuControllerProvider.menuList;
+                          return Column(
+                            children: List.generate(menuList.length, (index) {
+                              return _createMenuCardWidget(menuList[index], index,
+                                  (selectedIndex) {
+                                setState(() {
+                                  selectedMenuIndex = selectedIndex;
+                                });
+                              });
+                            }),
+                          );
+                        },
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                        ),
+                        onPressed: () async {
+                          final answer = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const AddMenuScreen()))
+                              as bool;
+                          if (answer) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("Menu added successfully")));
+                          }
+                        },
+                        child: const Icon(
+                          Icons.add,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Recipe Details",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          child: Column(
+                            children: [
+                              image == null
+                                  ? const Icon(
+                                      Icons.image_sharp,
+                                      color: Colors.grey,
+                                      size: 200,
+                                    )
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Image.file(
+                                        image!,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  TextButton(
+                                      onPressed: () =>
+                                          getImageFromGallery(ImageSource.gallery),
+                                      child: const Text("Add Image")),
+                                  TextButton(
+                                    onPressed: () =>
+                                        getImageFromGallery(ImageSource.camera),
+                                    child: const Text("Capture Image"),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: buildTextField("Title", recipeTitle),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                                flex: 1,
+                                child: buildTextField("Price", recipePrice,
+                                    inputType: TextInputType.number)),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        buildTextField("Description", recipeDescription,
+                            maxLines: 5),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        buildTextField("Quantity in kilogram", recipeQuantity,
+                            inputType: TextInputType.number),
+                        const SizedBox(height: 10),
+                        buildTextField("Delivery Price", deliveryPrice,
+                            inputType: TextInputType.number),
+                        const SizedBox(height: 10),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                          ),
+                          onPressed: () {
+                            addRecipeToDatabase();
+                          },
+                          child: const Text(
+                            "Create Recipe",
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
                     ),
                   ),
                 ],
               ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "Recipe Details",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      child: Column(
-                        children: [
-                          image == null
-                              ? const Icon(
-                                  Icons.image_sharp,
-                                  color: Colors.grey,
-                                  size: 200,
-                                )
-                              : ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: Image.file(
-                                    image!,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextButton(
-                                  onPressed: () =>
-                                      getImageFromGallery(ImageSource.gallery),
-                                  child: const Text("Add Image")),
-                              TextButton(
-                                onPressed: () =>
-                                    getImageFromGallery(ImageSource.camera),
-                                child: const Text("Capture Image"),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: buildTextField("Title", recipeTitle),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                            flex: 1,
-                            child: buildTextField("Price", recipePrice,
-                                inputType: TextInputType.number)),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    buildTextField("Description", recipeDescription,
-                        maxLines: 5),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    buildTextField("Quantity in kilogram", recipeQuantity,
-                        inputType: TextInputType.number),
-                    const SizedBox(height: 10),
-                    buildTextField("Delivery Price", deliveryPrice,
-                        inputType: TextInputType.number),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                      ),
-                      onPressed: () {
-                        addRecipeToDatabase();
-                      },
-                      child: const Text(
-                        "Create Recipe",
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+          isLoading
+              ? Scaffold(
+            backgroundColor: Colors.black.withAlpha(200),
+          )
+              : Container(),
+          isLoading
+              ? const Center(
+            child: CircularProgressIndicator(),
+          )
+              : Container(),
+        ],
       ),
     );
   }
@@ -275,14 +311,15 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
             "Please select a menu to add the recipe");
         return;
       }
-      if(widget.recipe!=null && widget.index!=null){
-        if(widget.index != selectedMenuIndex){
-          final confirmChange =  await showDialog(
+      if (widget.recipe != null && widget.index != null) {
+        if (widget.index != selectedMenuIndex) {
+          final confirmChange = await showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text("Confirm Menu Change"),
-                content: const Text("Are you sure you want to add this recipe to another Menu?"),
+                content: const Text(
+                    "Are you sure you want to add this recipe to another Menu?"),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
@@ -296,23 +333,30 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
               );
             },
           );
-          if(!confirmChange){
-              return;
+          if (!confirmChange) {
+            return;
           }
+        }
+        String url = await getImageURL();
+        if(url == "Unexpected Error"){
+          Utils.showPopup(context, "Network Error", "Please check your network connection.");
+          return;
         }
         final recipe = Recipe(
           id: widget.recipe!['id'],
-          url: "Temporary Empty",
+          url: url,
           name: recipeTitle.controller.text,
           description: recipeDescription.controller.text,
           price: double.parse(recipePrice.controller.text),
           quantity: int.parse(recipeQuantity.controller.text),
-          rating:  widget.recipe!['rating'],
+          rating: widget.recipe!['rating'],
           deliveryPrice: double.parse(deliveryPrice.controller.text),
           numberSold: widget.recipe!['numberSold'],
         );
         try {
-          Provider.of<MenuControllerProvider>(context, listen: false).removeRecipeFromList(Recipe.fromJson(widget.recipe!), widget.menuIndex!, widget.index!);
+          Provider.of<MenuControllerProvider>(context, listen: false)
+              .removeRecipeFromList(Recipe.fromJson(widget.recipe!),
+                  widget.menuIndex!, widget.index!);
           Provider.of<MenuControllerProvider>(context, listen: false)
               .addRecipeToMenu(recipe, selectedMenuIndex);
 
@@ -320,7 +364,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
               "Recipe added successfully to the menu at menu index $selectedMenuIndex");
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content:
-              Text("Recipe Updated Successfully. You can add more..")));
+                  Text("Recipe Updated Successfully. You can add more..")));
           setState(() {
             recipeTitle.controller.text = "";
             recipePrice.controller.text = "";
@@ -337,9 +381,14 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
           return;
         }
       }
+      String url = await getImageURL();
+      if(url == "Unexpected Error"){
+        Utils.showPopup(context, "Network Error", "Please check your network connection.");
+        return;
+      }
       final recipe = Recipe(
         id: "Temporary Empty",
-        url: "Temporary Empty",
+        url: url,
         name: recipeTitle.controller.text,
         description: recipeDescription.controller.text,
         price: double.parse(recipePrice.controller.text),
@@ -355,8 +404,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         print(
             "Recipe added successfully to the menu at index $selectedMenuIndex");
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content:
-                Text("Recipe Added Successfully. You can add more..")));
+            content: Text("Recipe Added Successfully. You can add more..")));
         setState(() {
           recipeTitle.controller.text = "";
           recipePrice.controller.text = "";

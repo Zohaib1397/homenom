@@ -105,7 +105,7 @@ class _CartScreenState extends State<CartScreen> {
                       Text("Total Quantity: ${recipeList[index]['currentOrder']}"),
                     ],
                   ),
-                  trailing: const Image(image: AssetImage("assets/temporary/food_background.jpg"), fit: BoxFit.contain,),
+                  trailing: Image(image: NetworkImage(recipeList[index]['url']), fit: BoxFit.contain,),
 
                 ),
               ),

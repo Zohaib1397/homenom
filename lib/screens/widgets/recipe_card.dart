@@ -128,8 +128,8 @@ class _RecipeCardState extends State<RecipeCard> {
                     ),
                     trailing: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: const Image(
-                        image: AssetImage("assets/temporary/food_background.jpg"),
+                      child: Image(
+                        image: NetworkImage('${menuList[widget.menuIndex].recipeList[index]['url']}'),
                         fit: BoxFit.contain,
                       ),
                     ),
