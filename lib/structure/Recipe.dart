@@ -20,6 +20,7 @@ class Recipe {
     required this.deliveryPrice,
     required this.rating,
     required this.quantity,
+    required this.menuID,
     required this.numberSold,
   });
 
@@ -32,6 +33,7 @@ class Recipe {
     deliveryPrice: json['deliveryPrice'],
     rating: json['rating'],
     quantity: json['quantity'],
+    menuID: json['menuID'],
     numberSold: json['numberSold'],
   );
 
@@ -45,6 +47,7 @@ class Recipe {
       'deliveryPrice' : deliveryPrice,
       'rating' : rating,
       'quantity' : quantity,
+      'menuID' : menuID,
       'numberSold' : numberSold,
     };
 

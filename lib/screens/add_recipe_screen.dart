@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -106,6 +105,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
       recipeQuantity.controller.text = widget.recipe!['quantity'].toString();
       deliveryPrice.controller.text =
           widget.recipe!['deliveryPrice'].toString();
+      selectedMenuIndex = widget.menuIndex!;
       downloadImageAndGetFile();
     }
   }
@@ -369,6 +369,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
           Utils.showPopup(context, "Network Error", "Please check your network connection.");
           return;
         }
+        final menuID = await Provider.of<MenuControllerProvider>(context, listen: false).getMenuId(selectedMenuIndex);
         final recipe = Recipe(
           id: widget.recipe!['id'],
           url: url,
@@ -377,6 +378,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
           price: double.parse(recipePrice.controller.text),
           quantity: int.parse(recipeQuantity.controller.text),
           rating: widget.recipe!['rating'],
+          menuID: menuID,
           deliveryPrice: double.parse(deliveryPrice.controller.text),
           numberSold: widget.recipe!['numberSold'],
         );
@@ -411,14 +413,16 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         Utils.showPopup(context, "Network Error", "Please check your network connection.");
         return;
       }
+      final menuID = await Provider.of<MenuControllerProvider>(context, listen: false).getMenuId(selectedMenuIndex);
       final recipe = Recipe(
-        id: "Temporary Empty",
+        id: UniqueKey().toString(),
         url: url,
         name: recipeTitle.controller.text,
         description: recipeDescription.controller.text,
         price: double.parse(recipePrice.controller.text),
         quantity: int.parse(recipeQuantity.controller.text),
         rating: 0,
+        menuID: menuID,
         deliveryPrice: double.parse(deliveryPrice.controller.text),
         numberSold: 0,
       );

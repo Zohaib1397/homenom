@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
+import 'package:homenom/screens/confirm_address.dart';
+import 'package:homenom/screens/widgets/build_cache_image.dart';
 import 'package:homenom/services/menu_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +26,7 @@ class _CartScreenState extends State<CartScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    final cartListLength = Provider.of<MenuControllerProvider>(context, listen: false).cartList.length;
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Cart List"),
@@ -45,20 +48,22 @@ class _CartScreenState extends State<CartScreen> {
                 "Clear Cart",
                 style: TextStyle(fontSize: 16),
               ),
-              backgroundColor: kAppBackgroundColor,
+              // backgroundColor: kAppBackgroundColor,
               icon: const Icon(Icons.clear_all),
               onPressed: () {
-                setState(() {
-                  Provider.of<MenuControllerProvider>(context,listen: false).clearCart();
-
-                });
-                Utils.showPopup(context, "Success", "Cart cleared successfully.");
+                if(cartListLength>0){
+                  setState(() {
+                    Provider.of<MenuControllerProvider>(context,listen: false).clearCart();
+                  });
+                  Utils.showPopup(context, "Success", "Cart cleared successfully.");
+                }else{
+                  Utils.showPopup(context, "Oops", "List is already empty.");
+                }
                 // clearCartNow(context);
                 //
                 // Navigator.push(context,
                 //     MaterialPageRoute(builder: (c) => const SplashScreen()));
                 //
-                // Fluttertoast.showToast(msg: "Cart has been cleared.");
               },
             ),
           ),
@@ -70,9 +75,15 @@ class _CartScreenState extends State<CartScreen> {
                 "Check Out",
                 style: TextStyle(fontSize: 16),
               ),
-              backgroundColor: kAppBackgroundColor,
+              // backgroundColor: kAppBackgroundColor,
               icon: const Icon(Icons.navigate_next),
               onPressed: () {
+                if(cartListLength>0){
+
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Oops!! cart is empty.")));
+                }
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddressScreen()));
                 // Navigator.push(
                 //   context,
                 //   MaterialPageRoute(
@@ -89,28 +100,43 @@ class _CartScreenState extends State<CartScreen> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: List.generate(Provider.of<MenuControllerProvider>(context, listen: false).cartList.length, (index) {
-            return Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  title: Text(recipeList[index]['name'], style: const TextStyle(fontWeight: FontWeight.bold),),
-                  isThreeLine: true,
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Description: ${recipeList[index]['description']}"),
-                      Text("Price: ${recipeList[index]['price']}"),
-                      Text("Sold: ${recipeList[index]['numberSold']}"),
-                      Text("Total Quantity: ${recipeList[index]['currentOrder']}"),
-                    ],
-                  ),
-                  trailing: Image(image: NetworkImage(recipeList[index]['url']), fit: BoxFit.contain,),
+          children: [
+            ...List.generate(Provider.of<MenuControllerProvider>(context, listen: false).cartList.length, (index) {
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    title: Text(recipeList[index]['name'], style: const TextStyle(fontWeight: FontWeight.bold),),
+                    isThreeLine: true,
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Description: ${recipeList[index]['description']}"),
+                        Text("Price: ${recipeList[index]['price']}"),
+                        Text("Sold: ${recipeList[index]['numberSold']}"),
+                        Text("Total Quantity: ${recipeList[index]['currentOrder']}"),
+                      ],
+                    ),
+                    trailing: generateCachedImage(url: recipeList[index]['url'], clip: 0),
+                    // trailing: Image(image: NetworkImage(recipeList[index]['url']), fit: BoxFit.contain,),
 
+                  ),
                 ),
+              );
+            }),
+            Provider.of<MenuControllerProvider>(context, listen: false).cartList.length == 0? const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Image(image: AssetImage("assets/empty_data_icon.png"),),
+                  ),
+                  Text("No item in cart"),
+                ],
               ),
-            );
-          }),
+            ) : Container(),
+          ]
         ),
       ),
     );

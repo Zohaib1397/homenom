@@ -1,11 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/cart_screen.dart';
+import 'package:homenom/screens/widgets/build_cache_image.dart';
 import 'package:homenom/services/menu_controller.dart';
 import 'package:provider/provider.dart';
-
-import '../services/Utils.dart';
 import '../structure/Menu.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -68,59 +66,88 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image(
-              image: NetworkImage(widget.recipe['url']),
-              fit: BoxFit.contain,
-            ),
+            generateCachedImage(url: widget.recipe['url'], clip: 0),
+            // Image(
+            //   image: NetworkImage(widget.recipe['url']),
+            //   fit: BoxFit.contain,
+            // ),
             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    widget.recipe['name'],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: ratingStars
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.recipe['name'],
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                Text("${widget.recipe['numberSold']} Sold",)
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                const Text("Rating", style: const TextStyle(fontWeight: FontWeight.bold),),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: ratingStars
+                                ),
+                                Text("${widget.recipe['rating']}/5"),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Description",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(widget.recipe['description'],
+                              textAlign: TextAlign.justify,),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          "Description",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(widget.recipe['description'],
-                          textAlign: TextAlign.justify,),
+                        customOrderCounter(
+                            onDecrement: () {
+                              setState(() {
+                                if (numberOfItems != 1) {
+                                  numberOfItems -= 1;
+                                }
+                              });
+                            },
+                            onIncrement: () {
+                              setState(() {
+                                if (numberOfItems != widget.recipe['quantity']) {
+                                  numberOfItems += 1;
+                                }
+                              });
+                            },
+                            orderCount: numberOfItems),
                       ],
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      customOrderCounter(
-                          onDecrement: () {
-                            setState(() {
-                              if (numberOfItems != 1) {
-                                numberOfItems -= 1;
-                              }
-                            });
-                          },
-                          onIncrement: () {
-                            setState(() {
-                              if (numberOfItems != widget.recipe['quantity']) {
-                                numberOfItems += 1;
-                              }
-                            });
-                          },
-                          orderCount: numberOfItems),
-                    ],
                   ),
                 ],
               ),
@@ -128,7 +155,7 @@ class _OrderScreenState extends State<OrderScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text("Price: ${widget.recipe['price']} Rs"),
+                Text("Price: ${widget.recipe['price']*numberOfItems} Rs"),
                 MaterialButton(
                   shape: RoundedRectangleBorder(
                       borderRadius:
@@ -136,9 +163,31 @@ class _OrderScreenState extends State<OrderScreen> {
                   color: kAppBackgroundColor,
                   onPressed: () async {
                     widget.recipe['currentOrder'] = numberOfItems;
-                      Provider.of<MenuControllerProvider>(context, listen: false).addItemToCart(widget.recipe);
-                      Utils.showPopup(context, "Success", "Item added to cart successfully");
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const CartScreen()));
+                      final result = Provider.of<MenuControllerProvider>(context, listen: false).addItemToCart(widget.recipe);
+                      if(result) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Item added to cart successfully."),
+                            TextButton(
+                              onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const CartScreen())),
+                              child: const Text("Go to cart"),
+                            ),
+                          ],
+                        )));
+                      }
+                      else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Already in cart, list updated."),
+                            TextButton(
+                              onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const CartScreen())),
+                              child: const Text("Go to cart"),
+                            ),
+                          ],
+                        )));
+                      }
                   },
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:homenom/services/Utils.dart';
 import '../handlers/MenuHandler.dart';
 import '../structure/Menu.dart';
 import '../structure/Recipe.dart';
@@ -14,10 +15,24 @@ class MenuControllerProvider extends ChangeNotifier{
     menusFromHandler();
   }
 
-  void addItemToCart(dynamic item){
+  bool addItemToCart(dynamic item){
+    //identify same menu ID
+    String id = item['id'];
+    for(int i =0 ;i<cartList.length; i++){
+      //Check if newly added item in cart is matching with previous
+      if(cartList[i]['id'] == id){
+        //Same cart already exists
+        cartList.removeAt(i);
+        cartList.add(item);
+        notifyListeners();
+        return false;
+      }
+    }
+    //add if the menu IDs not match
      cartList.add(item);
      notifyListeners();
      print(cartList);
+     return true;
   }
   void clearCart(){
     cartList.clear();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homenom/screens/recipe_screen.dart';
+import 'package:homenom/screens/widgets/build_cache_image.dart';
 
 import '../../constants/constants.dart';
 import '../../structure/Menu.dart';
@@ -72,15 +73,16 @@ class _MenuCardState extends State<MenuCard> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(kDefaultBorderRadius),
-                child: Image(
-                  // image: widget.menuImage,
-                  image: NetworkImage(widget.menu.menuUrl),
-                  // image: AssetImage("assets/temporary/food_background.jpg"),
-                  fit: BoxFit.cover,
-                ),
-              ),
+              generateCachedImage(url: widget.menu.menuUrl, clip: kDefaultBorderRadius, height: 250),
+              // ClipRRect(
+              //   borderRadius: BorderRadius.circular(kDefaultBorderRadius),
+              //   child: Image(
+              //     // image: widget.menuImage,
+              //     image: NetworkImage(widget.menu.menuUrl),
+              //     // image: AssetImage("assets/temporary/food_background.jpg"),
+              //     fit: BoxFit.cover,
+              //   ),
+              // ),
               Positioned(
                 bottom: 10,
                 left: 10,

@@ -1,0 +1,125 @@
+import 'package:flutter/material.dart';
+import 'package:homenom/screens/home_screen.dart';
+import 'package:homenom/screens/widgets/build_cache_image.dart';
+import 'package:provider/provider.dart';
+
+import '../services/menu_controller.dart';
+
+class PaymentScreen extends StatefulWidget {
+  const PaymentScreen({super.key});
+
+  @override
+  State<PaymentScreen> createState() => _PaymentScreenState();
+}
+
+class _PaymentScreenState extends State<PaymentScreen> {
+  late List<dynamic> recipeList;
+  double totalPrice = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    recipeList = Provider.of<MenuControllerProvider>(context, listen: false).cartList;
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Confirm Order"),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(),
+            const Icon(Icons.payments_outlined, size: 150),
+            const SizedBox(
+              height: 10,
+            ),
+            const Text.rich(
+              TextSpan(
+                text: "Please confirm your order through",
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: '\nCash-On-Delivery',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold, // Add bold style
+                    ),
+                  ),
+                ],
+              ),
+              textAlign: TextAlign.center,
+              textWidthBasis: TextWidthBasis.longestLine,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            ...List.generate(Provider.of<MenuControllerProvider>(context, listen: false).cartList.length, (index) {
+              totalPrice += recipeList[index]['price']*recipeList[index]['currentOrder'];
+              totalPrice += recipeList[index]['deliveryPrice'];
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    title: Text(recipeList[index]['name'], style: const TextStyle(fontWeight: FontWeight.bold),),
+                    isThreeLine: true,
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Description: ${recipeList[index]['description']}"),
+                        Text("Price: ${recipeList[index]['price']}"),
+                        Text("Sold: ${recipeList[index]['numberSold']}"),
+                        Text("Total Quantity: ${recipeList[index]['currentOrder']}"),
+                      ],
+                    ),
+                    trailing: generateCachedImage(url: recipeList[index]['url'], clip: 12),
+                    // trailing: Image(image: NetworkImage(recipeList[index]['url']), fit: BoxFit.contain,),
+                  ),
+                ),
+              );
+            }),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Total Price: ",
+                style: TextStyle(fontSize: 20)),
+                Text("$totalPrice",
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                // Text("Delivery Price: ")
+              ],
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          const SizedBox(width: 10),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: FloatingActionButton.extended(
+              backgroundColor: Colors.red,
+              elevation: 0,
+              onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomeScreen()));
+              },
+              label: const Text("Cancel Order", style: TextStyle(color: Colors.white),),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton.extended(
+              elevation: 0,
+              onPressed: () {},
+              label: const Text("Place Order"),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:homenom/screens/widgets/build_cache_image.dart';
 import 'package:homenom/screens/widgets/recipe_card.dart';
 
 import '../structure/Menu.dart';
@@ -35,10 +36,11 @@ class _RecipeScreenState extends State<RecipeScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              Image(
-                image: NetworkImage(widget.menu.menuUrl),
-                fit: BoxFit.cover,
-              ),
+              generateCachedImage(url: widget.menu.menuUrl, clip: 0),
+              // Image(
+              //   image: NetworkImage(widget.menu.menuUrl),
+              //   fit: BoxFit.cover,
+              // ),
               ListTile(
                 title: Row(
                   children: [

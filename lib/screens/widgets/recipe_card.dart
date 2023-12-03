@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homenom/screens/add_recipe_screen.dart';
+import 'package:homenom/screens/widgets/build_cache_image.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/constants.dart';
@@ -134,13 +135,14 @@ class _RecipeCardState extends State<RecipeCard> {
                             : Container(),
                       ],
                     ),
-                    trailing: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image(
-                        image: NetworkImage('${menuList[widget.menuIndex].recipeList[index]['url']}'),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
+                    trailing: generateCachedImage(url: menuList[widget.menuIndex].recipeList[index]['url'], clip: 12),
+                    // trailing: ClipRRect(
+                    //   borderRadius: BorderRadius.circular(12),
+                    //   child: Image(
+                    //     image: NetworkImage(menuList[widget.menuIndex].recipeList[index]['url']),
+                    //     fit: BoxFit.contain,
+                    //   ),
+                    // ),
                   ),
                 ),
               ),
