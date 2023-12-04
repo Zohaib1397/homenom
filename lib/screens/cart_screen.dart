@@ -64,7 +64,7 @@ class _CartScreenState extends State<CartScreen> {
           Align(
             alignment: Alignment.bottomLeft,
             child: FloatingActionButton.extended(
-              heroTag: "btn2",
+              heroTag: "Main Button",
               label: const Text(
                 "Check Out",
                 style: TextStyle(fontSize: 16),

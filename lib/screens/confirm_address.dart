@@ -186,6 +186,7 @@ class _AddressScreenState extends State<AddressScreen> {
                             height: 10,
                           ),
                           FloatingActionButton.extended(
+                            heroTag: "Main Button",
                             backgroundColor: Theme.of(context).primaryColor,
                             elevation: 0,
                             onPressed: () {

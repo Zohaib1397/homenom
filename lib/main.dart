@@ -14,6 +14,7 @@ import 'package:homenom/screens/login_screen.dart';
 import 'package:homenom/screens/profile_screen.dart';
 import 'package:homenom/screens/Signup%20Screens/customer_signup_screen.dart';
 import 'package:homenom/services/menu_controller.dart';
+import 'package:homenom/services/order_controller.dart';
 import 'package:homenom/services/user_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +25,8 @@ void main() async {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => MenuControllerProvider()),
-          ChangeNotifierProvider(create: (context) => UserControllerProvider())
+          ChangeNotifierProvider(create: (context) => UserControllerProvider()),
+          ChangeNotifierProvider(create: (context) => OrderControllerProvider())
         ],
         child: const MyApp(),
       ),

@@ -1,0 +1,49 @@
+import 'Recipe.dart';
+import 'Menu.dart';
+import 'User.dart';
+
+class Order {
+  late String orderId;
+  late User customer;
+  late Menu menu;
+  late List<Recipe> recipes;
+  late DateTime orderDate;
+  late double totalAmount;
+  late String status;
+
+  Order({
+    required this.orderId,
+    required this.customer,
+    required this.menu,
+    required this.recipes,
+    required this.orderDate,
+    required this.totalAmount,
+    required this.status,
+  });
+
+  factory Order.fromJson(Map<String, dynamic> json) {
+    return Order(
+      orderId: json['orderId'],
+      customer: User.fromJson(json['customer']),
+      menu: Menu.fromJson(json['menu']),
+      recipes: (json['recipes'] as List<dynamic>)
+          .map((recipeJson) => Recipe.fromJson(recipeJson))
+          .toList(),
+      orderDate: DateTime.parse(json['orderDate']),
+      totalAmount: json['totalAmount'],
+      status: json['status'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'orderId': orderId,
+      'customer': customer.toJson(),
+      'menu': menu.toJson(),
+      'recipes': recipes.map((recipe) => recipe.toJson()).toList(),
+      'orderDate': orderDate.toIso8601String(),
+      'totalAmount': totalAmount,
+      'status': status,
+    };
+  }
+}

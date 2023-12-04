@@ -98,7 +98,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          const SizedBox(width: 10),
           Align(
             alignment: Alignment.bottomLeft,
             child: FloatingActionButton.extended(
@@ -113,6 +112,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton.extended(
+              heroTag: "Main Button",
               elevation: 0,
               onPressed: () {},
               label: const Text("Place Order"),
