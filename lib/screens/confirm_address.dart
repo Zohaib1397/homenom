@@ -141,14 +141,14 @@ class _AddressScreenState extends State<AddressScreen> {
                               errorText: _address.errorText,
                               suffixIcon: IconButton(
                                 icon: const Icon(Icons.location_on),
-                                onPressed: () {
+                                onPressed: () async {
+                                  final address = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                          const LocationScreen()));
                                   setState(() async {
-                                    _address.controller.text =
-                                        await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const LocationScreen()));
+                                    _address.controller.text = address;
                                   });
                                 },
                               ),

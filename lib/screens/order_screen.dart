@@ -72,90 +72,101 @@ class _OrderScreenState extends State<OrderScreen> {
             //   fit: BoxFit.contain,
             // ),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.recipe['name'],
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text("${widget.recipe['numberSold']} Sold",)
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                const Text("Rating", style: const TextStyle(fontWeight: FontWeight.bold),),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: ratingStars
-                                ),
-                                Text("${widget.recipe['rating']}/5"),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Description",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(widget.recipe['description'],
-                              textAlign: TextAlign.justify,),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
                       children: [
-                        customOrderCounter(
-                            onDecrement: () {
-                              setState(() {
-                                if (numberOfItems != 1) {
-                                  numberOfItems -= 1;
-                                }
-                              });
-                            },
-                            onIncrement: () {
-                              setState(() {
-                                if (numberOfItems != widget.recipe['quantity']) {
-                                  numberOfItems += 1;
-                                }
-                              });
-                            },
-                            orderCount: numberOfItems),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.recipe['name'],
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Text("${widget.recipe['numberSold']} Sold",)
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  const Text("Rating", style: const TextStyle(fontWeight: FontWeight.bold),),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: ratingStars
+                                  ),
+                                  Text("${widget.recipe['rating']}/5"),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Description",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(widget.recipe['description'],
+                                textAlign: TextAlign.justify,),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          customOrderCounter(
+                              onDecrement: () {
+                                setState(() {
+                                  if (numberOfItems != 1) {
+                                    numberOfItems -= 1;
+                                  }
+                                });
+                              },
+                              onIncrement: () {
+                                setState(() {
+                                  if (numberOfItems != widget.recipe['quantity']) {
+                                    numberOfItems += 1;
+                                  }
+                                });
+                              },
+                              orderCount: numberOfItems),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text("Price: ${widget.recipe['price']*numberOfItems} Rs"),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Price: ",
+                        style: TextStyle(fontSize: 20)),
+                    Text("${widget.recipe['price']*numberOfItems} Rs",
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                    // Text("Delivery Price: ")
+                  ],
+                ),
                 MaterialButton(
                   shape: RoundedRectangleBorder(
                       borderRadius:

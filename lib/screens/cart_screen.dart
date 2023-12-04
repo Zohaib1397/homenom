@@ -48,7 +48,6 @@ class _CartScreenState extends State<CartScreen> {
                 "Clear Cart",
                 style: TextStyle(fontSize: 16),
               ),
-              // backgroundColor: kAppBackgroundColor,
               icon: const Icon(Icons.clear_all),
               onPressed: () {
                 if(cartListLength>0){
@@ -59,11 +58,6 @@ class _CartScreenState extends State<CartScreen> {
                 }else{
                   Utils.showPopup(context, "Oops", "List is already empty.");
                 }
-                // clearCartNow(context);
-                //
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (c) => const SplashScreen()));
-                //
               },
             ),
           ),
@@ -79,20 +73,10 @@ class _CartScreenState extends State<CartScreen> {
               icon: const Icon(Icons.navigate_next),
               onPressed: () {
                 if(cartListLength>0){
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddressScreen()));
                 }else{
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Oops!! cart is empty.")));
                 }
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AddressScreen()));
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (c) => AddressScreen(
-                //       totalAmount: totalAmount.toDouble(),
-                //       sellerUID: widget.sellerUID,
-                //     ),
-                //   ),
-                // );
               },
             ),
           ),
