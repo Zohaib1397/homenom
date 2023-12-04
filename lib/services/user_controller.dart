@@ -11,4 +11,10 @@ class UserControllerProvider extends ChangeNotifier{
     notifyListeners();
     return status;
   }
+
+  Future<bool> updatePhone(String phoneNum) async{
+    var status = await userHandler.updatePhoneNumber(phoneNum);
+    notifyListeners();
+    return status;
+  }
 }

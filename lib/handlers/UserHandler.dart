@@ -60,6 +60,21 @@ class UserHandler implements ItemDAO{
     }
   }
 
+  Future<bool> updatePhoneNumber(String number) async{
+    try{
+      await collection.update({
+        'phoneNum': number,
+        'isPhoneVerified' : true
+      });
+
+      return true;
+    }catch(e){
+      print(e.toString());
+      return false;
+    }
+  }
+
+
   @override
   Future<bool> update(user) {
     // TODO: implement update

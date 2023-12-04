@@ -24,7 +24,7 @@ class ProfileCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(field, style: const TextStyle(color: Colors.black45),),
-                  GestureDetector(onTap: onEdit,child: const Icon(Icons.edit))
+                  GestureDetector(onTap: onEdit,child: const Icon(Icons.edit)),
                 ],
               ),
               const SizedBox(height: 10),

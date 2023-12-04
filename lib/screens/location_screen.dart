@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:geolocator/geolocator.dart';
 import 'package:homenom/structure/Location.dart' as geolocation;
 import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
@@ -34,19 +35,54 @@ class _LocationScreenState extends State<LocationScreen> {
     currentUserAddress.userAddress = await geoCode.reverseGeocoding(latitude: 0.0, longitude: 0.0);
   }
 
+  // Future<void> getCurrentLocation() async {
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+  //   geolocation.Location location = geolocation.Location();
+  //   await location.checkIfAccessGranted();
+  //   await location.getCurrentLocation();
+  //   print("Current location is retrieved");
+  //   currentPosition = LatLng(location.latitude, location.longitude);
+  //   initialCameraPosition = CameraPosition(target: currentPosition, zoom: 14.0);
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  // }
   Future<void> getCurrentLocation() async {
-    setState(() {
-      isLoading = true;
-    });
-    geolocation.Location location = geolocation.Location();
-    await location.checkIfAccessGranted();
-    await location.getCurrentLocation();
-    print("Current location is retrieved");
-    currentPosition = LatLng(location.latitude, location.longitude);
-    initialCameraPosition = CameraPosition(target: currentPosition, zoom: 14.0);
-    setState(() {
-      isLoading = false;
-    });
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      geolocation.Location location = geolocation.Location();
+      await location.checkIfAccessGranted();
+
+      // Check if location services are enabled
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // Prompt the user to enable location services
+        bool enableLocationServices = await Geolocator.openLocationSettings();
+        if (!enableLocationServices) {
+          // Handle the case where the user decides not to enable location services
+          throw Exception('Location services are disabled.');
+        }
+      }
+
+      await location.getCurrentLocation();
+
+      print("Current location is retrieved");
+      currentPosition = LatLng(location.latitude, location.longitude);
+      initialCameraPosition = CameraPosition(target: currentPosition, zoom: 14.0);
+    } catch (e) {
+      print(e);
+      // Handle any errors that occur during the location retrieval process
+      // For example, you might want to display an error message to the user
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<Address> getAddressFromMarker(double latitude, double longitude) async{
