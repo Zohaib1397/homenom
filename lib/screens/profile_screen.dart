@@ -10,7 +10,6 @@ import 'package:homenom/services/Utils.dart';
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
-
   static const String id = "Profile_Screen";
 
   @override
@@ -18,6 +17,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 final currentUser = FirebaseAuth.instance.currentUser!;
+
 class _ProfileScreenState extends State<ProfileScreen> {
   TextFieldHandler editingText = TextFieldHandler();
 
@@ -64,7 +64,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         setState(() {
                           editingText.controller.text = user['username'];
                         });
-                        FieldEditingPopUp(context, user['isPhoneVerified'], fieldName: 'username', title: "Username", handler: editingText);
+                        FieldEditingPopUp(context, user['isPhoneVerified'],
+                            fieldName: 'username',
+                            title: "Username",
+                            handler: editingText);
                       },
                     ),
                     ProfileCard(
@@ -74,8 +77,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         setState(() {
                           editingText.controller.text = "${user['phoneNum']}";
                         });
-                        FieldEditingPopUp(context, user['isPhoneVerified'], fieldName: 'phoneNum', title: "Phone Number", handler: editingText);
-                        Utils.showPopup(context, "Notice", "Editing phone number will clear phone verifications");
+                        FieldEditingPopUp(context, user['isPhoneVerified'],
+                            fieldName: 'phoneNum',
+                            title: "Phone Number",
+                            handler: editingText);
+                        Utils.showPopup(context, "Notice",
+                            "Editing phone number will clear phone verifications");
                       },
                     ),
                     ProfileCard(
@@ -84,21 +91,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onEdit: () async {
                         await Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const LocationScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const LocationScreen()),
                         );
-                        await FirebaseFirestore.instance.collection("Users").doc(currentUser.email).update({"address": "${currentUserAddress.userAddress.streetAddress}, ${currentUserAddress.userAddress.city}"});
+                        await FirebaseFirestore.instance
+                            .collection("Users")
+                            .doc(currentUser.email)
+                            .update({
+                          "address":
+                              "${currentUserAddress.userAddress.streetAddress}, ${currentUserAddress.userAddress.city}",
+                          "latitude" : "${currentUserAddress.latitude}",
+                          "longitude" : "${currentUserAddress.longitude}",
+                        });
                       },
                     ),
-                    user['role'] == "ROLE.SELLER"? ProfileCard(
-                      field: "National Identity Number",
-                      content: user['CNIC'],
-                      onEdit: () {
-                        setState(() {
-                          editingText.controller.text = user['CNIC'];
-                        });
-                        FieldEditingPopUp(context, user['isPhoneVerified'], fieldName: 'CNIC', title: "National Identity Number", handler: editingText);
-                      },
-                    ): Container(),
+                    user['role'] == "ROLE.SELLER"
+                        ? ProfileCard(
+                            field: "National Identity Number",
+                            content: user['CNIC'],
+                            onEdit: () {
+                              setState(() {
+                                editingText.controller.text = user['CNIC'];
+                              });
+                              FieldEditingPopUp(
+                                  context, user['isPhoneVerified'],
+                                  fieldName: 'CNIC',
+                                  title: "National Identity Number",
+                                  handler: editingText);
+                            },
+                          )
+                        : Container(),
                   ],
                 );
               } else if (snapshot.hasError) {
@@ -117,37 +139,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-Future FieldEditingPopUp(BuildContext context, bool phoneVerification, {required fieldName, required String title, required TextFieldHandler handler}){
-  return showDialog(context: context, builder: (BuildContext context){
-    return AlertDialog(
-      title: Text("Edit $title"),
-      content: TextField(
-        controller: handler.controller,
-        decoration: InputDecoration(
-          errorText: handler.errorText,
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () async {
-            await FirebaseFirestore.instance.collection("Users").doc(currentUser.email).update({fieldName: handler.controller.text, "isPhoneVerified": fieldName == 'phoneNum'? !phoneVerification : phoneVerification});
-            Navigator.pop(context);
-          },
-          child: Container(
-            padding: const EdgeInsets.all(14),
-            child: const Text("Save"),
+Future FieldEditingPopUp(BuildContext context, bool phoneVerification,
+    {required fieldName,
+    required String title,
+    required TextFieldHandler handler}) {
+  return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Edit $title"),
+          content: TextField(
+            controller: handler.controller,
+            decoration: InputDecoration(
+              errorText: handler.errorText,
+            ),
           ),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            padding: const EdgeInsets.all(14),
-            child: const Text("Cancel"),
-          ),
-        )
-      ],
-    );
-  });
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await FirebaseFirestore.instance
+                    .collection("Users")
+                    .doc(currentUser.email)
+                    .update({
+                  fieldName: handler.controller.text,
+                  "isPhoneVerified": fieldName == 'phoneNum'
+                      ? !phoneVerification
+                      : phoneVerification
+                });
+                Navigator.pop(context);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(14),
+                child: const Text("Save"),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(14),
+                child: const Text("Cancel"),
+              ),
+            )
+          ],
+        );
+      });
 }
