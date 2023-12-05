@@ -100,8 +100,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             .update({
                           "address":
                               "${currentUserAddress.userAddress.streetAddress}, ${currentUserAddress.userAddress.city}",
-                          "latitude" : "${currentUserAddress.latitude}",
-                          "longitude" : "${currentUserAddress.longitude}",
+                          "latitude" : currentUserAddress.latitude,
+                          "longitude" : currentUserAddress.longitude,
                         });
                       },
                     ),

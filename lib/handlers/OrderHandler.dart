@@ -88,10 +88,21 @@ class OrderHandler implements ItemDAO{
     throw UnimplementedError();
   }
 
+  //Search orders based on status
   @override
-  Future search(String orderId) {
-    // TODO: implement search
-    throw UnimplementedError();
+  Future<List<order.Order>> search(String status) async {
+    List<order.Order> orderList = [];
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await collection.get();
+
+    for (QueryDocumentSnapshot<Map<String, dynamic>> element in querySnapshot.docs) {
+      order.Order currentOrder = order.Order.fromJson(element.data());
+      currentOrder.orderId = element.id;
+
+      if (status == currentOrder.status) {
+        orderList.add(currentOrder);
+      }
+    }
+    return orderList;
   }
 
   @override

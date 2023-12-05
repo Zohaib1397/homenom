@@ -29,22 +29,40 @@ class User {
     required this.restaurantName
   });
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
-    name: json['name'] ?? '',
-    username: json['username'] ?? '',
-    address: json['address'] ?? '',
-    email: json['email'] ?? '',
-    id: json['id'] ?? '',
-    phoneNum: json['phoneNum'] ?? '',
-    isPhoneVerified: json['isPhoneVerified'] ?? false,
-    CNIC: json['CNIC'] ?? '',
-    rating: json['rating'] ?? 0,
-    role: json['role'] ?? '',
-    latitude: json['latitude'] ?? 0.0,
-    longitude: json['longitude'] ?? 0.0,
-    restaurantName: json['restaurantName'] ?? '',
-  );
+  // factory User.fromJson(Map<String, dynamic> json) => User(
+  //   name: json['name'] ?? '',
+  //   username: json['username'] ?? '',
+  //   address: json['address'] ?? '',
+  //   email: json['email'] ?? '',
+  //   id: json['id'] ?? '',
+  //   phoneNum: json['phoneNum'] ?? '',
+  //   isPhoneVerified: json['isPhoneVerified'] ?? false,
+  //   CNIC: json['CNIC'] ?? '',
+  //   rating: json['rating'] ?? 0,
+  //   role: json['role'] ?? '',
+  //   latitude: json['latitude'] ?? 0.0,
+  //   longitude: json['longitude'] ?? 0.0,
+  //   restaurantName: json['restaurantName'] ?? '',
+  // );
 
+  factory User.fromJson(Map<String, dynamic> json) {
+    print("Raw JSON data: $json");
+    return User(
+      name: json['name'] ?? '',
+      username: json['username'] ?? '',
+      address: json['address'] ?? '',
+      email: json['email'] ?? '',
+      id: json['id'] ?? '',
+      phoneNum: json['phoneNum'] ?? '',
+      isPhoneVerified: json['isPhoneVerified'] ?? false,
+      CNIC: json['CNIC'] ?? '',
+      rating: json['rating'] ?? 0,
+      role: json['role'] ?? '',
+      latitude: json['latitude'] ?? 0.0,
+      longitude: json['longitude'] ?? 0.0,
+      restaurantName: json['restaurantName'] ?? '',
+    );
+  }
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = {
       'name' : name,

@@ -8,6 +8,7 @@ class OrderControllerProvider extends ChangeNotifier {
   List<Order> orderList = [];
   List<Order> respectiveOrders = []; //Also the order history
   List<Order> sellerOrderHistory = []; //Order history for seller
+  List<Order> pendingOrders = []; //pendingOrders
 
   OrderControllerProvider() {
     loadRespectiveOrders();
@@ -45,6 +46,10 @@ class OrderControllerProvider extends ChangeNotifier {
       print(e.toString());
       return false;
     }
+  }
+
+  Future<void> getRespectivePendingOrders() async{
+
   }
 
 }

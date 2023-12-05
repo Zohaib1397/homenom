@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/screens/home_screen.dart';
 import 'package:homenom/screens/widgets/build_cache_image.dart';
@@ -7,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../services/menu_controller.dart';
 import '../structure/Order.dart';
 import '../structure/Recipe.dart';
-import '../structure/User.dart';
+import '../structure/User.dart' as user;
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
@@ -119,7 +120,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               heroTag: "Main Button",
               elevation: 0,
               onPressed: () async {
-                User? customer = await Provider.of<UserControllerProvider>(context, listen: false).getUser();
+                user.User? customer = await Provider.of<UserControllerProvider>(context, listen: false).getUser(FirebaseAuth.instance.currentUser!.email);
                 Order order = Order(
                   orderId: UniqueKey().toString(),
                   customer: customer,

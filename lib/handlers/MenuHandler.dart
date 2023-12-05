@@ -149,4 +149,21 @@ class MenuHandler implements ItemDAO {
     // TODO: implement update
     throw UnimplementedError();
   }
+
+  Future<Menu?> getMenu(String menuID) async {
+    try {
+      DocumentSnapshot menuSnapshot = await collection.doc(menuID).get();
+      if (menuSnapshot.exists) {
+        Menu menu = Menu.fromJson(menuSnapshot.data() as Map<String, dynamic>);
+        menu.id = menuSnapshot.id;
+        return menu;
+      } else {
+        print("Menu with ID $menuID not found");
+        return null;
+      }
+    } catch (e) {
+      print("Error getting menu: $e");
+      return null;
+    }
+  }
 }

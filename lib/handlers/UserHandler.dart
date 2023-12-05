@@ -11,7 +11,7 @@ class UserHandler implements ItemDAO{
   late dynamic collection;
   
   UserHandler(){
-    collection = _fireStore.collection("Users").doc(_auth.currentUser!.email);
+    collection = _fireStore.collection("Users");
   }
   
   @override
@@ -50,11 +50,15 @@ class UserHandler implements ItemDAO{
     throw UnimplementedError();
   }
 
-  Future<user.User?> getUser() async {
+  Future<user.User?> getUser(String? email) async {
     try {
-      DocumentSnapshot userSnapshot = await collection.get();
+      late DocumentSnapshot userSnapshot;
+      if(email!=null){
+        userSnapshot = await collection.doc(email).get();
+      }else{
+        userSnapshot = await collection.get();
+      }
       if (userSnapshot.exists) {
-        print("UserSnapshot ${userSnapshot.data()}");
         user.User currentUser = user.User.fromJson(userSnapshot.data() as Map<String, dynamic>);
         return currentUser;
       } else {
@@ -69,7 +73,7 @@ class UserHandler implements ItemDAO{
 
   Future<bool> updateRole(ROLE role) async{
     try{
-      await collection.update({'role': role.toString()});
+      await collection.doc(_auth.currentUser!.email).update({'role': role.toString()});
       return true;
     }catch(e){
       print(e.toString());
@@ -79,7 +83,7 @@ class UserHandler implements ItemDAO{
 
   Future<bool> updatePhoneNumber(String number) async{
     try{
-      await collection.update({
+      await collection.doc(_auth.currentUser!.email).update({
         'phoneNum': number,
         'isPhoneVerified' : true
       });

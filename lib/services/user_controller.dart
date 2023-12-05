@@ -7,8 +7,8 @@ import '../structure/User.dart';
 class UserControllerProvider extends ChangeNotifier{
   final userHandler = UserHandler();
 
-  Future<User?> getUser() async{
-    return await userHandler.getUser();
+  Future<User?> getUser(String? email) async{
+    return await userHandler.getUser(email);
   }
   Future<bool> updateRole(ROLE role) async{
     var status = await userHandler.updateRole(role);
