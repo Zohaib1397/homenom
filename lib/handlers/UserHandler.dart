@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:homenom/structure/Database/ItemDAO.dart';
-
+import 'package:homenom/structure/User.dart' as user;
 import '../structure/Role.dart';
 
 class UserHandler implements ItemDAO{
@@ -48,6 +48,23 @@ class UserHandler implements ItemDAO{
   bool searchItemAtIndex(int index) {
     // TODO: implement searchItemAtIndex
     throw UnimplementedError();
+  }
+
+  Future<user.User?> getUser() async {
+    try {
+      DocumentSnapshot userSnapshot = await collection.get();
+      if (userSnapshot.exists) {
+        print("UserSnapshot ${userSnapshot.data()}");
+        user.User currentUser = user.User.fromJson(userSnapshot.data() as Map<String, dynamic>);
+        return currentUser;
+      } else {
+        print("User document does not exist");
+        return null;
+      }
+    } catch (e) {
+      print("Error getting user: $e");
+      return null;
+    }
   }
 
   Future<bool> updateRole(ROLE role) async{

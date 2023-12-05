@@ -16,7 +16,7 @@ class OrderHandler implements ItemDAO{
   @override
   Future<bool> create(order) async {
     try{
-      await collection.doc().set(order.toJson());
+      await collection.doc(order['orderId']).set(order);
       return true;
     }catch(e){
       print(e.toString());
@@ -27,7 +27,7 @@ class OrderHandler implements ItemDAO{
   @override
   Future<bool> delete(order) async {
     try {
-      await collection.doc(order.id).delete();
+      await collection.doc(order['orderId']).delete();
       return true;
     } catch (e) {
       print(e.toString());
@@ -41,18 +41,45 @@ class OrderHandler implements ItemDAO{
     throw UnimplementedError();
   }
 
+  //Order history for customer account
   Future<List<order.Order>> getHistory() async{
     List<order.Order> orderList = [];
     await collection.get().then((value) {
       value.docs.forEach((element) {
         order.Order currentOrder = order.Order.fromJson(element.data());
         currentOrder.orderId = element.id;
-        if (auth.currentUser!.email == currentOrder.customer.email) {
+        if (auth.currentUser!.email == currentOrder.customer?.email) {
           orderList.add(currentOrder);
         }
       });
     });
     return orderList;
+  }
+
+  // //Order history for seller account
+  // Future<List<order.Order>> getSellerHistory() async{
+  //   List<order.Order> orderList = [];
+  //   await collection.get().then((value) {
+  //     value.docs.forEach((element) {
+  //       order.Order currentOrder = order.Order.fromJson(element.data());
+  //       currentOrder.orderId = element.id;
+  //       if (auth.currentUser!.email == currentOrder.menu.email) {
+  //         orderList.add(currentOrder);
+  //       }
+  //     });
+  //   });
+  //   return orderList;
+  // }
+
+  Future<bool> updateOrderStatus(order, String status) async{
+    try{
+      //Update the order status
+      await collection.doc(order['orderId']).update({'status': status});
+      return true;
+    }catch(e){
+      print(e.toString());
+      return false;
+    }
   }
 
   @override

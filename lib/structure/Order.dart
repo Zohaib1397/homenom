@@ -1,11 +1,11 @@
 import 'Recipe.dart';
-import 'Menu.dart';
+// import 'Menu.dart';
 import 'User.dart';
 
 class Order {
   late String orderId;
-  late User customer;
-  late Menu menu;
+  late User? customer;
+  // late Menu menu;
   late List<Recipe> recipes;
   late DateTime orderDate;
   late double totalAmount;
@@ -14,7 +14,7 @@ class Order {
   Order({
     required this.orderId,
     required this.customer,
-    required this.menu,
+    // required this.menu,
     required this.recipes,
     required this.orderDate,
     required this.totalAmount,
@@ -25,7 +25,7 @@ class Order {
     return Order(
       orderId: json['orderId'],
       customer: User.fromJson(json['customer']),
-      menu: Menu.fromJson(json['menu']),
+      // menu: Menu.fromJson(json['menu']),
       recipes: (json['recipes'] as List<dynamic>)
           .map((recipeJson) => Recipe.fromJson(recipeJson))
           .toList(),
@@ -36,14 +36,15 @@ class Order {
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    final Map<String, dynamic> order = {
       'orderId': orderId,
-      'customer': customer.toJson(),
-      'menu': menu.toJson(),
+      'customer': customer?.toJson(),
+      // 'menu': menu.toJson(),
       'recipes': recipes.map((recipe) => recipe.toJson()).toList(),
       'orderDate': orderDate.toIso8601String(),
       'totalAmount': totalAmount,
       'status': status,
     };
+    return order;
   }
 }

@@ -2,10 +2,14 @@ import 'package:flutter/cupertino.dart';
 
 import '../handlers/UserHandler.dart';
 import '../structure/Role.dart';
+import '../structure/User.dart';
 
 class UserControllerProvider extends ChangeNotifier{
   final userHandler = UserHandler();
 
+  Future<User?> getUser() async{
+    return await userHandler.getUser();
+  }
   Future<bool> updateRole(ROLE role) async{
     var status = await userHandler.updateRole(role);
     notifyListeners();

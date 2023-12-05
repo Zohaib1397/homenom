@@ -27,36 +27,6 @@ class MenuHandler implements ItemDAO {
     }
   }
 
-  //
-  // Future<void> getEveryMenu() async {
-  //   Completer<List<Menu>> completer = Completer();
-  //   bool completerCompleted = false;
-  //   _firestore.collection("Data").snapshots().listen((snapshot) {
-  //     // print(snapshot);
-  //   //   List<Menu> menuList = [];
-  //   //   final list = snapshot.docs;
-  //   //   for (final menu in list) {
-  //   //     final title = menu.data()['title'];
-  //   //     final id = menu.id;
-  //   //     final url = menu.data()['menuUrl'];
-  //   //     final recipeList = menu.data()['recipeList'];
-  //   //
-  //   //     Menu temporaryMenu = Menu(
-  //   //       menuUrl: url,
-  //   //       title: title,
-  //   //       recipeList: recipeList,
-  //   //     );
-  //   //     temporaryMenu.id = id;
-  //   //     menuList.add(temporaryMenu);
-  //   //   }
-  //   //   if (!completerCompleted) {
-  //   //     completer.complete(menuList);
-  //   //     completerCompleted = true; // Mark the completer as completed
-  //   //   }
-  //   });
-  //   // return completer.future;
-  // }
-
   @override
   Future<bool> delete(item) async {
     try {

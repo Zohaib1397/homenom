@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:homenom/screens/home_screen.dart';
 import 'package:homenom/screens/widgets/build_cache_image.dart';
+import 'package:homenom/services/order_controller.dart';
+import 'package:homenom/services/user_controller.dart';
 import 'package:provider/provider.dart';
-
 import '../services/menu_controller.dart';
+import '../structure/Order.dart';
+import '../structure/Recipe.dart';
+import '../structure/User.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
@@ -114,11 +118,54 @@ class _PaymentScreenState extends State<PaymentScreen> {
             child: FloatingActionButton.extended(
               heroTag: "Main Button",
               elevation: 0,
-              onPressed: () {},
+              onPressed: () async {
+                User? customer = await Provider.of<UserControllerProvider>(context, listen: false).getUser();
+                Order order = Order(
+                  orderId: UniqueKey().toString(),
+                  customer: customer,
+                  recipes: recipeList.map((element) => Recipe.fromJson(element)).toList(),
+                  orderDate: DateTime.now(),
+                  totalAmount: totalPrice,
+                  status: "Pending"
+                );
+                Provider.of<OrderControllerProvider>(context, listen: false).createOrder(order);
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>const _OrderConfirmed()));
+              },
               label: const Text("Place Order"),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+class _OrderConfirmed extends StatelessWidget {
+  const _OrderConfirmed();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Order Confirmed"),
+        leading: IconButton(
+          onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen())),
+          icon: Icon(Icons.close),
+        ),
+      ),
+      body: const Center(
+        child: SizedBox(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(Icons.verified_user_rounded, size: 200, color: Colors.green,),
+              SizedBox(height: 20),
+              Text("Congratulation your order has been placed."),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
-import 'package:homenom/screens/confirm_address.dart';
+import 'package:homenom/screens/confirm_credentials.dart';
 import 'package:homenom/screens/widgets/build_cache_image.dart';
 import 'package:homenom/services/menu_controller.dart';
 import 'package:provider/provider.dart';

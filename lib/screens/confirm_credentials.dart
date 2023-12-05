@@ -29,21 +29,15 @@ class _AddressScreenState extends State<AddressScreen> {
   Future<bool> verifyPhoneNumber() async {
     Completer<bool> verificationCompleter = Completer<bool>();
     bool verified = false;
-
-    setState(() => isLoading = true);
-
     print("Verifying phone number: $verified");
-
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: "+92${_phoneField.controller.text.toString()}",
         verificationCompleted: (PhoneAuthCredential credentials) async {
-          // Verification completed, set verified to true
           verified = true;
           verificationCompleter.complete(verified);
         },
         verificationFailed: (FirebaseAuthException ex) {
-          // Handle verification failure
           setState(() {
             isLoading = false;
           });
@@ -57,35 +51,31 @@ class _AddressScreenState extends State<AddressScreen> {
               builder: (context) => OTPScreen(verificationId: verificationId),
             ),
           ).then((otpVerified) {
-            // This block executes when the OTP screen pops
             verified = otpVerified ?? false;
             verificationCompleter.complete(verified);
           });
         },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          // Handle code auto-retrieval timeout
-        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
       );
     } catch (e) {
-      // Handle exceptions
-      setState(() => isLoading = false);
       verificationCompleter.completeError(e);
     }
-
     print("Status verified of phone number: $verified");
-    setState(() => isLoading = false);
     return verificationCompleter.future;
   }
 
   Future<void> handlePhoneNumberVerification(String phoneNumber) async {
     try {
+      setState(() => isLoading = true);
       bool verified = await verifyPhoneNumber();
       if (verified) {
         print("Congratulation Phone is verified");
-        // Update user status in Firebase
+        // Update phone number status in Firebase
         Provider.of<UserControllerProvider>(context, listen: false)
             .updatePhone(_phoneField.controller.text);
+        setState(() => isLoading = false);
       } else {
+        setState(() => isLoading = false);
         throw Exception("Invalid code entered");
       }
     } catch (e) {
