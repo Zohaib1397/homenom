@@ -10,6 +10,15 @@ class UserControllerProvider extends ChangeNotifier{
   Future<User?> getUser(String? email) async{
     return await userHandler.getUser(email);
   }
+  Future<bool> updateLocation(double latitude, double longitude) async{
+    try{
+      await userHandler.updateLocation(latitude, longitude);
+      return true;
+    }catch(e){
+      print("Error saving location: ${e.toString()}");
+      return false;
+    }
+  }
   Future<bool> updateRole(ROLE role) async{
     var status = await userHandler.updateRole(role);
     notifyListeners();

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../constants/constants.dart';
+import '../handlers/MenuHandler.dart';
+import '../services/order_controller.dart';
+import '../structure/Menu.dart';
+import '../structure/Order.dart';
 import '../structure/Role.dart';
 
 class NotificationScreen extends StatelessWidget {
@@ -42,7 +47,84 @@ class SellerNotification extends StatefulWidget {
 class _SellerNotificationState extends State<SellerNotification> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Consumer<OrderControllerProvider>(
+        builder: (context, orderControllerProvider, _) {
+          orderControllerProvider.getSellerPendingOrders();
+          List<Order> orderList =  orderControllerProvider.pendingOrders;
+          return orderList.isNotEmpty
+              ? ListView.builder(
+            itemCount: orderList.length,
+            itemBuilder: (context, index) {
+              Order order = orderList[index];
+              return FutureBuilder(
+                future: MenuHandler().getMenu(order.recipes.first.menuID),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return const Text('Error loading menu picture');
+                  } else if (!snapshot.hasData) {
+                    return const Text('No menu picture found');
+                  } else {
+                    var menu = snapshot.data as Menu;
+                    return Card(
+                      margin: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        leading: menu.menuUrl != null
+                            ? CircleAvatar(
+                          backgroundImage: NetworkImage(menu.menuUrl),
+                        )
+                            : const Icon(Icons.image),
+                        title: Text('Order ID: ${order.orderId}'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Status:',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text('${order.status}'),
+                            const Text(
+                              'Total Amount:',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text('\$${order.totalAmount}'),
+                            const Text(
+                              'Order Date:',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text('${order.orderDate}'),
+                          ],
+                        ),
+                        onTap: () {
+                          // Navigate to the detailed order screen
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => OrderDetailsScreen(order),
+                          //   ),
+                          // );
+                        },
+                      ),
+                    );
+                  }
+                },
+              );
+            },
+          )
+              : const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(30.0),
+                  child: Image(image: AssetImage("assets/empty_data_icon.png"),),
+                ),
+                Text("No History found"),
+              ],
+            ),
+          );
+        });
   }
 }
 

@@ -4,16 +4,15 @@ import 'package:homenom/structure/Database/ItemDAO.dart';
 import 'package:homenom/structure/User.dart' as user;
 import '../structure/Role.dart';
 
-class UserHandler implements ItemDAO{
-  
+class UserHandler implements ItemDAO {
   final _auth = FirebaseAuth.instance;
   final _fireStore = FirebaseFirestore.instance;
   late dynamic collection;
-  
-  UserHandler(){
+
+  UserHandler() {
     collection = _fireStore.collection("Users");
   }
-  
+
   @override
   Future<bool> create(user) {
     // TODO: implement create
@@ -50,16 +49,29 @@ class UserHandler implements ItemDAO{
     throw UnimplementedError();
   }
 
+  Future<bool> updateLocation(double latitude, double longitude) async {
+    try {
+      await collection
+          .doc(_auth.currentUser!.email)
+          .update({'latitude': latitude, 'longitude': longitude});
+      return true;
+    } catch (e) {
+      print("Error in database while updating location: ${e.toString()}");
+      return false;
+    }
+  }
+
   Future<user.User?> getUser(String? email) async {
     try {
       late DocumentSnapshot userSnapshot;
-      if(email!=null){
+      if (email != null) {
         userSnapshot = await collection.doc(email).get();
-      }else{
+      } else {
         userSnapshot = await collection.get();
       }
       if (userSnapshot.exists) {
-        user.User currentUser = user.User.fromJson(userSnapshot.data() as Map<String, dynamic>);
+        user.User currentUser =
+            user.User.fromJson(userSnapshot.data() as Map<String, dynamic>);
         return currentUser;
       } else {
         print("User document does not exist");
@@ -71,35 +83,34 @@ class UserHandler implements ItemDAO{
     }
   }
 
-  Future<bool> updateRole(ROLE role) async{
-    try{
-      await collection.doc(_auth.currentUser!.email).update({'role': role.toString()});
+  Future<bool> updateRole(ROLE role) async {
+    try {
+      await collection
+          .doc(_auth.currentUser!.email)
+          .update({'role': role.toString()});
       return true;
-    }catch(e){
+    } catch (e) {
       print(e.toString());
       return false;
     }
   }
 
-  Future<bool> updatePhoneNumber(String number) async{
-    try{
-      await collection.doc(_auth.currentUser!.email).update({
-        'phoneNum': number,
-        'isPhoneVerified' : true
-      });
+  Future<bool> updatePhoneNumber(String number) async {
+    try {
+      await collection
+          .doc(_auth.currentUser!.email)
+          .update({'phoneNum': number, 'isPhoneVerified': true});
 
       return true;
-    }catch(e){
+    } catch (e) {
       print(e.toString());
       return false;
     }
   }
-
 
   @override
   Future<bool> update(user) {
     // TODO: implement update
     throw UnimplementedError();
   }
-
 }

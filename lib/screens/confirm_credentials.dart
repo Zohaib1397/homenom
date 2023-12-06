@@ -140,6 +140,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                   setState(() async {
                                     _address.controller.text = address;
                                   });
+                                  Provider.of<UserControllerProvider>(context,listen: false).updateLocation(currentUserAddress.latitude, currentUserAddress.longitude);
                                 },
                               ),
                             ),

@@ -48,8 +48,8 @@ class OrderControllerProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getRespectivePendingOrders() async{
-
+  Future<void> getSellerPendingOrders() async {
+    pendingOrders = await orderHandler.search("Pending");
   }
 
 }

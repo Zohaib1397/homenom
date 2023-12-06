@@ -57,11 +57,11 @@ class _CustomerHistoryState extends State<CustomerHistory> {
             future: MenuHandler().getMenu(order.recipes.first.menuID),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               } else if (snapshot.hasError) {
-                return Text('Error loading menu picture');
+                return const Text('Error loading menu picture');
               } else if (!snapshot.hasData) {
-                return Text('No menu picture found');
+                return const Text('No menu picture found');
               } else {
                 var menu = snapshot.data as Menu;
                 return Card(
@@ -71,7 +71,7 @@ class _CustomerHistoryState extends State<CustomerHistory> {
                         ? CircleAvatar(
                       backgroundImage: NetworkImage(menu.menuUrl),
                     )
-                        : Icon(Icons.image),
+                        : const Icon(Icons.image),
                     title: Text('Order ID: ${order.orderId}'),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

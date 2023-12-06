@@ -97,7 +97,7 @@ class OrderHandler implements ItemDAO{
     for (QueryDocumentSnapshot<Map<String, dynamic>> element in querySnapshot.docs) {
       order.Order currentOrder = order.Order.fromJson(element.data());
       currentOrder.orderId = element.id;
-
+      //TODO implement logic to get the email from the menu
       if (status == currentOrder.status) {
         orderList.add(currentOrder);
       }

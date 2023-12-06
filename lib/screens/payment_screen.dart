@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/state_manager.dart';
 import 'package:homenom/screens/home_screen.dart';
 import 'package:homenom/screens/widgets/build_cache_image.dart';
 import 'package:homenom/services/order_controller.dart';
@@ -18,6 +19,7 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  Map<String, List<dynamic>> totalOrders = {};
   late List<dynamic> recipeList;
   double totalPrice = 0;
 
@@ -25,7 +27,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void initState() {
     super.initState();
     recipeList = Provider.of<MenuControllerProvider>(context, listen: false).cartList;
+    separateMenus();
+    print("Total Orders: ${totalOrders}");
   }
+
+  void separateMenus(){
+    //identify each menu id in the recipe list
+    // and separate into multiple lists so that we consider it for multiple orders
+    for(final recipe in recipeList){
+      if(!totalOrders.containsKey(recipe['menuID'])){
+        totalOrders[recipe['menuID']] = [];
+      }
+        totalOrders[recipe['menuID']]!.add(recipe);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,17 +136,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
               heroTag: "Main Button",
               elevation: 0,
               onPressed: () async {
-                user.User? customer = await Provider.of<UserControllerProvider>(context, listen: false).getUser(FirebaseAuth.instance.currentUser!.email);
-                Order order = Order(
-                  orderId: UniqueKey().toString(),
-                  customer: customer,
-                  recipes: recipeList.map((element) => Recipe.fromJson(element)).toList(),
-                  orderDate: DateTime.now(),
-                  totalAmount: totalPrice,
-                  status: "Pending"
-                );
-                Provider.of<OrderControllerProvider>(context, listen: false).createOrder(order);
+                //TODO add logic here to separate orders
+                for(var menuID in totalOrders.keys){
+                  user.User? customer = await Provider.of<UserControllerProvider>(context, listen: false).getUser(FirebaseAuth.instance.currentUser!.email);
+                  Order order = Order(
+                      orderId: UniqueKey().toString(),
+                      customer: customer,
+                      recipes: totalOrders[menuID]!.map((element) => Recipe.fromJson(element)).toList(),
+                      orderDate: DateTime.now(),
+                      totalAmount: totalPrice,
+                      status: "Pending"
+                  );
+                  //Todo add logic for multiple ids
+                  Provider.of<OrderControllerProvider>(context, listen: false).createOrder(order);
+                }
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>const _OrderConfirmed()));
+                Provider.of<MenuControllerProvider>(context, listen: false).cartList.clear();
+                recipeList.clear();
               },
               label: const Text("Place Order"),
             ),
