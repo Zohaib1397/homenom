@@ -35,7 +35,6 @@ class _RecipeCardState extends State<RecipeCard> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: List.generate(menuList[widget.menuIndex].recipeList.length, (index) {
-            print("Length of list: ${menuList[widget.menuIndex].recipeList.length}");
             return Dismissible(
               key: UniqueKey(),
               direction: currentRole == ROLE.SELLER

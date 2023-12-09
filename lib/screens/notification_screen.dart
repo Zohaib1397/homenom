@@ -1,3 +1,4 @@
+import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -43,14 +44,13 @@ class SellerNotification extends StatefulWidget {
   @override
   State<SellerNotification> createState() => _SellerNotificationState();
 }
-
 class _SellerNotificationState extends State<SellerNotification> {
   @override
   Widget build(BuildContext context) {
     return Consumer<OrderControllerProvider>(
         builder: (context, orderControllerProvider, _) {
           orderControllerProvider.getSellerPendingOrders();
-          List<Order> orderList =  orderControllerProvider.pendingOrders;
+          List<Order> orderList = orderControllerProvider.pendingOrders;
           return orderList.isNotEmpty
               ? ListView.builder(
             itemCount: orderList.length,
@@ -60,7 +60,11 @@ class _SellerNotificationState extends State<SellerNotification> {
                 future: MenuHandler().getMenu(order.recipes.first.menuID),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
+                    return const CardLoading(
+                      height: 100,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      margin: EdgeInsets.only(bottom: 10),
+                    );
                   } else if (snapshot.hasError) {
                     return const Text('Error loading menu picture');
                   } else if (!snapshot.hasData) {
@@ -94,6 +98,32 @@ class _SellerNotificationState extends State<SellerNotification> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text('${order.orderDate}'),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // Accept button pressed
+                                    Provider.of<OrderControllerProvider>(
+                                      context,
+                                      listen: false,
+                                    ).updateOrderStatus(order, 'Accepted');
+                                  },
+                                  child: Text('Accept'),
+                                ),
+                                SizedBox(width: 8),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // Reject button pressed
+                                    Provider.of<OrderControllerProvider>(
+                                      context,
+                                      listen: false,
+                                    ).updateOrderStatus(order, 'Rejected');
+                                  },
+                                  child: Text('Reject'),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                         onTap: () {
@@ -118,7 +148,7 @@ class _SellerNotificationState extends State<SellerNotification> {
               children: [
                 Padding(
                   padding: EdgeInsets.all(30.0),
-                  child: Image(image: AssetImage("assets/empty_data_icon.png"),),
+                  child: Image(image: AssetImage("assets/empty_data_icon.png")),
                 ),
                 Text("No History found"),
               ],
@@ -127,6 +157,7 @@ class _SellerNotificationState extends State<SellerNotification> {
         });
   }
 }
+
 
 class DriverNotification extends StatefulWidget {
   const DriverNotification({super.key});

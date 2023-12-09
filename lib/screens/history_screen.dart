@@ -1,3 +1,4 @@
+import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -57,7 +58,11 @@ class _CustomerHistoryState extends State<CustomerHistory> {
             future: MenuHandler().getMenu(order.recipes.first.menuID),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
+                return const CardLoading(
+                  height: 100,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  margin: EdgeInsets.only(bottom: 10),
+                );
               } else if (snapshot.hasError) {
                 return const Text('Error loading menu picture');
               } else if (!snapshot.hasData) {
@@ -162,7 +167,11 @@ class OrderDetailsScreen extends StatelessWidget {
               future: MenuHandler().getMenu(order.recipes.first.menuID),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return const CardLoading(
+                    height: 100,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    margin: EdgeInsets.only(bottom: 10),
+                  );
                 } else if (snapshot.hasError) {
                   return Text('Error loading menu details');
                 } else if (!snapshot.hasData) {
