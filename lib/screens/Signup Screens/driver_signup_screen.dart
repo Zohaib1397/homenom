@@ -59,7 +59,7 @@ class _DriverSignUpScreenState extends State<DriverSignUpScreen> {
         username: _emailField.controller.text.split('@')[0],
         address: "Null",
         email: _emailField.controller.text,
-        id: "Temporary Empty",
+        id: UniqueKey().toString(),
         phoneNum: _phoneField.controller.text,
         isPhoneVerified: false,
         CNIC: _cnicField.controller.text,
@@ -68,6 +68,10 @@ class _DriverSignUpScreenState extends State<DriverSignUpScreen> {
         latitude: 0.0,
         longitude: 0.0,
         restaurantName: _bikeNumber.controller.text,
+        bikeNumber : _bikeNumber.controller.text,
+        bikeType : _bikeType.controller.text,
+        license : _license.controller.text,
+        bikeRegNo : _bikeRegNo.controller.text,
       );
       await FirebaseFirestore.instance
           .collection("Users")
@@ -197,13 +201,6 @@ class _DriverSignUpScreenState extends State<DriverSignUpScreen> {
                             controller: _bikeNumber.controller,
                             decoration: kInputFieldDecoration.copyWith(
                               hintText: "Enter bike number",
-                              errorText: _bikeNumber.errorText,
-                            ),
-                          ),
-                          TextField(
-                            controller: _bikeNumber.controller,
-                            decoration: kInputFieldDecoration.copyWith(
-                              hintText: "Select bike type",
                               errorText: _bikeNumber.errorText,
                             ),
                           ),

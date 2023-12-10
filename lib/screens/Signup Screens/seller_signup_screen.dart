@@ -56,7 +56,7 @@ class _SellerSignUpScreenState extends State<SellerSignUpScreen> {
           username: _emailField.controller.text.split('@')[0],
           address: _address.controller.text,
           email: _emailField.controller.text,
-          id: "Temporary Empty",
+          id: UniqueKey().toString(),
           phoneNum: _phoneField.controller.text,
           isPhoneVerified: false,
           CNIC: _cnicField.controller.text,
@@ -65,6 +65,10 @@ class _SellerSignUpScreenState extends State<SellerSignUpScreen> {
           latitude: latitude,
           longitude: longitude,
         restaurantName: _restaurantName.controller.text,
+          bikeNumber: "Null",
+          bikeType: "Null",
+          license: "Null",
+          bikeRegNo: "Null",
       );
       await FirebaseFirestore.instance
           .collection("Users")

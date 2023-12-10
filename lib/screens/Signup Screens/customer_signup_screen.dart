@@ -48,7 +48,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         username: _emailField.controller.text.split('@')[0],
         address: "Null",
         email: _emailField.controller.text,
-        id: "Temporary Empty",
+        id: UniqueKey().toString(),
         phoneNum: _phoneField.controller.text,
         isPhoneVerified: false,
         CNIC: "Null",
@@ -56,7 +56,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         role: role.toString(),
         latitude: 0.0,
         longitude: 0.0,
-        restaurantName: "Null"
+        restaurantName: "Null",
+        bikeNumber : "Null",
+        bikeType : "Null",
+        license : "Null",
+        bikeRegNo : "Null",
       );
       await FirebaseFirestore.instance.collection("Users").doc(userCredentials.user!.email).set(newUser.toJson());
       await _auth.currentUser!.updateDisplayName(_username.controller.text);
