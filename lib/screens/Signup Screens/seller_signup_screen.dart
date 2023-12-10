@@ -32,6 +32,8 @@ class _SellerSignUpScreenState extends State<SellerSignUpScreen> {
   bool isPasswordVisible = true;
   bool isConfirmPasswordVisible = true;
   final _auth = FirebaseAuth.instance;
+  double latitude = 0.0;
+  double longitude = 0.0;
 
   Future<bool> createAccount() async {
     try {
@@ -44,6 +46,7 @@ class _SellerSignUpScreenState extends State<SellerSignUpScreen> {
           ),
         ),
       );
+
       ROLE role = ROLE.SELLER;
       final userCredentials = await _auth.createUserWithEmailAndPassword(
           email: _emailField.controller.text,
@@ -59,8 +62,8 @@ class _SellerSignUpScreenState extends State<SellerSignUpScreen> {
           CNIC: _cnicField.controller.text,
           rating: 0,
           role: role.toString(),
-          latitude: 0.0,
-          longitude: 0.0,
+          latitude: latitude,
+          longitude: longitude,
         restaurantName: _restaurantName.controller.text,
       );
       await FirebaseFirestore.instance
@@ -167,14 +170,17 @@ class _SellerSignUpScreenState extends State<SellerSignUpScreen> {
                               errorText: _address.errorText,
                               suffixIcon: IconButton(
                                 icon: const Icon(Icons.location_on),
-                                onPressed: () {
-                                  setState(() async {
-                                    _address.controller.text =
-                                        await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const LocationScreen()));
+                                onPressed: () async {
+                                  final address = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                          const LocationScreen()));
+                                  setState(() {
+                                    _address.controller.text = address;
+                                    latitude = currentUserAddress.latitude;
+                                    longitude = currentUserAddress.longitude;
+
                                   });
                                 },
                               ),

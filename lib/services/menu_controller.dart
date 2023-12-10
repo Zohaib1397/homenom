@@ -45,6 +45,16 @@ class MenuControllerProvider extends ChangeNotifier{
     await menusFromHandler();
     return menuList[index].id;
   }
+  // Future<bool> updateSold(Recipe recipe, int sold) async{
+  //   var status = await menuHandler.updateSold(recipe, sold);
+  //   return status;
+  // }
+
+  Future<bool> updateMenuRating(Recipe recipe, double newRating) async {
+    var status = await menuHandler.updateRecipeRating(recipe, newRating);
+    notifyListeners();
+    return status;
+  }
 
   Future<void> menusFromHandler()async{
     menuList = await menuHandler.getRespectiveMenus();

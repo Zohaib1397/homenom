@@ -24,6 +24,15 @@ class UserControllerProvider extends ChangeNotifier{
     notifyListeners();
     return status;
   }
+  Future<bool> updateRating(String email, double newRating) async {
+    try {
+      await userHandler.updateUserRating(email, newRating);
+      return true;
+    } catch (e) {
+      print("Error updating user's rating: ${e.toString()}");
+      return false;
+    }
+  }
 
   Future<bool> updatePhone(String phoneNum) async{
     var status = await userHandler.updatePhoneNumber(phoneNum);

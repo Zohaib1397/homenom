@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/screens/history_screen.dart';
 
+import '../../constants/constants.dart';
+import '../../structure/Role.dart';
+import '../transit_screen.dart';
 import 'drawer_items.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -46,8 +49,8 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
               DrawerItem(
                 icon: Icons.history,
-                text: "H I S T O R Y",
-                onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => const HistoryScreen()))
+                text: currentRole == ROLE.SELLER? "O R D E R S": currentRole == ROLE.DRIVER? "T R A N S I T" :"H I S T O R Y",
+                onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context) => currentRole == ROLE.DRIVER? const TransitScreen(): const HistoryScreen()))
               ),
             ],
           ),

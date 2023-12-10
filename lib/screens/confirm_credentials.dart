@@ -137,7 +137,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                           const LocationScreen()));
-                                  setState(() async {
+                                  setState(() {
                                     _address.controller.text = address;
                                   });
                                   Provider.of<UserControllerProvider>(context,listen: false).updateLocation(currentUserAddress.latitude, currentUserAddress.longitude);
@@ -190,13 +190,28 @@ class _AddressScreenState extends State<AddressScreen> {
                               }
                               else{
                                 if(_phoneField.controller.text ==""){
+                                  setState(() {
+
                                   _phoneField.errorText = "Phone number is required";
+                                  });
+
                                 }
-                                else{
+                                else if (user['isPhoneVerified'] == false){
+                                  setState(() {
                                   _phoneField.errorText = "Please verify phone number";
+
+                                  });
                                 }
-                                if(_address.controller.text == ""){
+                                if(_address.controller.text.isEmpty){
+                                  setState(() {
                                   _address.errorText = "Address is required";
+                                  });
+                                }
+                                if(user['latitude'] == 0.0 || user['longitude']){
+                                  setState(() {
+                                  _address.errorText = "Address is required";
+
+                                  });
                                 }
 
                               }

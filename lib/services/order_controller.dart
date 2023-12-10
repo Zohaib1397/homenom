@@ -9,6 +9,9 @@ class OrderControllerProvider extends ChangeNotifier {
   List<Order> respectiveOrders = []; //Also the order history
   List<Order> sellerOrderHistory = []; //Order history for seller
   List<Order> pendingOrders = []; //pendingOrders
+  List<Order> approvedOrders = []; //Approved order list
+  List<Order> sellerOrdersByStatus = [];
+  List<Order> readyToDeliverOrders = [];
 
   OrderControllerProvider() {
     loadRespectiveOrders();
@@ -24,9 +27,7 @@ class OrderControllerProvider extends ChangeNotifier {
   Future<bool> createOrder(Order order) async {
     //create order by customer
     try {
-      print("Creating Order");
       await orderHandler.create(order.toJson());
-      print("Order saved");
       respectiveOrders.add(order);
       notifyListeners();
       return true;
@@ -48,8 +49,22 @@ class OrderControllerProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> getSellerOrdersByStatus(String status) async {
+    sellerOrdersByStatus = await orderHandler.search(status);
+    notifyListeners();
+  }
+
   Future<void> getSellerPendingOrders() async {
     pendingOrders = await orderHandler.search("Pending");
+    notifyListeners();
+  }
+  Future<void> getSellerApprovedOrders() async {
+    approvedOrders = await orderHandler.search("Approved");
+    notifyListeners();
+  }
+  Future<void> getReadyToDeliverOrders() async {
+    readyToDeliverOrders = await orderHandler.searchForDriver("Ready-To-Deliver");
+    notifyListeners();
   }
 
 }

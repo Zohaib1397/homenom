@@ -381,6 +381,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
           menuID: menuID,
           deliveryPrice: double.parse(deliveryPrice.controller.text),
           numberSold: widget.recipe!['numberSold'],
+          sellerEmail: FirebaseAuth.instance.currentUser!.email!,
         );
         try {
           final result = await Provider.of<MenuControllerProvider>(context, listen: false)
@@ -425,6 +426,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         menuID: menuID,
         deliveryPrice: double.parse(deliveryPrice.controller.text),
         numberSold: 0,
+        sellerEmail: FirebaseAuth.instance.currentUser!.email!
       );
       try {
         Provider.of<MenuControllerProvider>(context, listen: false)

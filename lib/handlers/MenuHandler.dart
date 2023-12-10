@@ -57,6 +57,8 @@ class MenuHandler implements ItemDAO {
     }
   }
 
+
+
   Future<bool> updateRecipe(recipe, newRecipe) async {
     try {
       String menuID = newRecipe.menuID;
@@ -150,6 +152,63 @@ class MenuHandler implements ItemDAO {
     throw UnimplementedError();
   }
 
+  Future<bool> updateSold(recipe, sold) async {
+    try {
+      String menuID = recipe.menuID;
+      DocumentReference menuRef = collection.doc(menuID);
+      var data = (await menuRef.get()).data() as Map<String, dynamic>?;
+
+      List<dynamic> currentRecipeList = data?['recipeList'] as List<dynamic>;
+      var updatedRecipe = recipe.toJson();
+
+      for (int i = 0; i < currentRecipeList.length; i++) {
+        if (currentRecipeList[i]['id'] == updatedRecipe['id']) {
+          int previousSold = currentRecipeList[i]['numberSold'] ?? 0;
+
+          currentRecipeList[i]['numberSold'] = previousSold + sold;
+          break;
+        }
+      }
+
+      await menuRef.update({'recipeList': currentRecipeList});
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> updateRecipeRating(recipe, newRating) async {
+    try {
+      String menuID = recipe.menuID;
+      DocumentReference menuRef = collection.doc(menuID);
+      var data = (await menuRef.get()).data() as Map<String, dynamic>?;
+
+      List<dynamic> currentRecipeList = data?['recipeList'] as List<dynamic>;
+      var updatedRecipe = recipe.toJson();
+
+      for (int i = 0; i < currentRecipeList.length; i++) {
+        if (currentRecipeList[i]['id'] == updatedRecipe['id']) {
+          double rating = (currentRecipeList[i]['rating'] ?? 0).toDouble();
+          if(rating != 0.0) {
+            currentRecipeList[i]['rating'] = (rating + newRating) / 2;
+          }else{
+            currentRecipeList[i]['rating'] = newRating;
+          }
+          int previousSold = currentRecipeList[i]['numberSold'] ?? 0;
+
+          currentRecipeList[i]['numberSold'] = previousSold + 1;
+          break;
+        }
+      }
+
+      await menuRef.update({'recipeList': currentRecipeList});
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
   Future<Menu?> getMenu(String menuID) async {
     try {
       DocumentSnapshot menuSnapshot = await collection.doc(menuID).get();

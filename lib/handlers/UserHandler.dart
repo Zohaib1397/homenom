@@ -82,7 +82,24 @@ class UserHandler implements ItemDAO {
       return null;
     }
   }
+  Future<bool> updateUserRating(String email, double newRating) async {
+    try {
+      DocumentSnapshot userSnapshot = await collection.doc(email).get();
 
+      if (userSnapshot.exists) {
+        double currentRating = (userSnapshot['rating'] ?? 0).toDouble();
+        double updatedRating = ((currentRating + newRating)/ 2).toDouble();
+        await collection.doc(email).update({'rating': updatedRating});
+        return true;
+      } else {
+        print("User document does not exist");
+        return false;
+      }
+    } catch (e) {
+      print("Error in database while updating user's rating: ${e.toString()}");
+      return false;
+    }
+  }
   Future<bool> updateRole(ROLE role) async {
     try {
       await collection

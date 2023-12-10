@@ -45,6 +45,16 @@ class SellerNotification extends StatefulWidget {
   State<SellerNotification> createState() => _SellerNotificationState();
 }
 class _SellerNotificationState extends State<SellerNotification> {
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPendingOrders();
+  }
+
+  void _loadPendingOrders(){
+    Provider.of<OrderControllerProvider>(context, listen: false).getSellerPendingOrders();
+  }
   @override
   Widget build(BuildContext context) {
     return Consumer<OrderControllerProvider>(

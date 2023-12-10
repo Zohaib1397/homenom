@@ -77,29 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
               MaterialPageRoute(builder: (context) => AddRecipeScreen()));
         },
       ): null,
-      // bottomNavigationBar: NavigationBar(
-      //   onDestinationSelected: (int index) {
-      //     print('Selected $index');
-      //   },
-      //   selectedIndex: 0,
-      //   destinations: const <NavigationDestination>[
-      //     NavigationDestination(
-      //       selectedIcon: Icon(Icons.person),
-      //       icon: Icon(Icons.person_outline),
-      //       label: 'Learn',
-      //     ),
-      //     NavigationDestination(
-      //       selectedIcon: Icon(Icons.engineering),
-      //       icon: Icon(Icons.engineering_outlined),
-      //       label: 'Relearn',
-      //     ),
-      //     NavigationDestination(
-      //       selectedIcon: Icon(Icons.bookmark),
-      //       icon: Icon(Icons.bookmark_border),
-      //       label: 'Unlearn',
-      //     ),
-      //   ],
-      // ),
     );
   }
 
@@ -210,10 +187,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(
                   Icons.shopping_cart_outlined,
                 ))
-            : IconButton.filledTonal(
+            : currentRole == ROLE.SELLER? IconButton.filledTonal(
                 onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationScreen())),
                 icon: const Icon(Icons.notifications_outlined),
-              ),
+              ) : Container(),
       ],
     );
   }

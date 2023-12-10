@@ -136,7 +136,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
               heroTag: "Main Button",
               elevation: 0,
               onPressed: () async {
-                //TODO add logic here to separate orders
                 for(var menuID in totalOrders.keys){
                   user.User? customer = await Provider.of<UserControllerProvider>(context, listen: false).getUser(FirebaseAuth.instance.currentUser!.email);
                   Order order = Order(
@@ -145,9 +144,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       recipes: totalOrders[menuID]!.map((element) => Recipe.fromJson(element)).toList(),
                       orderDate: DateTime.now(),
                       totalAmount: totalPrice,
-                      status: "Pending"
+                      status: "Pending",
+                      sellerEmail: totalOrders[menuID]!.first['sellerEmail'],
                   );
-                  //Todo add logic for multiple ids
                   Provider.of<OrderControllerProvider>(context, listen: false).createOrder(order);
                 }
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>const _OrderConfirmed()));

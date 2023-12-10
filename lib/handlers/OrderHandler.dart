@@ -97,14 +97,26 @@ class OrderHandler implements ItemDAO{
     for (QueryDocumentSnapshot<Map<String, dynamic>> element in querySnapshot.docs) {
       order.Order currentOrder = order.Order.fromJson(element.data());
       currentOrder.orderId = element.id;
-      //TODO implement logic to get the email from the menu
-      if (status == currentOrder.status) {
+      if (status == currentOrder.status && currentOrder.sellerEmail == auth.currentUser!.email) {
         orderList.add(currentOrder);
       }
     }
     return orderList;
   }
 
+  Future<List<order.Order>> searchForDriver(String status) async {
+    List<order.Order> orderList = [];
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await collection.get();
+
+    for (QueryDocumentSnapshot<Map<String, dynamic>> element in querySnapshot.docs) {
+      order.Order currentOrder = order.Order.fromJson(element.data());
+      currentOrder.orderId = element.id;
+      if (status == currentOrder.status) {
+        orderList.add(currentOrder);
+      }
+    }
+    return orderList;
+  }
   @override
   bool searchItemAtIndex(int index) {
     // TODO: implement searchItemAtIndex

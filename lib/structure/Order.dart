@@ -10,6 +10,7 @@ class Order {
   late DateTime orderDate;
   late double totalAmount;
   late String status;
+  late String sellerEmail;
 
   Order({
     required this.orderId,
@@ -19,6 +20,7 @@ class Order {
     required this.orderDate,
     required this.totalAmount,
     required this.status,
+    required this.sellerEmail,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -32,7 +34,9 @@ class Order {
       orderDate: DateTime.parse(json['orderDate']),
       totalAmount: json['totalAmount'],
       status: json['status'],
+      sellerEmail: json['sellerEmail'],
     );
+
   }
 
   Map<String, dynamic> toJson() {
@@ -44,6 +48,7 @@ class Order {
       'orderDate': orderDate.toIso8601String(),
       'totalAmount': totalAmount,
       'status': status,
+      'sellerEmail': sellerEmail,
     };
     return order;
   }

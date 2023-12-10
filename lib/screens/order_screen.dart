@@ -24,7 +24,7 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   void initState() {
     super.initState();
-    int rating = widget.recipe['rating'];
+    double rating = widget.recipe['rating'];
     for (int i = 0; i < 5; i++) {
       if (i + 1 <= rating) {
         ratingStars.add(
@@ -110,7 +110,21 @@ class _OrderScreenState extends State<OrderScreen> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(20.0),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Delivery Price:",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text("${widget.recipe['deliveryPrice']} Rs",
+                              textAlign: TextAlign.justify,),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
