@@ -289,7 +289,7 @@ class _SellerHistoryState extends State<SellerHistory> {
                                 selectedStatus == "Accepted"? ElevatedButton(
                                   onPressed: (){
                                    orderControllerProvider.updateOrderStatus(order, "Ready-To-Deliver");
-                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select driver."),));
+                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Thank you, The driver will pick your order."),));
                                    orderControllerProvider.getSellerOrdersByStatus(selectedStatus);
                                   },
                                   child: const Text("Complete Order"),

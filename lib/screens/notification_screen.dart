@@ -69,16 +69,10 @@ class _SellerNotificationState extends State<SellerNotification> {
               return FutureBuilder(
                 future: MenuHandler().getMenu(order.recipes.first.menuID),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CardLoading(
-                      height: 100,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      margin: EdgeInsets.only(bottom: 10),
-                    );
-                  } else if (snapshot.hasError) {
+                  if (snapshot.hasError) {
                     return const Text('Error loading menu picture');
                   } else if (!snapshot.hasData) {
-                    return const Text('No menu picture found');
+                    return const Text('Please wait');
                   } else {
                     var menu = snapshot.data as Menu;
                     return Card(

@@ -22,12 +22,31 @@ class TransitScreen extends StatelessWidget {
   }
 }
 
+late String fromAddress = "No address";
 Future<LatLng> getSellerAddress(BuildContext context, String email) async {
   final seller = await Provider.of<UserControllerProvider>(context, listen: false).getUser(email);
+  fromAddress = seller!.address;
   return LatLng(seller!.latitude, seller.longitude);
 }
 
-class TransitOrderList extends StatelessWidget {
+class TransitOrderList extends StatefulWidget {
+  @override
+  State<TransitOrderList> createState() => _TransitOrderListState();
+}
+
+class _TransitOrderListState extends State<TransitOrderList> {
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+  Future<void> getFromAddress(String email) async {
+    final user = await Provider.of<UserControllerProvider>(context, listen: false).getUser(email);
+    setState(() {
+      fromAddress = user!.address;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -62,7 +81,6 @@ class TransitOrderList extends StatelessWidget {
           children: transitOrders.map<Widget>((transitOrder) {
             final orderDetails = transitOrder['orderDetails'] as Map<String, dynamic>;
             final order = order_class.Order.fromJson(orderDetails);
-
             return FutureBuilder<LatLng>(
               future: getSellerAddress(context, order.sellerEmail),
               builder: (context, snapshot) {
@@ -72,7 +90,6 @@ class TransitOrderList extends StatelessWidget {
                   return const Text('Error loading seller address');
                 } else {
                   final latLng = snapshot.data!;
-
                   return Column(
                     children: [
                       ListTile(
@@ -87,7 +104,7 @@ class TransitOrderList extends StatelessWidget {
                             const Text('Order Date:', style: TextStyle(fontWeight: FontWeight.bold)),
                             Text('${order.orderDate}'),
                             const Text('From:', style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text('Seller Address: ${order.sellerEmail}'),
+                            Text('Seller Address: ${fromAddress}'),
                             const Text('To:', style: TextStyle(fontWeight: FontWeight.bold)),
                             Text(order.customer?.address ?? 'No customer address found'),
                             ElevatedButton(
@@ -164,7 +181,6 @@ class TransitOrderList extends StatelessWidget {
       await deliveryCollection.doc(documentId).delete();
     }
   }
-
 
   Set<Marker> _buildMarkers(order_class.Order order, LatLng latLng){
     Set<Marker> markers = Set();
