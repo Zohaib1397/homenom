@@ -39,4 +39,10 @@ class UserControllerProvider extends ChangeNotifier{
     notifyListeners();
     return status;
   }
+
+  Future<void> updateDriverCollection(order) async {
+    await userHandler.updateDriverCollection(order);
+    notifyListeners();
+    return;
+  }
 }

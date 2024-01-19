@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:homenom/screens/authentication_status.dart';
 import 'package:homenom/screens/login_screen.dart';
 import '../../services/Utils.dart';
@@ -51,16 +52,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         id: UniqueKey().toString(),
         phoneNum: _phoneField.controller.text,
         isPhoneVerified: false,
-        CNIC: "Null",
         rating: 0,
         role: role.toString(),
         latitude: 0.0,
         longitude: 0.0,
-        restaurantName: "Null",
-        bikeNumber : "Null",
-        bikeType : "Null",
-        license : "Null",
-        bikeRegNo : "Null",
       );
       await FirebaseFirestore.instance.collection("Users").doc(userCredentials.user!.email).set(newUser.toJson());
       await _auth.currentUser!.updateDisplayName(_username.controller.text);
@@ -200,31 +195,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () async {
+                                List list = [
+                                  _emailField,
+                                  _username,
+                                  _passwordField,
+                                  _confirmPasswordField,
+                                  _phoneField,
+                                  _passwordField,
+                                ];
                                 if(_emailField.controller.text.isEmpty || _username.controller.text.isEmpty || _passwordField.controller.text.isEmpty){
-                                  if(_emailField.controller.text.isEmpty){
-                                    setState(() {
-                                      _emailField.errorText = "Email is required";
-                                    });
-                                  }
-                                  if(_username.controller.text.isEmpty){
-                                    setState(() {
-                                      _username.errorText = "Name is required";
-                                    });
-                                  }
-                                  if( _passwordField.controller.text.isEmpty){
-                                    setState(() {
-                                      _passwordField.errorText="Password is required";
-                                    });
-                                  }
-                                  if(_confirmPasswordField.controller.text.isEmpty){
-                                    setState(() {
-                                      _confirmPasswordField.errorText = "Password didn't match";
-                                    });
-                                  }
-                                  if(_phoneField.controller.text.isEmpty){
-                                    setState(() {
-                                      _phoneField.errorText = "Phone Number is required";
-                                    });
+                                  for(int i =0; i<list.length;i++){
+                                    if(list[i].controller.text.isEmpty){
+                                      setState(() {
+                                        list[i].errorText = "Field is required";
+                                      });
+                                    }
                                   }
                                   return;
                                 }

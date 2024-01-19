@@ -1,11 +1,12 @@
-
 import 'User.dart';
 
-class Seller extends User {
-  late String CNIC;
-  late String restaurantName;
+class Driver extends User {
+  late String bikeNumber;
+  late String bikeType;
+  late String license;
+  late String bikeRegNo;
 
-  Seller({
+  Driver({
     required String name,
     required String username,
     required String address,
@@ -13,12 +14,14 @@ class Seller extends User {
     required String id,
     required String phoneNum,
     required bool isPhoneVerified,
-    required this.CNIC,
     required double rating,
     required String role,
     required double latitude,
     required double longitude,
-    required this.restaurantName,
+    required this.bikeNumber,
+    required this.bikeType,
+    required this.license,
+    required this.bikeRegNo,
   }) : super(
     name: name,
     username: username,
@@ -33,7 +36,7 @@ class Seller extends User {
     longitude: longitude,
   );
 
-  factory Seller.fromJson(Map<String, dynamic> json) => Seller(
+  factory Driver.fromJson(Map<String, dynamic> json) => Driver(
     name: json['User']['name'],
     username: json['User']['username'],
     address: json['User']['address'],
@@ -41,19 +44,23 @@ class Seller extends User {
     id: json['User']['id'],
     phoneNum: json['User']['phoneNum'],
     isPhoneVerified: json['User']['isPhoneVerified'],
-    CNIC: json['CNIC'],
     rating: json['rating'],
     role: json['role'],
     latitude: json['latitude'],
     longitude: json['longitude'],
-    restaurantName: json['restaurantName'],
+    bikeNumber: json['bikeNumber'],
+    bikeType: json['bikeType'],
+    license: json['license'],
+    bikeRegNo: json['bikeRegNo'],
   );
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> data = {
       'User': super.toJson(),
-      'CNIC': CNIC,
-      'restaurantName': restaurantName,
+      'bikeNumber': bikeNumber,
+      'bikeType': bikeType,
+      'license': license,
+      'bikeRegNo': bikeRegNo,
     };
 
     return data;

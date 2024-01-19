@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:card_loading/card_loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -62,8 +63,8 @@ class _DriverViewState extends State<DriverView> {
                   return Card(
                     margin: const EdgeInsets.all(8.0),
                     child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(menu.menuUrl ?? ''),
+                      leading: CachedNetworkImage(
+                        imageUrl: menu.menuUrl,
                       ),
                       title: Text('Order ID: ${order.orderId}'),
                       subtitle: Column(
@@ -117,7 +118,7 @@ class _DriverViewState extends State<DriverView> {
                                   .updateOrderStatus(order, "In-Transit");
 
                               // Update the new collection in Firebase with driver details and order details
-                              await updateDriverCollection(order);
+                              Provider.of<UserControllerProvider>(context).updateDriverCollection(order);
                               Navigator.push(context, MaterialPageRoute(builder: (context) => TransitScreen()));
                             },
                             child: Text('Get This Order'),
@@ -162,15 +163,6 @@ class _DriverViewState extends State<DriverView> {
     }
   }
 
-  Future<void> updateDriverCollection(order_class.Order order) async {
-    final driverCollection = FirebaseFirestore.instance.collection('Delivery');
-    final driver = await Provider.of<UserControllerProvider>(context, listen: false).getUser(FirebaseAuth.instance.currentUser!.email);
-    await driverCollection.add({
-      'driver': driver?.toJson(),
-      'orderId': order.orderId,
-      'orderDetails': order.toJson(),
-    });
-  }
 }
 
 

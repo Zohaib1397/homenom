@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:homenom/screens/authentication_status.dart';
 import '../../services/Utils.dart';
 import '../../structure/Role.dart';
-import '../../structure/User.dart' as Model;
+import '../../structure/Seller.dart' as Model;
 import '../../constants/constants.dart';
 import '../../structure/TextFieldHandler.dart';
 import '../location_screen.dart';
@@ -51,7 +51,7 @@ class _SellerSignUpScreenState extends State<SellerSignUpScreen> {
       final userCredentials = await _auth.createUserWithEmailAndPassword(
           email: _emailField.controller.text,
           password: _passwordField.controller.text);
-      final newUser = Model.User(
+      final newUser = Model.Seller(
           name: _username.controller.text,
           username: _emailField.controller.text.split('@')[0],
           address: _address.controller.text,
@@ -65,10 +65,6 @@ class _SellerSignUpScreenState extends State<SellerSignUpScreen> {
           latitude: latitude,
           longitude: longitude,
         restaurantName: _restaurantName.controller.text,
-          bikeNumber: "Null",
-          bikeType: "Null",
-          license: "Null",
-          bikeRegNo: "Null",
       );
       await FirebaseFirestore.instance
           .collection("Users")

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class ProfileCard extends StatelessWidget {
   final String field;
   final String content;
-  final void Function()? onEdit;
-  const ProfileCard({super.key, required this.field, required this.content, required this.onEdit});
+  const ProfileCard({super.key, required this.field, required this.content});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,6 @@ class ProfileCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(field, style: const TextStyle(color: Colors.black45),),
-                  GestureDetector(onTap: onEdit,child: const Icon(Icons.edit)),
                 ],
               ),
               const SizedBox(height: 10),

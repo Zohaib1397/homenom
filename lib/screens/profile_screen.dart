@@ -1,7 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:homenom/constants/constants.dart';
 import 'package:homenom/screens/location_screen.dart';
 import 'package:homenom/screens/widgets/profile_card.dart';
 import 'package:homenom/structure/TextFieldHandler.dart';
@@ -32,127 +31,95 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('Users')
-                .doc(currentUser.email)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final user = snapshot.data!.data() as Map<String, dynamic>;
-                return ListView(
-                  children: [
-                    // Profile Picture
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.person,
-                            size: 90,
-                          ),
-                          Text(user['email']),
-                        ],
-                      ),
+          stream: FirebaseFirestore.instance
+              .collection('Users')
+              .doc(currentUser.email)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final user = snapshot.data!.data() as Map<String, dynamic>;
+              return ListView(
+                children: [
+                  // Profile Picture
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.person,
+                          size: 90,
+                        ),
+                        Text(user['email']),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-                    const Text("My Details"),
-                    ProfileCard(
-                      field: "Username",
-                      content: user['username'],
-                      onEdit: () {
-                        setState(() {
-                          editingText.controller.text = user['username'];
-                        });
-                        FieldEditingPopUp(context, user['isPhoneVerified'],
-                            fieldName: 'username',
-                            title: "Username",
-                            handler: editingText);
-                      },
-                    ),
-                    ProfileCard(
-                      field: "Phone Number",
-                      content: "0${user['phoneNum']}",
-                      onEdit: () {
-                        setState(() {
-                          editingText.controller.text = "${user['phoneNum']}";
-                        });
-                        FieldEditingPopUp(context, user['isPhoneVerified'],
-                            fieldName: 'phoneNum',
-                            title: "Phone Number",
-                            handler: editingText);
-                        Utils.showPopup(context, "Notice",
-                            "Editing phone number will clear phone verifications");
-                      },
-                    ),
-                    ProfileCard(
-                      field: "Address",
-                      content: user['address'],
-                      onEdit: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LocationScreen()),
-                        );
-                        await FirebaseFirestore.instance
-                            .collection("Users")
-                            .doc(currentUser.email)
-                            .update({
-                          "address":
-                              "${currentUserAddress.userAddress.streetAddress}, ${currentUserAddress.userAddress.city}",
-                          "latitude" : currentUserAddress.latitude,
-                          "longitude" : currentUserAddress.longitude,
-                        });
-                      },
-                    ),
-                    user['role'] == "ROLE.SELLER"
-                        ? ProfileCard(
-                            field: "National Identity Number",
-                            content: user['CNIC'],
-                            onEdit: () {
-                              setState(() {
-                                editingText.controller.text = user['CNIC'];
-                              });
-                              FieldEditingPopUp(
-                                  context, user['isPhoneVerified'],
-                                  fieldName: 'CNIC',
-                                  title: "National Identity Number",
-                                  handler: editingText);
-                            },
-                          )
-                        : Container(),
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Utils.showPopup(context, "Database Error",
-                    "Error accessing data. Contact developer");
-              } else {
-                return Center(
-                    child: Container(
+                  ),
+                  const SizedBox(height: 20),
+                  const Text("My Details"),
+                  ProfileCard(
+                    field: "Username",
+                    content: user['username'],
+                  ),
+                  ProfileCard(
+                    field: "Phone Number",
+                    content: "0${user['phoneNum']}",
+                  ),
+                  ProfileCard(
+                    field: "Address",
+                    content: user['address'],
+                  ),
+                  user['role'] == "ROLE.SELLER"
+                      ? ProfileCard(
+                          field: "National Identity Number",
+                          content: user['CNIC'],
+                        )
+                      : Container(),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      showEditDialog(context, user);
+                    },
+                    child: Text("Edit My Details"),
+                  ),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Utils.showPopup(context, "Database Error",
+                  "Error accessing data. Contact developer");
+            } else {
+              return Center(
+                child: Container(
                   padding: const EdgeInsets.all(40),
                   child: const CircularProgressIndicator(),
-                ));
-              }
-            }),
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }
-}
 
-Future FieldEditingPopUp(BuildContext context, bool phoneVerification,
-    {required fieldName,
-    required String title,
-    required TextFieldHandler handler}) {
-  return showDialog(
+  void showEditDialog(BuildContext context, Map<String, dynamic> user) {
+    setState(() {
+      editingText.controller.text = user['username'];
+    });
+
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Edit $title"),
-          content: TextField(
-            controller: handler.controller,
-            decoration: InputDecoration(
-              errorText: handler.errorText,
-            ),
+          title: Text("Edit My Details"),
+          content: Column(
+            children: [
+              TextField(
+                controller: editingText.controller,
+                decoration: InputDecoration(
+                  labelText: "Username",
+                  errorText: editingText.errorText,
+                ),
+              ),
+            ],
           ),
           actions: [
             TextButton(
@@ -161,10 +128,8 @@ Future FieldEditingPopUp(BuildContext context, bool phoneVerification,
                     .collection("Users")
                     .doc(currentUser.email)
                     .update({
-                  fieldName: handler.controller.text,
-                  "isPhoneVerified": fieldName == 'phoneNum'
-                      ? !phoneVerification
-                      : phoneVerification
+                  "username": editingText.controller.text,
+                  // Update other fields here
                 });
                 Navigator.pop(context);
               },
@@ -184,5 +149,7 @@ Future FieldEditingPopUp(BuildContext context, bool phoneVerification,
             )
           ],
         );
-      });
+      },
+    );
+  }
 }

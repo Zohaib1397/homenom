@@ -5,7 +5,7 @@ import 'package:homenom/screens/authentication_status.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../services/Utils.dart';
 import '../../structure/Role.dart';
-import '../../structure/User.dart' as Model;
+import '../../structure/Driver.dart' as Model;
 import '../../constants/constants.dart';
 import '../../structure/TextFieldHandler.dart';
 import 'dart:io';
@@ -54,7 +54,7 @@ class _DriverSignUpScreenState extends State<DriverSignUpScreen> {
       final userCredentials = await _auth.createUserWithEmailAndPassword(
           email: _emailField.controller.text,
           password: _passwordField.controller.text);
-      final newUser = Model.User(
+      final newUser = Model.Driver(
         name: _username.controller.text,
         username: _emailField.controller.text.split('@')[0],
         address: "Null",
@@ -62,12 +62,10 @@ class _DriverSignUpScreenState extends State<DriverSignUpScreen> {
         id: UniqueKey().toString(),
         phoneNum: _phoneField.controller.text,
         isPhoneVerified: false,
-        CNIC: _cnicField.controller.text,
         rating: 0,
         role: role.toString(),
         latitude: 0.0,
         longitude: 0.0,
-        restaurantName: _bikeNumber.controller.text,
         bikeNumber : _bikeNumber.controller.text,
         bikeType : _bikeType.controller.text,
         license : _license.controller.text,

@@ -26,8 +26,6 @@ class _LocationScreenState extends State<LocationScreen> {
   @override
   void initState() {
     super.initState();
-
-    print("Call of init state");
     getCurrentLocation();
   }
 
@@ -35,20 +33,6 @@ class _LocationScreenState extends State<LocationScreen> {
     currentUserAddress.userAddress = await geoCode.reverseGeocoding(latitude: 0.0, longitude: 0.0);
   }
 
-  // Future<void> getCurrentLocation() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   geolocation.Location location = geolocation.Location();
-  //   await location.checkIfAccessGranted();
-  //   await location.getCurrentLocation();
-  //   print("Current location is retrieved");
-  //   currentPosition = LatLng(location.latitude, location.longitude);
-  //   initialCameraPosition = CameraPosition(target: currentPosition, zoom: 14.0);
-  //   setState(() {
-  //     isLoading = false;
-  //   });
-  // }
   Future<void> getCurrentLocation() async {
     try {
       setState(() {
@@ -143,22 +127,5 @@ class _LocationScreenState extends State<LocationScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
-    // body: Padding(
-    //   padding: const EdgeInsets.symmetric(vertical: 20),
-    //   child: Column(
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     children: [
-    //       const Row(
-    //         mainAxisAlignment: MainAxisAlignment.center,
-    //         children: [
-    //           Text("Your Location"),
-    //           SizedBox(width: 10,),
-    //           Icon(Icons.my_location),
-    //         ],
-    //       ),
-    //
-    //     ],
-    //   ),
-    // ),
   }
 }

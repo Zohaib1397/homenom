@@ -3,6 +3,7 @@ import 'package:homenom/screens/widgets/build_cache_image.dart';
 import 'package:homenom/screens/widgets/recipe_card.dart';
 
 import '../structure/Menu.dart';
+import 'add_recipe_screen.dart';
 
 class RecipeScreen extends StatefulWidget {
   final Menu menu;
@@ -92,6 +93,14 @@ class _RecipeScreenState extends State<RecipeScreen> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text("Add Recipe"),
+        icon: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddRecipeScreen()));
+        },
       ),
     );
   }

@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homenom/constants/constants.dart';
@@ -6,6 +7,7 @@ import 'package:homenom/screens/cart_screen.dart';
 import 'package:homenom/screens/login_screen.dart';
 import 'package:homenom/screens/profile_screen.dart';
 import 'package:homenom/screens/seller_screen.dart';
+import 'package:homenom/screens/transit_screen.dart';
 import 'package:homenom/screens/widgets/drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +15,7 @@ import '../services/menu_controller.dart';
 import '../structure/Role.dart';
 import 'customer_screen.dart';
 import 'driver_screen.dart';
+import 'history_screen.dart';
 import 'notification_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -27,6 +30,24 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final currentUser = FirebaseAuth.instance.currentUser!;
+  int currentMenuIndex = 0;
+
+  List sellerView = [
+    SellerView(),
+    ProfileScreen(),
+    HistoryScreen(),
+  ];
+  List driverView = [
+    DriverView(),
+    ProfileScreen(),
+    HistoryScreen(),
+    TransitScreen(),
+  ];
+  List customerView = [
+    CustomerView(),
+    ProfileScreen(),
+    HistoryScreen(),
+  ];
 
   @override
   void initState() {
@@ -56,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // backgroundColor: Theme.of(context).colorScheme.background,
       key: _scaffoldKey,
       appBar: buildAppBar(context),
-      body: currentRole == ROLE.SELLER ? SellerView() : currentRole == ROLE.DRIVER? const DriverView(): const CustomerView(),
+      body: currentRole == ROLE.SELLER ? sellerView[currentMenuIndex] : currentRole == ROLE.DRIVER? driverView[currentMenuIndex]: customerView[currentMenuIndex],
       drawer: MyDrawer(
         onSignOut: signOut,
         onProfileOption: showProfileScreen,
@@ -77,6 +98,19 @@ class _HomeScreenState extends State<HomeScreen> {
               MaterialPageRoute(builder: (context) => AddRecipeScreen()));
         },
       ): null,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentMenuIndex,
+        onTap: (index){
+          setState(() {
+            currentMenuIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home", activeIcon: Icon(Icons.home)),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile", activeIcon: Icon(Icons.person)),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: "History", activeIcon: Icon(Icons.history_outlined)),
+        ],
+      ),
     );
   }
 

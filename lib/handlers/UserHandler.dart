@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:homenom/structure/Database/ItemDAO.dart';
 import 'package:homenom/structure/User.dart' as user;
+import '../structure/Order.dart' as order_class;
 import '../structure/Role.dart';
 
 class UserHandler implements ItemDAO {
@@ -124,7 +125,15 @@ class UserHandler implements ItemDAO {
       return false;
     }
   }
-
+  Future<void> updateDriverCollection(order_class.Order order) async {
+    final driverCollection = FirebaseFirestore.instance.collection('Delivery');
+    final driver = await getUser(FirebaseAuth.instance.currentUser!.email);
+    await driverCollection.add({
+      'driver': driver?.toJson(),
+      'orderId': order.orderId,
+      'orderDetails': order.toJson(),
+    });
+  }
   @override
   Future<bool> update(user) {
     // TODO: implement update
